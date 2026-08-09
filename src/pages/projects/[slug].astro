@@ -1,0 +1,67 @@
+---
+import Base from "../../layouts/Base.astro";
+import Figure from "../../components/Figure.astro";
+import TagList from "../../components/TagList.astro";
+import { sortedProjects } from "../../lib/projects";
+
+export async function getStaticPaths() {
+  const projects = await sortedProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: { project, number: i + 1 },
+  }));
+}
+
+const { project, number } = Astro.props;
+const {
+  title,
+  summary,
+  problem,
+  approach,
+  result,
+  tags,
+  repo,
+  paper,
+  demo,
+  video,
+  poster,
+  image,
+  alt,
+  figcaption,
+} = project.data;
+---
+
+<Base title={`${title} — Jose Sanchez Gonzalez`} description={summary}>
+  <p class="meta"><a href="/#projects">&larr; Index</a></p>
+  <h1>{title}</h1>
+  <p class="detail-summary">{summary}</p>
+
+  <Figure
+    number={number}
+    video={video}
+    poster={poster}
+    image={image}
+    alt={alt}
+    caption={figcaption}
+    eager
+  />
+
+  <h2>Problem</h2>
+  <p>{problem}</p>
+
+  <h2>Approach</h2>
+  <p>{approach}</p>
+
+  <h2>Result</h2>
+  <p>{result}</p>
+
+  <h2>Stack</h2>
+  <TagList tags={tags} />
+
+  <h2>Links</h2>
+  <div class="project-links">
+    <a href={repo}>GitHub</a>
+    {paper && <a href={paper}>Paper</a>}
+    {demo && <a href={demo}>Demo</a>}
+  </div>
+</Base>

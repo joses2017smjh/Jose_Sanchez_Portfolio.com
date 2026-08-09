@@ -1,0 +1,51 @@
+---
+/**
+ * The figure system: every visual on the site is a numbered figure with a
+ * mono caption, like a well-set paper. Numbers come from project order.
+ */
+interface Props {
+  number: number;
+  video?: string | undefined;
+  poster?: string | undefined;
+  image?: string | undefined;
+  alt: string;
+  caption: string;
+  /** Eager-load only the hero figure on a detail page. */
+  eager?: boolean;
+}
+
+const { number, video, poster, image, alt, caption, eager = false } = Astro.props;
+const label = `FIG. ${String(number).padStart(2, "0")}`;
+---
+
+<figure class="figure">
+  <div class="figure-rule" aria-hidden="true">
+    <span class="figure-number">{label}</span>
+  </div>
+  <div class="figure-media">
+    {
+      video ? (
+        <video
+          data-loop
+          playsinline
+          muted
+          preload="none"
+          poster={poster}
+          aria-label={alt}
+        >
+          <source src={video} type={video.endsWith(".webm") ? "video/webm" : "video/mp4"} />
+        </video>
+      ) : (
+        <img
+          src={image}
+          alt={alt}
+          loading={eager ? "eager" : "lazy"}
+          decoding="async"
+          width="1280"
+          height="720"
+        />
+      )
+    }
+  </div>
+  <figcaption>{label} — {caption}</figcaption>
+</figure>

@@ -1,0 +1,433 @@
+/* ---------------------------------------------------------------------------
+   Design tokens
+   --------------------------------------------------------------------------- */
+:root {
+  /* palette */
+  --paper: #faf9f5;
+  --ink: #211f1c;
+  --graphite: #6e6a63;
+  --hairline: #e6e2da;
+  --vellum: #f2f0ea;
+  --cobalt: #1f3fa6; /* links at rest */
+  --cardinal: #a31621; /* hover / active / the Now dot */
+
+  /* type */
+  --font-serif: "Times New Roman", Times, Georgia, serif;
+  --font-script: "Great Vibes", cursive;
+  --font-mono: "Fragment Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* scale (major third-ish, tuned by eye for Times) */
+  --text-sm: 0.9375rem;
+  --text-base: 1.125rem;
+  --text-md: 1.375rem;
+  --text-lg: 1.75rem;
+  --text-xl: 2.25rem;
+  --text-signature: clamp(3rem, 8vw, 4.25rem);
+  --text-meta: 0.8125rem;
+
+  /* rhythm */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.75rem;
+  --space-4: 3rem;
+  --space-5: 5rem;
+  --space-6: 8rem;
+
+  --measure: 62ch;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 100%;
+  line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-size: var(--text-base);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding: var(--space-5) var(--space-2) var(--space-6);
+}
+
+::selection {
+  background: var(--cobalt);
+  color: var(--paper);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 var(--space-2);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-xl);
+}
+
+h2 {
+  font-size: var(--text-lg);
+  margin-top: var(--space-5);
+}
+
+h3 {
+  font-size: var(--text-md);
+  margin-top: var(--space-3);
+}
+
+p {
+  margin: 0 0 var(--space-2);
+  max-width: var(--measure);
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ---------------------------------------------------------------------------
+   Links — same tab always; cobalt at rest, cardinal on hover
+   --------------------------------------------------------------------------- */
+a {
+  color: var(--cobalt);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+  transition: color 120ms ease;
+}
+
+a:hover {
+  color: var(--cardinal);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--cardinal);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+/* ---------------------------------------------------------------------------
+   Meta register — mono for nav, dates, tags, captions
+   --------------------------------------------------------------------------- */
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+  color: var(--graphite);
+}
+
+/* ---------------------------------------------------------------------------
+   Signature — the name, once, in script
+   --------------------------------------------------------------------------- */
+.signature {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: var(--text-signature);
+  line-height: 1.1;
+  margin: 0 0 var(--space-2);
+}
+
+/* ---------------------------------------------------------------------------
+   Site chrome
+   --------------------------------------------------------------------------- */
+.site-header {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding: var(--space-3) var(--space-2) 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.site-header nav {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.site-header a {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+  color: var(--graphite);
+  text-decoration: none;
+}
+
+.site-header a:hover,
+.site-header a[aria-current="page"] {
+  color: var(--cardinal);
+}
+
+.site-footer {
+  max-width: var(--measure);
+  margin-inline: auto;
+  width: 100%;
+  padding: var(--space-3) var(--space-2);
+  border-top: 1px solid var(--hairline);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: var(--space-1);
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+}
+
+.skip-link:focus {
+  left: var(--space-1);
+  z-index: 10;
+}
+
+/* ---------------------------------------------------------------------------
+   Link row (GitHub / LinkedIn / Email / Resume)
+   --------------------------------------------------------------------------- */
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  padding: 0;
+  margin: var(--space-3) 0 0;
+  list-style: none;
+}
+
+.link-row a {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+}
+
+/* ---------------------------------------------------------------------------
+   The figure system — every visual is a numbered figure
+   --------------------------------------------------------------------------- */
+.figure {
+  margin: var(--space-3) 0;
+}
+
+.figure-rule {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.figure-number {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.08em;
+  color: var(--graphite);
+  white-space: nowrap;
+}
+
+.figure-rule::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--hairline);
+  transform: translateY(-0.25em);
+}
+
+.figure-media {
+  background: var(--vellum);
+  aspect-ratio: 16 / 9;
+}
+
+.figure-media img,
+.figure-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.figure figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+  color: var(--graphite);
+  margin-top: var(--space-1);
+}
+
+/* ---------------------------------------------------------------------------
+   Project list
+   --------------------------------------------------------------------------- */
+.project-list {
+  list-style: none;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+}
+
+.project-list > li {
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.project-list > li:first-child {
+  border-top: none;
+  padding-top: var(--space-2);
+}
+
+.project-title {
+  font-size: var(--text-md);
+  margin: 0 0 var(--space-1);
+}
+
+.project-title a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.project-title a:hover {
+  color: var(--cardinal);
+}
+
+.project-summary {
+  color: var(--graphite);
+  margin-bottom: var(--space-2);
+}
+
+.project-links {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.project-links a {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+}
+
+/* ---------------------------------------------------------------------------
+   Tags — real text, scannable
+   --------------------------------------------------------------------------- */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tag-list li {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+  color: var(--graphite);
+}
+
+.tag-list li::before {
+  content: "·";
+  margin-right: 0.5em;
+  color: var(--hairline);
+}
+
+.tag-list li:first-child::before {
+  content: none;
+}
+
+/* ---------------------------------------------------------------------------
+   /now log
+   --------------------------------------------------------------------------- */
+.now-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.now-dot {
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: var(--cardinal);
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .now-dot {
+    animation: now-pulse 3s ease-in-out infinite;
+  }
+}
+
+@keyframes now-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.now-list {
+  list-style: none;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+}
+
+.now-list > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.now-list > li:first-child {
+  border-top: none;
+}
+
+.now-list h3 {
+  margin: var(--space-1) 0;
+}
+
+.now-list .entry-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Detail page
+   --------------------------------------------------------------------------- */
+.detail-summary {
+  font-size: var(--text-md);
+  color: var(--graphite);
+  text-wrap: balance;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — kill everything that moves
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

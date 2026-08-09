@@ -1,0 +1,74 @@
+---
+import "@fontsource/great-vibes";
+import "@fontsource/fragment-mono";
+import "../styles/global.css";
+import { site } from "../site.config";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const path = Astro.url.pathname;
+const current = (href: string) =>
+  (href === "/" ? path === "/" : path.startsWith(href)) ? "page" : undefined;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a href="/" aria-current={current("/")}>{site.name}</a>
+      <nav aria-label="Site">
+        <a href="/now" aria-current={current("/now")}>Now</a>
+        <a href="/resume.pdf">Resume</a>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p class="meta" style="margin: 0;">
+        &copy; {new Date().getFullYear()} {site.name}
+      </p>
+    </footer>
+
+    {/* Videos autoplay only in-viewport and only when motion is welcome. */}
+    <script>
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const videos = document.querySelectorAll<HTMLVideoElement>("video[data-loop]");
+      if (!reduced.matches && videos.length > 0) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const { target, isIntersecting } of entries) {
+              const v = target as HTMLVideoElement;
+              if (isIntersecting) v.play().catch(() => {});
+              else v.pause();
+            }
+          },
+          { rootMargin: "100px" },
+        );
+        for (const v of videos) {
+          v.muted = true;
+          v.loop = true;
+          io.observe(v);
+        }
+      } else {
+        // Reduced motion: leave the poster frame and offer manual controls.
+        for (const v of videos) v.controls = true;
+      }
+    </script>
+  </body>
+</html>

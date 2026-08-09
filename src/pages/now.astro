@@ -1,0 +1,50 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../layouts/Base.astro";
+
+const entries = (await getCollection("now")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const rendered = await Promise.all(
+  entries.map(async (entry) => ({ entry, ...(await render(entry)) })),
+);
+
+const fmt = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  timeZone: "UTC",
+});
+---
+
+<Base
+  title="Now — Jose Sanchez Gonzalez"
+  description="What I'm currently building, newest first."
+>
+  <h1 class="now-heading">
+    <span class="now-dot" aria-hidden="true"></span>
+    Now
+  </h1>
+  <p class="project-summary">
+    What I'm currently building. Newest first.
+  </p>
+
+  <ul class="now-list">
+    {
+      rendered.map(({ entry, Content }) => (
+        <li>
+          <p class="meta">
+            <time datetime={entry.data.date.toISOString().slice(0, 10)}>
+              {fmt.format(entry.data.date)}
+            </time>
+          </p>
+          <h3>{entry.data.title}</h3>
+          <div class="entry-body">
+            <Content />
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

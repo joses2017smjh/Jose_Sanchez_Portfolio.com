@@ -1,0 +1,23 @@
+{
+  "name": "jose-sanchez-portfolio",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.3.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.0.0",
+    "@fontsource/fragment-mono": "^5.0.0",
+    "@fontsource/great-vibes": "^5.0.0",
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
