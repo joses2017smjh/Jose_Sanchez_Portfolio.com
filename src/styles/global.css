@@ -262,11 +262,18 @@ a:focus-visible {
   aspect-ratio: 16 / 9;
 }
 
-.figure-media img,
 .figure-media video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* contain, not cover: architecture diagrams and charts must never crop */
+.figure-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: var(--space-1);
 }
 
 .figure figcaption {
