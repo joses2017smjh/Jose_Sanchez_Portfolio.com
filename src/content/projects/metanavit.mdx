@@ -1,0 +1,36 @@
+---
+title: "MetaNaviT: AI-Powered File Organizer"
+summary: "Semantic search and automated organization for files scattered across local, cloud, and web sources."
+problem: >-
+  File collections sprawl across local directories, cloud storage, web
+  content, and databases. Filename search can't answer questions about what
+  files contain, how they relate, or where they belong.
+approach: >-
+  Built a retrieval pipeline that extracts and indexes content from
+  heterogeneous sources with LlamaIndex, stores embeddings in PostgreSQL with
+  pgvector, and serves everything through FastAPI. Retrieval-augmented
+  generation with locally hosted models via Ollama powers semantic search,
+  metadata extraction, hierarchical indexing, and automated file structuring.
+  The whole stack ships as Docker services.
+result: >-
+  A working production-style RAG system: containerized services answering
+  semantic queries and reorganizing files across local, cloud, web, and
+  database sources.
+tags:
+  [
+    "Python",
+    "FastAPI",
+    "PostgreSQL",
+    "pgvector",
+    "RAG",
+    "LlamaIndex",
+    "Ollama",
+    "Docker",
+  ]
+repo: "https://github.com/klaurie/MetaNaviT"
+image: "/media/placeholder-figure.svg"
+alt: "Placeholder — swap for a screenshot of MetaNaviT's search or file organization output."
+figcaption: "Placeholder. Swap for a semantic search demo screenshot."
+date: 2025-06-01
+order: 3
+---

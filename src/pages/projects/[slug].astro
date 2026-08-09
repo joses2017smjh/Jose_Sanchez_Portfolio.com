@@ -1,6 +1,8 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Figure from "../../components/Figure.astro";
+import FigureStrip from "../../components/FigureStrip.astro";
+import ScrollRuler from "../../components/ScrollRuler.astro";
 import TagList from "../../components/TagList.astro";
 import { sortedProjects } from "../../lib/projects";
 
@@ -28,10 +30,12 @@ const {
   image,
   alt,
   figcaption,
+  gallery,
 } = project.data;
 ---
 
 <Base title={`${title} — Jose Sanchez Gonzalez`} description={summary}>
+  <ScrollRuler />
   <p class="meta"><a href="/#projects">&larr; Index</a></p>
   <h1>{title}</h1>
   <p class="detail-summary">{summary}</p>
@@ -55,13 +59,28 @@ const {
   <h2>Result</h2>
   <p>{result}</p>
 
+  {
+    gallery && gallery.length > 0 && (
+      <>
+        <h2>Figures</h2>
+        <FigureStrip number={number} items={gallery} />
+      </>
+    )
+  }
+
   <h2>Stack</h2>
   <TagList tags={tags} />
 
-  <h2>Links</h2>
-  <div class="project-links">
-    <a href={repo}>GitHub</a>
-    {paper && <a href={paper}>Paper</a>}
-    {demo && <a href={demo}>Demo</a>}
-  </div>
+  {
+    (repo || paper || demo) && (
+      <>
+        <h2>Links</h2>
+        <div class="project-links">
+          {repo && <a href={repo}>GitHub</a>}
+          {paper && <a href={paper}>Paper</a>}
+          {demo && <a href={demo}>Demo</a>}
+        </div>
+      </>
+    )
+  }
 </Base>

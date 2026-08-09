@@ -1,0 +1,47 @@
+---
+title: "Vision-Based Metric Depth Estimation for Robotic Pruning"
+summary: "Metric depth estimation for dormant orchard scenes, built to guide robotic pruning."
+problem: >-
+  Robotic pruning needs centimeter-accurate depth on thin, cluttered branches,
+  where commodity sensors and off-the-shelf monocular models fall short.
+  Collecting real orchard data with ground-truth depth at that precision is
+  slow, seasonal, and expensive.
+approach: >-
+  Built a synthetic-orchard pipeline in Blender that renders RGB, ground-truth
+  depth maps, masks, and full camera intrinsics and extrinsics for dormant
+  apple tree scenes. Compared monocular, calibrated, fine-tuned, and
+  multi-view RGB-D depth models on those scenes, then refined predictions
+  with a DINOv2-based RGB+D multi-view model. Profiled deployment latency
+  alongside accuracy to make the speed/precision trade-off explicit.
+result: >-
+  Validation RMSE improved from 0.0550 m to 0.0445 ± 0.0057 m with DINOv2
+  RGB+D multi-view refinement. Latency: 484.7 ms per 6-view group (80.8 ms
+  amortized per depth map) vs 333.6 ms per monocular frame — higher accuracy
+  at the cost of a slower minimum inference unit.
+tags:
+  [
+    "Python",
+    "PyTorch",
+    "DINOv2",
+    "CNNs",
+    "Blender",
+    "OpenCV",
+    "3D Perception",
+  ]
+repo: "https://github.com/joses2017smjh/Vision-Based-Metric-Depth-Estimation-for-Robotic-Pruning"
+image: "/media/placeholder-figure.svg"
+alt: "Placeholder — swap for a synthetic orchard render beside its predicted metric depth map."
+figcaption: "Placeholder. Swap for a render/depth-map comparison figure."
+gallery:
+  - image: "/media/placeholder-figure.svg"
+    alt: "Placeholder for a Blender synthetic orchard scene."
+    caption: "Placeholder — synthetic orchard scene."
+  - image: "/media/placeholder-figure.svg"
+    alt: "Placeholder for a predicted vs ground-truth depth comparison."
+    caption: "Placeholder — predicted vs ground-truth depth."
+  - image: "/media/placeholder-figure.svg"
+    alt: "Placeholder for the latency vs accuracy trade-off chart."
+    caption: "Placeholder — latency vs accuracy trade-off."
+date: 2026-06-01
+order: 1
+---

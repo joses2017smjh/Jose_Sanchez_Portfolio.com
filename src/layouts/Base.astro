@@ -2,6 +2,7 @@
 import "@fontsource-variable/instrument-sans";
 import "@fontsource/fragment-mono";
 import "../styles/global.css";
+import LiquidCursor from "../components/LiquidCursor.astro";
 import { site } from "../site.config";
 
 interface Props {
@@ -39,6 +40,7 @@ const current = (href: string) =>
     <main id="main">
       <slot />
     </main>
+    <LiquidCursor />
     <footer class="site-footer">
       <p class="meta" style="margin: 0;">
         &copy; {new Date().getFullYear()} {site.name}

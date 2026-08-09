@@ -296,10 +296,24 @@ a:focus-visible {
   padding-top: var(--space-1);
 }
 
+/* title ——— year rows with a hairline leader */
+.project-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.project-row .leader {
+  flex: 1;
+  border-top: 1px solid var(--hairline);
+  transform: translateY(-0.22em);
+}
+
 .project-title {
   font-size: var(--text-md);
   font-weight: 500;
-  margin: 0 0 var(--space-1);
+  margin: 0;
 }
 
 .project-title a {
@@ -355,6 +369,26 @@ a:focus-visible {
 
 .tag-list li:first-child::before {
   content: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Figure strip — horizontal scroll-snap slider for secondary figures
+   --------------------------------------------------------------------------- */
+.figure-strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(85%, 34rem);
+  gap: var(--space-2);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-1);
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline) transparent;
+}
+
+.figure-strip .strip-item {
+  scroll-snap-align: start;
+  margin: 0;
 }
 
 /* ---------------------------------------------------------------------------

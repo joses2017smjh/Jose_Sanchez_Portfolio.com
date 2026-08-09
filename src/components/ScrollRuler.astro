@@ -1,0 +1,85 @@
+---
+/**
+ * Fixed vertical ruler on the left edge; the red marker tracks reading
+ * progress through the page. Decorative — hidden from assistive tech,
+ * hidden on narrow viewports.
+ */
+---
+
+<div class="scroll-ruler" aria-hidden="true">
+  <div class="ruler-ticks"></div>
+  <div class="ruler-marker" data-ruler-marker></div>
+</div>
+
+<script>
+  const marker = document.querySelector<HTMLElement>("[data-ruler-marker]");
+  if (marker) {
+    const ruler = marker.parentElement!;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+      const travel = ruler.clientHeight - marker.offsetHeight;
+      marker.style.transform = `translateY(${progress * travel}px)`;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    update();
+  }
+</script>
+
+<style>
+  .scroll-ruler {
+    display: none;
+  }
+
+  @media (min-width: 60rem) {
+    .scroll-ruler {
+      display: block;
+      position: fixed;
+      left: 1.25rem;
+      top: 50%;
+      translate: 0 -50%;
+      height: 55vh;
+      width: 1.25rem;
+    }
+
+    .ruler-ticks {
+      position: absolute;
+      inset: 0;
+      /* short tick every 8px, long tick every 40px */
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          var(--hairline) 0 1px,
+          transparent 1px 8px
+        ),
+        repeating-linear-gradient(
+          to bottom,
+          var(--faint) 0 1px,
+          transparent 1px 40px
+        );
+      background-size:
+        0.5rem 100%,
+        1.25rem 100%;
+      background-repeat: no-repeat;
+    }
+
+    .ruler-marker {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.75rem;
+      height: 1px;
+      background: var(--red);
+      will-change: transform;
+    }
+  }
+</style>

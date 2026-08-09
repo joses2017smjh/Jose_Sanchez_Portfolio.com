@@ -23,7 +23,8 @@ const projects = defineCollection({
     result: z.string().max(350),
     // Real-text skill tags for keyword scanners.
     tags: z.array(z.string().max(24)).min(1).max(10),
-    repo: z.string().url(),
+    // Omit for private/coursework projects with no public repo.
+    repo: z.string().url().optional(),
     paper: z.string().url().optional(),
     demo: z.string().url().optional(),
     // Media, from /public. Provide video (mp4/webm) when a motion asset
@@ -33,6 +34,18 @@ const projects = defineCollection({
     image: z.string().optional(),
     alt: z.string().max(160),
     figcaption: z.string().max(120),
+    // Extra figures shown as a horizontal scroll-snap strip on the
+    // detail page (FIG. NNA, NNB, ...).
+    gallery: z
+      .array(
+        z.object({
+          image: z.string(),
+          alt: z.string().max(160),
+          caption: z.string().max(120),
+        }),
+      )
+      .max(8)
+      .optional(),
     date: z.coerce.date(),
     // Lower = earlier in the list (and lower figure number).
     order: z.number().int().nonnegative(),

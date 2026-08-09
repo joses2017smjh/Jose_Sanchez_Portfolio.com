@@ -1,0 +1,169 @@
+---
+/**
+ * Liquid cursor: a crisp dot with two soft blue/red blobs that chase it at
+ * different speeds, stretching with velocity and settling back into one
+ * drop at rest. Hovering a link pulls both blobs toward that link's current
+ * color. Fine pointers only; disabled entirely for prefers-reduced-motion
+ * and touch devices, so the native cursor stays for everyone else.
+ */
+---
+
+<canvas id="liquid-cursor" aria-hidden="true"></canvas>
+
+<script>
+  const canvas = document.getElementById("liquid-cursor") as HTMLCanvasElement;
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (canvas && finePointer && !reducedMotion) {
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      document.documentElement.classList.add("cursor-active");
+
+      let dpr = 1;
+      const resize = () => {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+      };
+      resize();
+      window.addEventListener("resize", resize, { passive: true });
+
+      const BLUE: [number, number, number] = [143, 165, 230];
+      const RED: [number, number, number] = [224, 101, 94];
+
+      const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+      let visible = false;
+
+      // Each blob is a damped spring chasing the pointer; different
+      // stiffness makes them separate at speed and merge at rest.
+      const makeBlob = (
+        stiffness: number,
+        damping: number,
+        radius: number,
+        color: [number, number, number],
+      ) => ({
+        x: mouse.x,
+        y: mouse.y,
+        vx: 0,
+        vy: 0,
+        stiffness,
+        damping,
+        radius,
+        color: [...color] as [number, number, number],
+        rest: color,
+      });
+
+      const blobs = [
+        makeBlob(0.16, 0.7, 12, BLUE),
+        makeBlob(0.1, 0.72, 10, RED),
+        // the drip: small, laggy, trails behind and "drips" into place
+        makeBlob(0.045, 0.82, 5, [
+          (BLUE[0] + RED[0]) / 2,
+          (BLUE[1] + RED[1]) / 2,
+          (BLUE[2] + RED[2]) / 2,
+        ]),
+      ];
+
+      // When hovering a link, both blobs lean toward the link's live color
+      // (red on your links' hover state), then relax back to blue/red apart.
+      let hoverColor: [number, number, number] | null = null;
+      document.addEventListener("mouseover", (e) => {
+        const a = (e.target as Element | null)?.closest("a, button");
+        if (a) {
+          const rgb = getComputedStyle(a).color.match(/\d+(\.\d+)?/g);
+          hoverColor = rgb
+            ? ([+rgb[0], +rgb[1], +rgb[2]] as [number, number, number])
+            : null;
+        } else {
+          hoverColor = null;
+        }
+      });
+
+      document.addEventListener(
+        "mousemove",
+        (e) => {
+          mouse.x = e.clientX;
+          mouse.y = e.clientY;
+          visible = true;
+        },
+        { passive: true },
+      );
+      document.addEventListener("mouseleave", () => (visible = false));
+      document.addEventListener("mouseenter", () => (visible = true));
+
+      let alpha = 0;
+      const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+      const frame = () => {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        alpha = lerp(alpha, visible ? 1 : 0, 0.12);
+
+        if (alpha > 0.01) {
+          ctx.globalCompositeOperation = "lighter";
+          for (const b of blobs) {
+            b.vx = (b.vx + (mouse.x - b.x) * b.stiffness) * b.damping;
+            b.vy = (b.vy + (mouse.y - b.y) * b.stiffness) * b.damping;
+            b.x += b.vx;
+            b.y += b.vy;
+
+            const target = hoverColor ?? b.rest;
+            for (let i = 0; i < 3; i++) b.color[i] = lerp(b.color[i], target[i], 0.08);
+
+            const speed = Math.hypot(b.vx, b.vy);
+            const stretch = Math.min(speed / 30, 1.1);
+            const angle = Math.atan2(b.vy, b.vx);
+
+            ctx.save();
+            ctx.translate(b.x, b.y);
+            ctx.rotate(angle);
+            ctx.scale(1 + stretch, 1 / (1 + stretch * 0.45));
+            const r = b.radius * (1 + stretch * 0.25);
+            const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 2.4);
+            const [cr, cg, cb] = b.color.map(Math.round);
+            g.addColorStop(0, `rgba(${cr},${cg},${cb},${0.5 * alpha})`);
+            g.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(0, 0, r * 2.4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          // crisp dot at the true pointer position, for precision
+          ctx.globalCompositeOperation = "source-over";
+          ctx.fillStyle = `rgba(230,230,228,${0.95 * alpha})`;
+          ctx.beginPath();
+          ctx.arc(mouse.x, mouse.y, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    }
+  }
+</script>
+
+<style>
+  #liquid-cursor {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  html:not(.cursor-active) #liquid-cursor {
+    display: none;
+  }
+</style>
+
+<style is:global>
+  html.cursor-active,
+  html.cursor-active * {
+    cursor: none !important;
+  }
+</style>

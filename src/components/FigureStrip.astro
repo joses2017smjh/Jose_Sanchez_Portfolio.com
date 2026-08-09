@@ -1,0 +1,39 @@
+---
+/**
+ * Horizontal scroll-snap strip of secondary figures, labeled FIG. NNA,
+ * FIG. NNB, ... after the project's hero figure number. CSS-only sliding.
+ */
+interface Props {
+  number: number;
+  items: readonly { image: string; alt: string; caption: string }[];
+}
+
+const { number, items } = Astro.props;
+const pad = String(number).padStart(2, "0");
+---
+
+<div class="figure-strip" role="group" aria-label="Additional figures">
+  {
+    items.map((item, i) => {
+      const label = `FIG. ${pad}${String.fromCharCode(65 + i)}`;
+      return (
+        <figure class="figure strip-item">
+          <div class="figure-rule" aria-hidden="true">
+            <span class="figure-number">{label}</span>
+          </div>
+          <div class="figure-media">
+            <img
+              src={item.image}
+              alt={item.alt}
+              loading="lazy"
+              decoding="async"
+              width="1280"
+              height="720"
+            />
+          </div>
+          <figcaption>{label} — {item.caption}</figcaption>
+        </figure>
+      );
+    })
+  }
+</div>

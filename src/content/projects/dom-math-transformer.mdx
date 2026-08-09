@@ -1,0 +1,26 @@
+---
+title: "DoM: Decoder-Only Transformer for Math Word Problems"
+summary: "A from-scratch transformer that turns math word problems into executable computation graphs."
+problem: >-
+  Math word problems require mapping free-form language onto a precise
+  sequence of operations. Generic seq2seq models routinely emit malformed
+  programs that can't be executed, so accuracy collapses exactly where
+  correctness matters most.
+approach: >-
+  Co-developed a decoder-only seq2seq transformer built from scratch in
+  PyTorch — custom vocabularies, dataloader, and training loop — trained on
+  the MathQA dataset (~30k problems). Designed smart_sample, a constrained
+  decoding method that restricts each generation step so every output is
+  guaranteed to form a valid, executable DAG.
+result: >-
+  77.45% exact-match accuracy, 84.78% BLEU, and 2.72 average graph edit
+  distance on the MathQA test set, with constrained decoding guaranteeing
+  valid graph construction on every sample.
+tags: ["Python", "PyTorch", "NLP", "Transformers"]
+repo: "https://github.com/joses2017smjh/OMR_LLM"
+image: "/media/placeholder-figure.svg"
+alt: "Placeholder — swap for a word problem beside its generated computation graph."
+figcaption: "Placeholder. Swap for a problem-to-graph example figure."
+date: 2026-03-01
+order: 2
+---

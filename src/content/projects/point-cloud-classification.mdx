@@ -1,0 +1,23 @@
+---
+title: "Point Cloud Classification"
+summary: "Point-based deep learning models that classify 3D objects from raw point clouds."
+problem: >-
+  Point clouds are unordered and irregular, so standard CNNs don't apply:
+  models must be invariant to point permutation while still capturing local
+  spatial structure and long-range relationships.
+approach: >-
+  Designed point-based architectures inspired by PointNet and
+  PointConvFormer, combining shared per-point encoders with attention
+  mechanisms to model spatial relationships directly on raw points. Trained
+  and evaluated on the ModelNet and ShapeNet benchmarks.
+result: >-
+  Working 3D object classifiers on ModelNet and ShapeNet; attention-based
+  variants improved classification performance over the PointNet-style
+  baseline. Graduate coursework — code not publicly released.
+tags: ["Python", "PyTorch", "LiDAR", "Point Clouds", "Attention"]
+image: "/media/placeholder-figure.svg"
+alt: "Placeholder — swap for a visualization of classified 3D point cloud objects."
+figcaption: "Placeholder. Swap for a point cloud classification visual."
+date: 2025-12-01
+order: 4
+---
