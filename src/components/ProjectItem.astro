@@ -1,18 +1,30 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import Figure from "./Figure.astro";
 import TagList from "./TagList.astro";
 
 interface Props {
   project: CollectionEntry<"projects">;
+  /** 1-based position in the sorted list; doubles as the figure number. */
+  number: number;
 }
 
-const { project } = Astro.props;
-const { title, summary, tags, repo, date } = project.data;
+const { project, number } = Astro.props;
+const { title, summary, tags, repo, date, video, poster, image, alt, figcaption } =
+  project.data;
 const href = `/projects/${project.id}`;
 ---
 
 <li>
   <article>
+    <Figure
+      number={number}
+      video={video}
+      poster={poster}
+      image={image}
+      alt={alt}
+      caption={figcaption}
+    />
     <div class="project-row">
       <h3 class="project-title"><a href={href}>{title}</a></h3>
       <span class="leader" aria-hidden="true"></span>

@@ -22,7 +22,7 @@ const projects = await sortedProjects();
   </ul>
 
   <h2 id="projects">Projects</h2>
-  <ul class="project-list" aria-labelledby="projects">
+  <ul class="project-carousel" aria-labelledby="projects">
     {
       projects.map((project, i) => (
         <ProjectItem project={project} number={i + 1} />

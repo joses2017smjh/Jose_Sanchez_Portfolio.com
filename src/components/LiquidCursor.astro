@@ -29,8 +29,8 @@
       resize();
       window.addEventListener("resize", resize, { passive: true });
 
-      const BLUE: [number, number, number] = [143, 165, 230];
-      const RED: [number, number, number] = [224, 101, 94];
+      const BLUE: [number, number, number] = [31, 63, 166];
+      const RED: [number, number, number] = [163, 22, 33];
 
       const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
       let visible = false;
@@ -101,7 +101,9 @@
         alpha = lerp(alpha, visible ? 1 : 0, 0.12);
 
         if (alpha > 0.01) {
-          ctx.globalCompositeOperation = "lighter";
+          // multiply = translucent ink on the white page; blue + red
+          // overlap into a darker violet where the blobs merge
+          ctx.globalCompositeOperation = "multiply";
           for (const b of blobs) {
             b.vx = (b.vx + (mouse.x - b.x) * b.stiffness) * b.damping;
             b.vy = (b.vy + (mouse.y - b.y) * b.stiffness) * b.damping;
@@ -133,7 +135,7 @@
 
           // crisp dot at the true pointer position, for precision
           ctx.globalCompositeOperation = "source-over";
-          ctx.fillStyle = `rgba(230,230,228,${0.95 * alpha})`;
+          ctx.fillStyle = `rgba(19,19,19,${0.95 * alpha})`;
           ctx.beginPath();
           ctx.arc(mouse.x, mouse.y, 2.5, 0, Math.PI * 2);
           ctx.fill();
