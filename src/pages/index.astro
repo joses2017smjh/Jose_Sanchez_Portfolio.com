@@ -2,31 +2,201 @@
 import Base from "../layouts/Base.astro";
 import ProjectItem from "../components/ProjectItem.astro";
 import { site } from "../site.config";
+import { resume } from "../resume.config";
 import { sortedProjects } from "../lib/projects";
 
 const projects = await sortedProjects();
 ---
 
-<Base title={site.name} description={site.positioning}>
-  <h1>{site.name}</h1>
-  <p class="dim">{site.positioning}</p>
-  <p>{site.bio}</p>
-  <ul class="link-row">
-    {
-      site.links.map((link) => (
-        <li>
-          <a href={link.href}>{link.label}</a>
-        </li>
-      ))
-    }
-  </ul>
+<Base title={site.name} description={site.positioning} full>
+  <div class="panels" id="panels">
+    <section class="panel" id="about" aria-label="About">
+      <div class="panel-inner">
+        <p class="meta panel-label">01 — About</p>
+        <h1 class="display-name">{site.name}</h1>
+        <p class="dim">{site.positioning}</p>
+        <p>{site.bio}</p>
+        <ul class="link-row">
+          {
+            site.links.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
 
-  <h2 id="projects">Projects</h2>
-  <ul class="project-carousel" aria-labelledby="projects">
-    {
-      projects.map((project, i) => (
-        <ProjectItem project={project} number={i + 1} />
-      ))
+    <section class="panel" id="projects" aria-label="Projects">
+      <div class="panel-inner">
+        <p class="meta panel-label">02 — Projects</p>
+        <h2 class="panel-title">Projects</h2>
+      </div>
+      <ul class="project-carousel">
+        {
+          projects.map((project, i) => (
+            <ProjectItem project={project} number={i + 1} />
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="panel" id="beyond" aria-label="Beyond programming">
+      <div class="panel-inner">
+        <p class="meta panel-label">03 — Beyond programming</p>
+        <h2 class="panel-title">Beyond programming</h2>
+        <ul class="beyond-list">
+          {
+            resume.beyond.map((item) => (
+              <li>
+                <h3>{item.title}</h3>
+                <p class="dim">{item.body}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="meta">
+          Running log of what I'm building: <a href="/now">/now</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="panel" id="resume" aria-label="Resume">
+      <div class="panel-inner">
+        <p class="meta panel-label">04 — Resume</p>
+        <h2 class="panel-title">Resume</h2>
+        <p class="meta"><a href="/resume.pdf">Download PDF</a></p>
+
+        <h2>Summary</h2>
+        <p>{resume.summary}</p>
+
+        <h2>Education</h2>
+        <ul class="resume-list">
+          {
+            resume.education.map((e) => (
+              <li>
+                <div class="project-row">
+                  <h3>{e.degree}</h3>
+                  <span class="leader" aria-hidden="true" />
+                  <span class="meta">{e.when}</span>
+                </div>
+                <p class="dim">{e.school}</p>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2>Skills</h2>
+        <ul class="resume-list">
+          {
+            resume.skills.map((s) => (
+              <li>
+                <h3>{s.area}</h3>
+                <p class="dim">{s.items}</p>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2>Experience</h2>
+        <ul class="resume-list">
+          {
+            resume.experience.map((job) => (
+              <li>
+                <div class="project-row">
+                  <h3>{job.role}</h3>
+                  <span class="leader" aria-hidden="true" />
+                  <span class="meta">{job.when}</span>
+                </div>
+                <p class="dim">{job.org}</p>
+                <ul class="resume-bullets">
+                  {job.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2>Projects</h2>
+        <ul class="resume-list">
+          {
+            projects.map((p) => (
+              <li>
+                <div class="project-row">
+                  <h3>
+                    <a href={`/projects/${p.id}`}>{p.data.title}</a>
+                  </h3>
+                  <span class="leader" aria-hidden="true" />
+                  <span class="meta">{p.data.date.getUTCFullYear()}</span>
+                </div>
+                <p class="dim">{p.data.summary}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  {/* Vertical wheel pages between panels; inner scrollers (the project
+      carousel, a panel's own vertical overflow) get first claim. */}
+  <script>
+    const panels = document.getElementById("panels");
+    if (panels && window.matchMedia("(pointer: fine)").matches) {
+      const sections = Array.from(panels.querySelectorAll<HTMLElement>(".panel"));
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let lock = false;
+      panels.addEventListener(
+        "wheel",
+        (e) => {
+          if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // native horizontal gesture
+          // let an inner scroller consume the wheel until it hits its edge
+          let el = e.target as HTMLElement | null;
+          while (el && el !== panels) {
+            if (el.scrollWidth > el.clientWidth + 1) {
+              const more =
+                e.deltaY > 0
+                  ? el.scrollLeft + el.clientWidth < el.scrollWidth - 1
+                  : el.scrollLeft > 0;
+              if (more) {
+                el.scrollLeft += e.deltaY;
+                e.preventDefault();
+                return;
+              }
+            }
+            if (el.scrollHeight > el.clientHeight + 1) {
+              const more =
+                e.deltaY > 0
+                  ? el.scrollTop + el.clientHeight < el.scrollHeight - 1
+                  : el.scrollTop > 0;
+              if (more) return; // native vertical scroll inside the panel
+            }
+            el = el.parentElement;
+          }
+          e.preventDefault();
+          if (lock) return;
+          const current = Math.round(
+            panels.scrollLeft / (sections[1]?.offsetLeft - sections[0]?.offsetLeft || 1),
+          );
+          const next = Math.min(
+            Math.max(current + (e.deltaY > 0 ? 1 : -1), 0),
+            sections.length - 1,
+          );
+          if (next !== current) {
+            lock = true;
+            sections[next]?.scrollIntoView({
+              behavior: reduced ? "auto" : "smooth",
+              inline: "center",
+              block: "nearest",
+            });
+            setTimeout(() => (lock = false), reduced ? 100 : 500);
+          }
+        },
+        { passive: false },
+      );
     }
-  </ul>
+  </script>
 </Base>

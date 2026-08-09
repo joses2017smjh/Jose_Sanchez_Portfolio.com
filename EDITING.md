@@ -9,6 +9,7 @@ you can see on the site comes from the files below. Edit, save, refresh.
 |---|---|
 | Your name, the line under it, the bio paragraph | `src/site.config.ts` |
 | GitHub / LinkedIn / Email / Resume links | `src/site.config.ts` (the `links` array) |
+| Resume panel + "Beyond programming" panel text | `src/resume.config.ts` |
 | Everything on a project card and its detail page | `src/content/projects/<project>.mdx` |
 | Entries on the /now page | `src/content/now/<date>-<name>.md` |
 | The images themselves | `public/media/<project>/` |

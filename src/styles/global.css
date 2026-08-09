@@ -287,16 +287,15 @@ a:focus-visible {
 /* ---------------------------------------------------------------------------
    Project list
    --------------------------------------------------------------------------- */
-/* Horizontal snap-scrolling strip of project cards, breaking out of the
-   centered column to run edge to edge like a film strip. */
+/* Horizontal snap-scrolling strip of project cards inside the Projects
+   panel, bleeding to the panel's edges. */
 .project-carousel {
   list-style: none;
-  margin: var(--space-3) calc(50% - 50vw) 0;
-  padding: 0 max(calc(50vw - var(--measure) / 2 + var(--space-2)), var(--space-2))
-    var(--space-2);
+  margin: var(--space-3) calc(-1 * var(--space-3)) 0;
+  padding: 0 var(--space-3) var(--space-2);
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: min(80vw, 30rem);
+  grid-auto-columns: min(70vw, 26rem);
   gap: var(--space-4);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -405,6 +404,114 @@ a:focus-visible {
 .figure-strip .strip-item {
   scroll-snap-align: start;
   margin: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Big rectangles — the homepage is four full-height panels paged
+   horizontally: About | Projects | Beyond programming | Resume
+   --------------------------------------------------------------------------- */
+main.full {
+  max-width: none;
+  padding: var(--space-2);
+}
+
+.panels {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(92vw, 72rem);
+  gap: var(--space-2);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  height: calc(100svh - 9rem);
+  min-height: 28rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline) transparent;
+}
+
+.panel {
+  scroll-snap-align: center;
+  overflow-y: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--bg);
+  padding: var(--space-4) var(--space-3);
+}
+
+.panel-inner {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+.panel-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--text-xs);
+  margin-bottom: var(--space-4);
+}
+
+/* big display text, the one loud thing on the site */
+.display-name,
+.panel-title {
+  font-family: var(--font-sans);
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  color: var(--text);
+  text-transform: none;
+  margin: 0 0 var(--space-3);
+}
+
+.display-name {
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+}
+
+.beyond-list,
+.resume-list {
+  list-style: none;
+  margin: 0 0 var(--space-2);
+  padding: 0;
+}
+
+.beyond-list > li,
+.resume-list > li {
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.beyond-list > li:first-child,
+.resume-list > li:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.resume-bullets {
+  margin: var(--space-1) 0 0;
+  padding-left: 1.1rem;
+  color: var(--dim);
+}
+
+.resume-bullets li {
+  margin-bottom: var(--space-1);
+}
+
+/* stack the rectangles vertically on small screens */
+@media (max-width: 48rem) {
+  .panels {
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+
+  .panel {
+    margin-bottom: var(--space-2);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* ---------------------------------------------------------------------------
