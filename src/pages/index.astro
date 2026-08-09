@@ -8,8 +8,8 @@ const projects = await sortedProjects();
 ---
 
 <Base title={site.name} description={site.positioning}>
-  <h1 class="signature">{site.name}</h1>
-  <p><strong>{site.positioning}</strong></p>
+  <h1>{site.name}</h1>
+  <p class="dim">{site.positioning}</p>
   <p>{site.bio}</p>
   <ul class="link-row">
     {

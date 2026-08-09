@@ -54,9 +54,8 @@ domain once you have it.
 
 ## Design system
 
-Tokens live in [src/styles/global.css](src/styles/global.css): palette
-(Paper/Ink/Graphite/Hairline/Vellum + Cobalt links, Cardinal hover), type
-(Times New Roman body, Great Vibes for the signature, Fragment Mono for
-tags/dates/captions), spacing scale, and the figure system (`FIG. NN` +
-hairline rule + mono caption on every visual). All links open in the same
-tab by design.
+Tokens live in [src/styles/global.css](src/styles/global.css): dark
+near-monochrome palette (muted blue links, muted red hover/active), type
+(Instrument Sans body, Fragment Mono for tags/dates/captions/section
+headers), spacing scale, and the figure system (`FIG. NN` + hairline rule +
+mono caption on every visual). All links open in the same tab by design.

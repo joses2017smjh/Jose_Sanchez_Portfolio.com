@@ -1,29 +1,28 @@
 /* ---------------------------------------------------------------------------
-   Design tokens
+   Design tokens — dark, near-monochrome, whisper-quiet
    --------------------------------------------------------------------------- */
 :root {
+  color-scheme: dark;
+
   /* palette */
-  --paper: #faf9f5;
-  --ink: #211f1c;
-  --graphite: #6e6a63;
-  --hairline: #e6e2da;
-  --vellum: #f2f0ea;
-  --cobalt: #1f3fa6; /* links at rest */
-  --cardinal: #a31621; /* hover / active / the Now dot */
+  --bg: #101010;
+  --text: #e6e6e4;
+  --dim: #9a9a96;
+  --faint: #6b6b68;
+  --hairline: #242422;
+  --surface: #1a1a19;
+  --blue: #8fa5e6; /* links at rest — muted cobalt for dark ground */
+  --red: #e0655e; /* hover / active / the Now dot */
 
   /* type */
-  --font-serif: "Times New Roman", Times, Georgia, serif;
-  --font-script: "Great Vibes", cursive;
+  --font-sans: "Instrument Sans Variable", system-ui, -apple-system, sans-serif;
   --font-mono: "Fragment Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  /* scale (major third-ish, tuned by eye for Times) */
-  --text-sm: 0.9375rem;
-  --text-base: 1.125rem;
-  --text-md: 1.375rem;
-  --text-lg: 1.75rem;
-  --text-xl: 2.25rem;
-  --text-signature: clamp(3rem, 8vw, 4.25rem);
-  --text-meta: 0.8125rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
 
   /* rhythm */
   --space-1: 0.5rem;
@@ -33,7 +32,7 @@
   --space-5: 5rem;
   --space-6: 8rem;
 
-  --measure: 62ch;
+  --measure: 40rem;
 }
 
 /* ---------------------------------------------------------------------------
@@ -46,12 +45,13 @@
 }
 
 html {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-serif);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
   font-size: 100%;
-  line-height: 1.65;
+  line-height: 1.7;
   -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
@@ -67,41 +67,46 @@ main {
   width: 100%;
   max-width: var(--measure);
   margin-inline: auto;
-  padding: var(--space-5) var(--space-2) var(--space-6);
+  padding: var(--space-6) var(--space-2);
 }
 
 ::selection {
-  background: var(--cobalt);
-  color: var(--paper);
+  background: var(--blue);
+  color: var(--bg);
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  line-height: 1.15;
-  margin: 0 0 var(--space-2);
-  text-wrap: balance;
-}
-
+/* Hierarchy from weight and spacing, not size. */
 h1 {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0 0 var(--space-2);
+  letter-spacing: -0.01em;
 }
 
 h2 {
-  font-size: var(--text-lg);
-  margin-top: var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--faint);
+  margin: var(--space-5) 0 var(--space-2);
 }
 
 h3 {
-  font-size: var(--text-md);
-  margin-top: var(--space-3);
+  font-size: var(--text-base);
+  font-weight: 500;
+  margin: 0 0 var(--space-1);
 }
 
 p {
   margin: 0 0 var(--space-2);
   max-width: var(--measure);
+}
+
+.dim {
+  color: var(--dim);
 }
 
 img,
@@ -112,24 +117,26 @@ video {
 }
 
 /* ---------------------------------------------------------------------------
-   Links — same tab always; cobalt at rest, cardinal on hover
+   Links — same tab always; muted blue at rest, red on hover
    --------------------------------------------------------------------------- */
 a {
-  color: var(--cobalt);
+  color: var(--blue);
   text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--blue) 35%, transparent);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.15em;
-  transition: color 120ms ease;
+  text-underline-offset: 0.2em;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
 }
 
 a:hover {
-  color: var(--cardinal);
+  color: var(--red);
+  text-decoration-color: color-mix(in srgb, var(--red) 55%, transparent);
 }
 
 a:focus-visible {
-  outline: 2px solid var(--cardinal);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
-  border-radius: 1px;
+  border-radius: 2px;
 }
 
 /* ---------------------------------------------------------------------------
@@ -137,20 +144,9 @@ a:focus-visible {
    --------------------------------------------------------------------------- */
 .meta {
   font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.04em;
-  color: var(--graphite);
-}
-
-/* ---------------------------------------------------------------------------
-   Signature — the name, once, in script
-   --------------------------------------------------------------------------- */
-.signature {
-  font-family: var(--font-script);
-  font-weight: 400;
-  font-size: var(--text-signature);
-  line-height: 1.1;
-  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+  color: var(--dim);
 }
 
 /* ---------------------------------------------------------------------------
@@ -159,6 +155,7 @@ a:focus-visible {
 .site-header {
   max-width: var(--measure);
   margin-inline: auto;
+  width: 100%;
   padding: var(--space-3) var(--space-2) 0;
   display: flex;
   justify-content: space-between;
@@ -173,15 +170,18 @@ a:focus-visible {
 
 .site-header a {
   font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.04em;
-  color: var(--graphite);
+  font-size: var(--text-sm);
+  color: var(--faint);
   text-decoration: none;
+  transition: color 150ms ease;
 }
 
-.site-header a:hover,
+.site-header a:hover {
+  color: var(--text);
+}
+
 .site-header a[aria-current="page"] {
-  color: var(--cardinal);
+  color: var(--dim);
 }
 
 .site-footer {
@@ -196,11 +196,11 @@ a:focus-visible {
   position: absolute;
   left: -9999px;
   top: var(--space-1);
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--text);
+  color: var(--bg);
   padding: var(--space-1) var(--space-2);
   font-family: var(--font-mono);
-  font-size: var(--text-meta);
+  font-size: var(--text-sm);
 }
 
 .skip-link:focus {
@@ -222,8 +222,7 @@ a:focus-visible {
 
 .link-row a {
   font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.04em;
+  font-size: var(--text-sm);
 }
 
 /* ---------------------------------------------------------------------------
@@ -242,9 +241,9 @@ a:focus-visible {
 
 .figure-number {
   font-family: var(--font-mono);
-  font-size: var(--text-meta);
+  font-size: var(--text-xs);
   letter-spacing: 0.08em;
-  color: var(--graphite);
+  color: var(--faint);
   white-space: nowrap;
 }
 
@@ -256,7 +255,10 @@ a:focus-visible {
 }
 
 .figure-media {
-  background: var(--vellum);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  overflow: hidden;
   aspect-ratio: 16 / 9;
 }
 
@@ -269,9 +271,9 @@ a:focus-visible {
 
 .figure figcaption {
   font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.04em;
-  color: var(--graphite);
+  font-size: var(--text-xs);
+  letter-spacing: 0.02em;
+  color: var(--faint);
   margin-top: var(--space-1);
 }
 
@@ -280,7 +282,7 @@ a:focus-visible {
    --------------------------------------------------------------------------- */
 .project-list {
   list-style: none;
-  margin: var(--space-4) 0 0;
+  margin: 0;
   padding: 0;
 }
 
@@ -291,25 +293,27 @@ a:focus-visible {
 
 .project-list > li:first-child {
   border-top: none;
-  padding-top: var(--space-2);
+  padding-top: var(--space-1);
 }
 
 .project-title {
   font-size: var(--text-md);
+  font-weight: 500;
   margin: 0 0 var(--space-1);
 }
 
 .project-title a {
-  color: var(--ink);
+  color: var(--text);
   text-decoration: none;
+  transition: color 150ms ease;
 }
 
 .project-title a:hover {
-  color: var(--cardinal);
+  color: var(--red);
 }
 
 .project-summary {
-  color: var(--graphite);
+  color: var(--dim);
   margin-bottom: var(--space-2);
 }
 
@@ -321,8 +325,7 @@ a:focus-visible {
 
 .project-links a {
   font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.04em;
+  font-size: var(--text-sm);
 }
 
 /* ---------------------------------------------------------------------------
@@ -339,15 +342,15 @@ a:focus-visible {
 
 .tag-list li {
   font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.04em;
-  color: var(--graphite);
+  font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+  color: var(--dim);
 }
 
 .tag-list li::before {
   content: "·";
   margin-right: 0.5em;
-  color: var(--hairline);
+  color: var(--faint);
 }
 
 .tag-list li:first-child::before {
@@ -367,7 +370,7 @@ a:focus-visible {
   width: 0.5em;
   height: 0.5em;
   border-radius: 50%;
-  background: var(--cardinal);
+  background: var(--red);
   flex-shrink: 0;
 }
 
@@ -406,6 +409,10 @@ a:focus-visible {
   margin: var(--space-1) 0;
 }
 
+.now-list .entry-body {
+  color: var(--dim);
+}
+
 .now-list .entry-body p:last-child {
   margin-bottom: 0;
 }
@@ -414,8 +421,7 @@ a:focus-visible {
    Detail page
    --------------------------------------------------------------------------- */
 .detail-summary {
-  font-size: var(--text-md);
-  color: var(--graphite);
+  color: var(--dim);
   text-wrap: balance;
 }
 
