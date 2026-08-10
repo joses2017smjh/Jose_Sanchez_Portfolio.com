@@ -3,9 +3,9 @@
  * Drippy yin-yang cursor: a disc split into a blue and a red teardrop
  * (classic taijitu construction) held at a fixed orientation — it never
  * spins — with opposite-color dots, its rim a randomly morphing splat of
- * interfering capillary waves whose fingers continually merge and split.
- * The halves stay distinct: mixing is limited to a faint violet seam at
- * the center. At rest, one blue and one red drip grow from the bottom
+ * interfering capillary waves whose lobes swell and subside at a
+ * lava-lamp pace, with translucent blobs drifting through the disc that
+ * mix the two colours where they cross the violet seam. At rest, one blue and one red drip grow from the bottom
  * edge and detach as falling droplets; movement warps the whole disc —
  * stretched along its direction of travel on an underdamped spring, so
  * it wobbles back into a circle when the pointer stops — and retracts
@@ -38,7 +38,7 @@
 
       const BLUE: [number, number, number] = [31, 63, 166];
       const RED: [number, number, number] = [163, 22, 33];
-      const R = 12 * 1.7; // disc radius, keeps the 70%-bigger sizing
+      const R = 12 * 1.53; // disc radius (10% down from the 1.7 sizing)
 
       const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
       let visible = false;
@@ -59,16 +59,27 @@
       // grow, shrink, merge and split like a splash. The amplitude budget
       // is capped so fingers always stay inside the painted disc.
       // Movement agitates the water: waves run faster and taller.
+      // Low wave numbers and slow drift give big rounded lobes that swell
+      // and subside like a lava lamp, rather than a fast spiky splash.
       const RIPPLE = [
-        { k: 2, a: 0.03, t: 0.03, w: 0.017, p: 5.1 },
-        { k: 3, a: 0.045, t: 0.045, w: 0.021, p: 0 },
-        { k: 5, a: 0.05, t: 0.05, w: -0.033, p: 2.1 },
-        { k: 7, a: 0.02, t: 0.02, w: 0.026, p: 3.3 },
-        { k: 9, a: 0.03, t: 0.03, w: 0.049, p: 4.2 },
-        { k: 13, a: 0.015, t: 0.015, w: -0.065, p: 1.3 },
+        { k: 2, a: 0.05, t: 0.05, w: 0.008, p: 5.1 },
+        { k: 3, a: 0.055, t: 0.055, w: 0.011, p: 0 },
+        { k: 4, a: 0.045, t: 0.045, w: -0.014, p: 2.1 },
+        { k: 5, a: 0.03, t: 0.03, w: 0.017, p: 3.3 },
+        { k: 7, a: 0.02, t: 0.02, w: -0.021, p: 4.2 },
+        { k: 9, a: 0.012, t: 0.012, w: 0.027, p: 1.3 },
       ];
-      const RIM_SEGMENTS = 60;
+      const RIM_SEGMENTS = 72;
       let splatTimer = 0;
+
+      // Lava-lamp interior: slow translucent bodies rising and sinking
+      // through the disc. Where one drifts across the seam its colour
+      // lays over the other half, so blue and red mix as they pass.
+      const LAVA = [
+        { color: "red" as const, ph: 0.0, sp: 0.0055, sway: 0.31, seed: 0.0 },
+        { color: "blue" as const, ph: 2.4, sp: -0.0041, sway: 0.27, seed: 1.7 },
+        { color: "red" as const, ph: 4.1, sp: 0.0032, sway: 0.22, seed: 3.4 },
+      ];
       const colors = {
         blue: [...BLUE] as [number, number, number],
         red: [...RED] as [number, number, number],
@@ -194,17 +205,17 @@
           // between samples keep the edge sharp rather than glassy
           const agitation = 1 + Math.min(speed * 0.03, 0.4);
           if (--splatTimer <= 0) {
-            splatTimer = 40 + Math.random() * 110;
+            splatTimer = 90 + Math.random() * 180;
             let budget = 0;
             for (const m of RIPPLE) {
-              m.t = 0.008 + Math.random() * 0.07;
+              m.t = 0.01 + Math.random() * 0.08;
               budget += m.t;
             }
-            const cap = 0.2 / Math.max(budget, 0.2);
+            const cap = 0.22 / Math.max(budget, 0.22);
             for (const m of RIPPLE) m.t *= cap;
           }
           for (const m of RIPPLE) {
-            m.a = lerp(m.a, m.t, 0.025);
+            m.a = lerp(m.a, m.t, 0.012); // slow swell, lava-lamp pace
             m.p += m.w * (1 + Math.min(speed * 0.04, 2.5));
           }
           ctx.beginPath();
@@ -239,9 +250,27 @@
           ctx.fillStyle = rgba(colors.red, 0.92 * alpha);
           circle(0, -R / 2, R * 0.16);
 
-          // the only mixing: a faint violet breath at the seam
-          ctx.fillStyle = `rgba(97,42,99,${0.16 * alpha})`;
-          circle(0, 0, R * 0.2);
+          // lava-lamp bodies: slow translucent blobs rising and sinking
+          // through the disc, mixing the two colours as they cross over
+          for (const g of LAVA) {
+            g.ph += g.sp;
+            const gx = Math.sin(g.ph * 0.7 + g.seed) * R * g.sway;
+            const gy = Math.sin(g.ph) * R * 0.5;
+            const gr = R * (0.34 + 0.1 * Math.sin(g.ph * 1.6 + g.seed));
+            ctx.fillStyle = rgba(
+              g.color === "blue" ? colors.blue : colors.red,
+              0.32 * alpha,
+            );
+            circle(gx, gy, gr);
+          }
+
+          // soften the seam: a violet band where the halves meet
+          const seam = ctx.createLinearGradient(-R * 0.55, 0, R * 0.55, 0);
+          seam.addColorStop(0, "rgba(97,42,99,0)");
+          seam.addColorStop(0.5, `rgba(97,42,99,${0.3 * alpha})`);
+          seam.addColorStop(1, "rgba(97,42,99,0)");
+          ctx.fillStyle = seam;
+          circle(0, 0, R);
           ctx.restore();
 
           // ---- drips: one continuous column of liquid leaving the disc ----
