@@ -184,6 +184,15 @@ a:focus-visible {
   color: var(--blue);
 }
 
+/* section indicator: the rectangle you're on, in that rectangle's accent */
+.site-header nav a[data-here="blue"] {
+  color: var(--blue);
+}
+
+.site-header nav a[data-here="red"] {
+  color: var(--red);
+}
+
 .site-footer {
   max-width: var(--measure);
   margin-inline: auto;
@@ -330,7 +339,7 @@ main:not(.full) .figure-media video {
   padding: 0 var(--space-3) var(--space-2);
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: min(85vw, 40rem);
+  grid-auto-columns: min(88vw, 48rem);
   gap: var(--space-4);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -366,22 +375,18 @@ a.figure-media:hover {
   display: flex;
   flex-direction: column;
   overflow-y: hidden;
+  /* no heading here (the nav marks the section), so the cards take the
+     space the label used to hold */
+  padding-top: var(--space-3);
+}
+
+.panel#projects .project-carousel {
+  margin-top: var(--space-1);
 }
 
 .panel#projects .panel-inner {
   flex-shrink: 0;
   width: 100%;
-}
-
-/* the header scales with viewport height so short windows still leave
-   the cards room */
-.panel#projects .panel-label {
-  margin-bottom: var(--space-2);
-}
-
-.panel#projects .panel-title {
-  font-size: clamp(1.75rem, 6.5vh, 4.5rem);
-  margin-bottom: var(--space-2);
 }
 
 .panel#projects .project-carousel {
@@ -647,13 +652,6 @@ main.full {
   .panel-cover {
     display: none;
   }
-}
-
-.panel-label {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: var(--text-xs);
-  margin-bottom: var(--space-4);
 }
 
 /* big display text, the one loud thing on the site */

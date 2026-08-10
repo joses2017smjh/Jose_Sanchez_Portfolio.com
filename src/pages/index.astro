@@ -12,7 +12,6 @@ const projects = await sortedProjects();
   <div class="panels" id="panels">
     <section class="panel" id="about" aria-label="About">
       <div class="panel-inner">
-        <p class="meta panel-label">01 — About</p>
         <h1 class="display-name">{site.name}</h1>
         <p class="dim">{site.positioning}</p>
         <p>{site.bio}</p>
@@ -33,7 +32,6 @@ const projects = await sortedProjects();
         <span class="cover-line">PROJECTS</span>
       </div>
       <div class="panel-inner">
-        <p class="meta panel-label">02 — Projects</p>
         <h2 class="sr-only">Projects</h2>
       </div>
       <ul class="project-carousel">
@@ -51,7 +49,6 @@ const projects = await sortedProjects();
         <span class="cover-line">PROGRAMMING</span>
       </div>
       <div class="panel-inner">
-        <p class="meta panel-label">03 — Beyond programming</p>
         <h2 class="sr-only">Beyond programming</h2>
         <ul class="beyond-list">
           {
@@ -85,7 +82,6 @@ const projects = await sortedProjects();
         </a>
       </nav>
       <div class="panel-inner">
-        <p class="meta panel-label">04 — Resume</p>
         <h2 class="panel-title">Resume</h2>
 
         <a class="resume-preview" href={resume.links.pdf} title="Open the full-size resume">
@@ -191,6 +187,56 @@ const projects = await sortedProjects();
       </div>
     </section>
   </div>
+
+  {/* The nav is the section indicator: whichever rectangle is centered
+      lights up in that rectangle's own accent. Works for the horizontal
+      pager and the stacked mobile layout alike, since it measures each
+      panel's center against the viewport's. */}
+  <script>
+    {
+      const panelsEl = document.getElementById("panels");
+      const links = Array.from(
+        document.querySelectorAll<HTMLAnchorElement>('.site-header nav a[href^="/#"]'),
+      );
+      if (panelsEl && links.length) {
+        const accent: Record<string, string> = {
+          about: "blue",
+          projects: "red",
+          beyond: "blue",
+          resume: "red",
+        };
+        const sections = Array.from(panelsEl.querySelectorAll<HTMLElement>(".panel"));
+        let raf = 0;
+        const mark = () => {
+          raf = 0;
+          const cx = window.innerWidth / 2;
+          const cy = window.innerHeight / 2;
+          let here = "";
+          let best = Infinity;
+          for (const s of sections) {
+            const r = s.getBoundingClientRect();
+            const d = Math.hypot((r.left + r.right) / 2 - cx, (r.top + r.bottom) / 2 - cy);
+            if (d < best) {
+              best = d;
+              here = s.id;
+            }
+          }
+          for (const a of links) {
+            const id = a.getAttribute("href")!.slice(2);
+            if (id === here) a.dataset.here = accent[id] ?? "blue";
+            else delete a.dataset.here;
+          }
+        };
+        const queue = () => {
+          if (!raf) raf = requestAnimationFrame(mark);
+        };
+        panelsEl.addEventListener("scroll", queue, { passive: true });
+        window.addEventListener("scroll", queue, { passive: true });
+        window.addEventListener("resize", queue, { passive: true });
+        mark();
+      }
+    }
+  </script>
 
   {/* Vertical wheel pages between panels; inner scrollers (the project
       carousel, a panel's own vertical overflow) get first claim. */}
