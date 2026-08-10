@@ -63,10 +63,35 @@ const projects = await sortedProjects();
     </section>
 
     <section class="panel" id="resume" aria-label="Resume">
+      <nav class="float-icons" aria-label="Resume links">
+        <a href={resume.links.pdf} download title="Download resume PDF">
+          <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M8 1v9M4.5 7 8 10.5 11.5 7M2.5 13.5h11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="sr-only">Download PDF</span>
+        </a>
+        <a href={resume.links.overleaf} title="LaTeX source on Overleaf">
+          <span aria-hidden="true">TeX</span>
+          <span class="sr-only">Overleaf source</span>
+        </a>
+        <a href={resume.links.linkedin} title="LinkedIn profile">
+          <span aria-hidden="true">in</span>
+          <span class="sr-only">LinkedIn</span>
+        </a>
+      </nav>
       <div class="panel-inner">
         <p class="meta panel-label">04 — Resume</p>
         <h2 class="panel-title">Resume</h2>
-        <p class="meta"><a href="/resume.pdf">Download PDF</a></p>
+
+        <a class="resume-preview" href={resume.links.pdf} title="Open the full-size resume">
+          <img
+            src="/media/resume-preview.png"
+            alt="Preview of Jose Sanchez Gonzalez's one-page resume — click to open the full-size PDF."
+            width="1000"
+            height="1294"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+        <p class="meta">Click the page to view full size — or use the floating icons.</p>
 
         <h2>Summary</h2>
         <p>{resume.summary}</p>
@@ -121,18 +146,37 @@ const projects = await sortedProjects();
         </ul>
 
         <h2>Projects</h2>
-        <ul class="resume-list">
+        <ul class="resume-projects">
           {
             projects.map((p) => (
               <li>
-                <div class="project-row">
-                  <h3>
-                    <a href={`/projects/${p.id}`}>{p.data.title}</a>
-                  </h3>
-                  <span class="leader" aria-hidden="true" />
-                  <span class="meta">{p.data.date.getUTCFullYear()}</span>
+                <a
+                  class="resume-thumb"
+                  href={`/projects/${p.id}`}
+                  aria-hidden="true"
+                  tabindex="-1"
+                >
+                  <img
+                    src={p.data.image ?? p.data.poster}
+                    alt=""
+                    width="320"
+                    height="180"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+                <div>
+                  <div class="project-row">
+                    <h3>
+                      <a href={`/projects/${p.id}`}>{p.data.title}</a>
+                    </h3>
+                    <span class="leader" aria-hidden="true" />
+                    <span class="meta">{p.data.date.getUTCFullYear()}</span>
+                  </div>
+                  <p class="dim">
+                    {p.data.summary} {p.data.result}
+                  </p>
                 </div>
-                <p class="dim">{p.data.summary}</p>
               </li>
             ))
           }

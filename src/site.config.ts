@@ -17,7 +17,7 @@ export const site = {
     { label: "GitHub", href: "https://github.com/joses2017smjh" },
     {
       label: "LinkedIn",
-      href: "https://linkedin.com/in/jose-j-sanchez-gonzalez-84a800257/",
+      href: "https://www.linkedin.com/in/jose-j-sanchez-gonzalez/",
     },
     { label: "Email", href: "mailto:sanchej7@oregonstate.edu" },
     // Drop your resume at public/resume.pdf

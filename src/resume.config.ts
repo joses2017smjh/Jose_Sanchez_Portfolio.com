@@ -9,6 +9,12 @@
  * if you want it shown.
  */
 export const resume = {
+  /** Targets of the floating icon buttons on the resume panel. */
+  links: {
+    pdf: "/resume.pdf",
+    overleaf: "https://www.overleaf.com/read/fnncbxtzykhz#40bcb3",
+    linkedin: "https://www.linkedin.com/in/jose-j-sanchez-gonzalez/",
+  },
   summary:
     "AI/ML engineer with hands-on experience across computer vision, 3D perception, and NLP — from quantified depth-estimation research for robotic pruning to from-scratch transformers and production-style RAG systems, plus an in-progress humanoid robotics build (ROS2, Isaac Sim, reinforcement learning).",
   education: [
