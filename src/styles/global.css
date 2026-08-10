@@ -122,7 +122,7 @@ video {
 a {
   color: var(--blue);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--blue) 35%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--blue) 70%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
   transition: color 150ms ease, text-decoration-color 150ms ease;
@@ -130,7 +130,7 @@ a {
 
 a:hover {
   color: var(--red);
-  text-decoration-color: color-mix(in srgb, var(--red) 55%, transparent);
+  text-decoration-color: var(--red);
 }
 
 a:focus-visible {
@@ -177,11 +177,11 @@ a:focus-visible {
 }
 
 .site-header a:hover {
-  color: var(--text);
+  color: var(--red);
 }
 
 .site-header a[aria-current="page"] {
-  color: var(--dim);
+  color: var(--blue);
 }
 
 .site-footer {

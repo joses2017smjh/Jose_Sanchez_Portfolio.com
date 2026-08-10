@@ -1,10 +1,12 @@
 ---
 /**
- * Liquid cursor: a crisp dot with two soft blue/red blobs that chase it at
- * different speeds, stretching with velocity and settling back into one
- * drop at rest. Hovering a link pulls both blobs toward that link's current
- * color. Fine pointers only; disabled entirely for prefers-reduced-motion
- * and touch devices, so the native cursor stays for everyone else.
+ * Dripping-ink cursor: solid blue and red blobs (multiply-blended, so
+ * overlap reads as dark violet ink) chase the pointer. At rest, drips
+ * grow from each blob's bottom edge and detach as falling droplets, like
+ * paint. Fast movement stretches the blobs and retracts the drips.
+ * Hovering a link pulls both blobs toward that link's current color.
+ * Fine pointers only; fully disabled for prefers-reduced-motion and
+ * touch, where the native cursor remains.
  */
 ---
 
@@ -31,17 +33,24 @@
 
       const BLUE: [number, number, number] = [31, 63, 166];
       const RED: [number, number, number] = [163, 22, 33];
+      const SCALE = 1.7;
 
       const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
       let visible = false;
 
-      // Each blob is a damped spring chasing the pointer; different
-      // stiffness makes them separate at speed and merge at rest.
+      interface Drip {
+        offset: number; // x offset from blob center, as a fraction of radius
+        len: number;
+        maxLen: number;
+        rate: number;
+      }
+
       const makeBlob = (
         stiffness: number,
         damping: number,
         radius: number,
         color: [number, number, number],
+        dripOffsets: number[],
       ) => ({
         x: mouse.x,
         y: mouse.y,
@@ -49,24 +58,32 @@
         vy: 0,
         stiffness,
         damping,
-        radius,
+        radius: radius * SCALE,
         color: [...color] as [number, number, number],
         rest: color,
+        drips: dripOffsets.map((offset, i) => ({
+          offset,
+          len: 3,
+          maxLen: (22 + i * 9 + Math.random() * 8) * SCALE * 0.7,
+          rate: (0.12 + Math.random() * 0.14) * SCALE,
+        })) as Drip[],
       });
 
       const blobs = [
-        makeBlob(0.16, 0.7, 12, BLUE),
-        makeBlob(0.1, 0.72, 10, RED),
-        // the drip: small, laggy, trails behind and "drips" into place
-        makeBlob(0.045, 0.82, 5, [
-          (BLUE[0] + RED[0]) / 2,
-          (BLUE[1] + RED[1]) / 2,
-          (BLUE[2] + RED[2]) / 2,
-        ]),
+        makeBlob(0.16, 0.7, 12, BLUE, [-0.45, 0.3]),
+        makeBlob(0.1, 0.72, 10, RED, [-0.15, 0.55]),
       ];
 
-      // When hovering a link, both blobs lean toward the link's live color
-      // (red on your links' hover state), then relax back to blue/red apart.
+      interface Droplet {
+        x: number;
+        y: number;
+        vy: number;
+        r: number;
+        born: number;
+        color: [number, number, number];
+      }
+      const droplets: Droplet[] = [];
+
       let hoverColor: [number, number, number] | null = null;
       document.addEventListener("mouseover", (e) => {
         const a = (e.target as Element | null)?.closest("a, button");
@@ -95,15 +112,21 @@
       let alpha = 0;
       const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
+      const circle = (x: number, y: number, r: number) => {
+        ctx.beginPath();
+        ctx.arc(x, y, Math.max(r, 0.1), 0, Math.PI * 2);
+        ctx.fill();
+      };
+
       const frame = () => {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         alpha = lerp(alpha, visible ? 1 : 0, 0.12);
 
         if (alpha > 0.01) {
-          // multiply = translucent ink on the white page; blue + red
-          // overlap into a darker violet where the blobs merge
+          // solid ink, no glow: crisp fills, multiply where blue meets red
           ctx.globalCompositeOperation = "multiply";
+
           for (const b of blobs) {
             b.vx = (b.vx + (mouse.x - b.x) * b.stiffness) * b.damping;
             b.vy = (b.vy + (mouse.y - b.y) * b.stiffness) * b.damping;
@@ -112,33 +135,76 @@
 
             const target = hoverColor ?? b.rest;
             for (let i = 0; i < 3; i++) b.color[i] = lerp(b.color[i], target[i], 0.08);
+            const [cr, cg, cb] = b.color.map(Math.round);
+            ctx.fillStyle = `rgba(${cr},${cg},${cb},${0.92 * alpha})`;
 
             const speed = Math.hypot(b.vx, b.vy);
-            const stretch = Math.min(speed / 30, 1.1);
+            const stretch = Math.min(speed / 40, 0.8);
             const angle = Math.atan2(b.vy, b.vx);
 
+            // body
             ctx.save();
             ctx.translate(b.x, b.y);
             ctx.rotate(angle);
-            ctx.scale(1 + stretch, 1 / (1 + stretch * 0.45));
-            const r = b.radius * (1 + stretch * 0.25);
-            const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 2.4);
-            const [cr, cg, cb] = b.color.map(Math.round);
-            g.addColorStop(0, `rgba(${cr},${cg},${cb},${0.5 * alpha})`);
-            g.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
-            ctx.fillStyle = g;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 2.4, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.scale(1 + stretch, 1 / (1 + stretch * 0.4));
+            circle(0, 0, b.radius);
             ctx.restore();
+
+            // drips: grow at rest, retract in motion, detach as droplets
+            for (const d of b.drips) {
+              if (speed < 2.5) d.len += d.rate;
+              else d.len = Math.max(d.len - speed * 0.12, 3);
+
+              if (d.len > d.maxLen) {
+                const tipY = b.y + b.radius * 0.55 + d.len;
+                droplets.push({
+                  x: b.x + d.offset * b.radius,
+                  y: tipY,
+                  vy: 0.4,
+                  r: b.radius * 0.24,
+                  born: tipY,
+                  color: [cr, cg, cb],
+                });
+                d.len = 4 + Math.random() * 4;
+                d.maxLen = (20 + Math.random() * 18) * SCALE * 0.7;
+              }
+
+              const dx = b.x + d.offset * b.radius;
+              const baseY = b.y + b.radius * 0.5;
+              const steps = Math.max(Math.ceil(d.len / (b.radius * 0.3)), 2);
+              for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                // tapers toward the tip, with a rounder drip head at the end
+                const r =
+                  t < 1
+                    ? lerp(b.radius * 0.42, b.radius * 0.2, t)
+                    : b.radius * 0.26;
+                circle(dx, baseY + d.len * t, r);
+              }
+            }
           }
+
+          // detached droplets fall, shrink, fade
+          for (let i = droplets.length - 1; i >= 0; i--) {
+            const p = droplets[i];
+            p.vy += 0.3;
+            p.y += p.vy;
+            p.r *= 0.985;
+            const fade = Math.max(1 - (p.y - p.born) / 140, 0);
+            if (fade <= 0.02 || p.r < 0.8) {
+              droplets.splice(i, 1);
+              continue;
+            }
+            const [cr, cg, cb] = p.color;
+            ctx.fillStyle = `rgba(${cr},${cg},${cb},${0.9 * fade * alpha})`;
+            circle(p.x, p.y, p.r);
+          }
+          if (droplets.length > 40) droplets.splice(0, droplets.length - 40);
 
           // crisp dot at the true pointer position, for precision
           ctx.globalCompositeOperation = "source-over";
           ctx.fillStyle = `rgba(19,19,19,${0.95 * alpha})`;
-          ctx.beginPath();
-          ctx.arc(mouse.x, mouse.y, 2.5, 0, Math.PI * 2);
-          ctx.fill();
+          circle(mouse.x, mouse.y, 4);
         }
 
         requestAnimationFrame(frame);
