@@ -268,6 +268,13 @@ a:focus-visible {
   object-fit: cover;
 }
 
+/* Detail pages give motion assets a 30%-taller frame than the standard
+   16:9 — the orchard clip is portrait and earns the room. (Homepage
+   carousel media is sized by the panel, not by aspect ratio.) */
+main:not(.full) .figure-media:has(video) {
+  aspect-ratio: 16 / 11.7;
+}
+
 /* contain, not cover: architecture diagrams and charts must never crop */
 .figure-media img {
   width: 100%;
@@ -295,7 +302,7 @@ a:focus-visible {
   padding: 0 var(--space-3) var(--space-2);
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: min(77vw, 28.6rem);
+  grid-auto-columns: min(85vw, 40rem);
   gap: var(--space-4);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -557,15 +564,14 @@ main.full {
   margin-inline: auto;
 }
 
-/* Full-rectangle cover label: giant two-tone letters on the panel's own
-   ground, fading away once the pointer is on (or focus is in) the panel. */
+/* Full-rectangle cover label: giant black letters on a solid accent
+   field, fading away once the pointer is on (or focus is in) the panel. */
 .panel-cover {
   position: absolute;
   inset: 0;
   z-index: 3;
   display: grid;
   place-content: center;
-  background: var(--bg);
   border-radius: 5px;
   text-align: center;
   font-weight: 700;
@@ -592,12 +598,12 @@ main.full {
   font-size: min(8.5vw, 7.75rem);
 }
 
-.cover-red .hot {
-  color: var(--red);
+.cover-red {
+  background: var(--red);
 }
 
-.cover-blue .hot {
-  color: var(--blue);
+.cover-blue {
+  background: var(--blue);
 }
 
 /* touch screens and the stacked mobile layout have no hover to lift the

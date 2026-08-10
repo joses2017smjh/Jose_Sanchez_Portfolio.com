@@ -2,8 +2,8 @@
 /**
  * Drippy yin-yang cursor: a single slowly spinning disc split into a blue
  * and a red teardrop (classic taijitu construction), with opposite-color
- * dots, its rim a jagged ripple of interfering capillary waves whose
- * peaks continually merge and split. The halves stay distinct — mixing is limited to a faint violet
+ * dots, its rim a randomly morphing splat of interfering capillary
+ * waves whose fingers continually merge and split. The halves stay distinct — mixing is limited to a faint violet
  * seam at the center. At rest, one blue and one red drip grow from the
  * bottom edge and detach as falling droplets; movement warps the whole
  * disc — stretched along its direction of travel on an underdamped
@@ -51,18 +51,23 @@
       // along the last real direction of travel instead of jittering.
       const fluid = { s: 0, sv: 0, k: 0, kv: 0, ax: 1, ay: 0, pvx: 0, pvy: 0 };
 
-      // The rim is a jagged ripple: four capillary waves of different
-      // wavelengths travel around the edge at different speeds, so their
-      // interference makes peaks continually merge, swap and split —
-      // superposition is the lightweight way to get combining peaks.
+      // The rim is a random splat: six capillary waves of different
+      // wavelengths travel around the edge at different speeds, and each
+      // wave's amplitude keeps drifting toward a freshly rolled random
+      // target — so the blob never settles into a regular pattern; lobes
+      // grow, shrink, merge and split like a splash. The amplitude budget
+      // is capped so fingers always stay inside the painted disc.
       // Movement agitates the water: waves run faster and taller.
       const RIPPLE = [
-        { k: 3, a: 0.045, w: 0.021, p: 0 },
-        { k: 5, a: 0.05, w: -0.033, p: 2.1 },
-        { k: 8, a: 0.035, w: 0.049, p: 4.2 },
-        { k: 13, a: 0.018, w: -0.065, p: 1.3 },
+        { k: 2, a: 0.03, t: 0.03, w: 0.017, p: 5.1 },
+        { k: 3, a: 0.045, t: 0.045, w: 0.021, p: 0 },
+        { k: 5, a: 0.05, t: 0.05, w: -0.033, p: 2.1 },
+        { k: 7, a: 0.02, t: 0.02, w: 0.026, p: 3.3 },
+        { k: 9, a: 0.03, t: 0.03, w: 0.049, p: 4.2 },
+        { k: 13, a: 0.015, t: 0.015, w: -0.065, p: 1.3 },
       ];
       const RIM_SEGMENTS = 60;
+      let splatTimer = 0;
       const colors = {
         blue: [...BLUE] as [number, number, number],
         red: [...RED] as [number, number, number],
@@ -183,10 +188,23 @@
           ctx.transform(1, 0, fluid.k, 1, 0, 0);
           ctx.rotate(body.spin - axisAngle);
 
-          // jagged rippling rim, clipped over the disc; straight segments
+          // jagged splat rim, clipped over the disc; straight segments
           // between samples keep the edge sharp rather than glassy
           const agitation = 1 + Math.min(speed * 0.03, 0.4);
-          for (const m of RIPPLE) m.p += m.w * (1 + Math.min(speed * 0.04, 2.5));
+          if (--splatTimer <= 0) {
+            splatTimer = 40 + Math.random() * 110;
+            let budget = 0;
+            for (const m of RIPPLE) {
+              m.t = 0.008 + Math.random() * 0.07;
+              budget += m.t;
+            }
+            const cap = 0.2 / Math.max(budget, 0.2);
+            for (const m of RIPPLE) m.t *= cap;
+          }
+          for (const m of RIPPLE) {
+            m.a = lerp(m.a, m.t, 0.025);
+            m.p += m.w * (1 + Math.min(speed * 0.04, 2.5));
+          }
           ctx.beginPath();
           for (let i = 0; i <= RIM_SEGMENTS; i++) {
             const th = (i / RIM_SEGMENTS) * PI * 2;
@@ -198,8 +216,8 @@
           }
           ctx.closePath();
           ctx.clip();
-          // taijitu overfills the rim so ripple peaks stay colored
-          ctx.scale(1.32, 1.32);
+          // taijitu overfills the rim so splat fingers stay colored
+          ctx.scale(1.42, 1.42);
 
           ctx.fillStyle = rgba(colors.blue, 0.92 * alpha);
           circle(0, 0, R);
