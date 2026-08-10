@@ -31,6 +31,8 @@ const projects = defineCollection({
     // exists; poster is required with video (reduced-motion fallback).
     video: z.string().optional(),
     poster: z.string().optional(),
+    // Seconds to skip on the card, so a slow lead-in doesn't play there.
+    videoStart: z.number().nonnegative().optional(),
     image: z.string().optional(),
     // Two clips shown side by side inside the hero figure, both playing
     // at once (a good/bad pair reads better together than in sequence).

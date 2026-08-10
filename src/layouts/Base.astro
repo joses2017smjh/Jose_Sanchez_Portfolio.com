@@ -69,7 +69,23 @@ const current = (href: string) =>
         );
         for (const v of videos) {
           v.muted = true;
-          v.loop = true;
+          const start = Number(v.dataset.start ?? 0);
+          if (start > 0) {
+            // Loop the clip from its offset rather than from zero: native
+            // loop would rewind past the trimmed lead-in every cycle.
+            v.loop = false;
+            const toStart = () => {
+              if (v.duration > start) v.currentTime = start;
+            };
+            v.addEventListener("loadedmetadata", toStart);
+            v.addEventListener("ended", () => {
+              toStart();
+              v.play().catch(() => {});
+            });
+            if (v.readyState >= 1) toStart();
+          } else {
+            v.loop = true;
+          }
           io.observe(v);
         }
       } else {

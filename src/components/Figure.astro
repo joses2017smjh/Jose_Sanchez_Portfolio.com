@@ -10,6 +10,8 @@ interface Props {
   image?: string | undefined;
   /** Two clips side by side in one frame; wins over `image` when set. */
   pair?: readonly { image: string; alt: string }[] | undefined;
+  /** Seconds into the clip to begin (and loop back to). */
+  start?: number | undefined;
   alt: string;
   caption: string;
   /** Eager-load only the hero figure on a detail page. */
@@ -18,8 +20,18 @@ interface Props {
   href?: string | undefined;
 }
 
-const { number, video, poster, image, pair, alt, caption, eager = false, href } =
-  Astro.props;
+const {
+  number,
+  video,
+  poster,
+  image,
+  pair,
+  start,
+  alt,
+  caption,
+  eager = false,
+  href,
+} = Astro.props;
 const label = `FIG. ${String(number).padStart(2, "0")}`;
 const Media = href ? "a" : "div";
 ---
@@ -44,9 +56,12 @@ const Media = href ? "a" : "div";
       ) : video ? (
         <video
           data-loop
+          data-start={start}
           playsinline
           muted
-          preload="none"
+          {/* a start offset needs metadata up front so the first painted
+              frame is already the trimmed one, not frame zero */}
+          preload={start ? "metadata" : "none"}
           poster={poster}
           aria-label={alt}
         >
