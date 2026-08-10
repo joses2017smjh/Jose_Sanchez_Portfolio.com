@@ -262,17 +262,31 @@ a:focus-visible {
   aspect-ratio: 16 / 9;
 }
 
+/* Never crop footage: a portrait clip keeps its own shape and sits on the
+   surface ground rather than being cut to a landscape box. */
 .figure-media video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
-/* Detail pages give motion assets a 30%-taller frame than the standard
-   16:9 — the orchard clip is portrait and earns the room. (Homepage
-   carousel media is sized by the panel, not by aspect ratio.) */
+/* On detail pages the frame hugs the clip at its native proportions —
+   no letterbox bars, no cropping. (Homepage carousel media is sized by
+   the panel, so the clip is contained inside the card instead.) */
 main:not(.full) .figure-media:has(video) {
-  aspect-ratio: 16 / 11.7;
+  aspect-ratio: auto;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  width: fit-content;
+  margin-inline: auto;
+}
+
+main:not(.full) .figure-media video {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(38rem, 75vh);
 }
 
 /* contain, not cover: architecture diagrams and charts must never crop */

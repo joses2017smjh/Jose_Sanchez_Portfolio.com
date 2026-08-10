@@ -1,16 +1,17 @@
 ---
 /**
- * Drippy yin-yang cursor: a single slowly spinning disc split into a blue
- * and a red teardrop (classic taijitu construction), with opposite-color
- * dots, its rim a randomly morphing splat of interfering capillary
- * waves whose fingers continually merge and split. The halves stay distinct — mixing is limited to a faint violet
- * seam at the center. At rest, one blue and one red drip grow from the
- * bottom edge and detach as falling droplets; movement warps the whole
- * disc — stretched along its direction of travel on an underdamped
- * spring, so it wobbles back into a circle when the pointer stops —
- * retracts the drips, and spins it faster. Hovering a link pulls
- * both halves toward that link's color. Fine pointers only; disabled for
- * prefers-reduced-motion and touch, where the native cursor remains.
+ * Drippy yin-yang cursor: a disc split into a blue and a red teardrop
+ * (classic taijitu construction) held at a fixed orientation — it never
+ * spins — with opposite-color dots, its rim a randomly morphing splat of
+ * interfering capillary waves whose fingers continually merge and split.
+ * The halves stay distinct: mixing is limited to a faint violet seam at
+ * the center. At rest, one blue and one red drip grow from the bottom
+ * edge and detach as falling droplets; movement warps the whole disc —
+ * stretched along its direction of travel on an underdamped spring, so
+ * it wobbles back into a circle when the pointer stops — and retracts
+ * the drips. Hovering a link pulls both halves toward that link's color.
+ * Fine pointers only; disabled for prefers-reduced-motion and touch,
+ * where the native cursor remains.
  */
 ---
 
@@ -42,7 +43,7 @@
       const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
       let visible = false;
 
-      const body = { x: mouse.x, y: mouse.y, vx: 0, vy: 0, spin: 0 };
+      const body = { x: mouse.x, y: mouse.y, vx: 0, vy: 0 };
       // Droplet dynamics, Rayleigh-style: aerodynamic drag stretches the
       // disc along its motion axis (mode-2 deformation), direction changes
       // slosh it sideways (shear), and when the pointer stops surface
@@ -145,7 +146,6 @@
           body.y += body.vy;
 
           const speed = Math.hypot(body.vx, body.vy);
-          body.spin += 0.015 + Math.min(speed * 0.004, 0.08);
 
           // deformation axis follows real motion only, with inertia
           if (speed > 0.7) {
@@ -186,7 +186,9 @@
           ctx.rotate(axisAngle);
           ctx.scale(1 + fluid.s, 1 / (1 + fluid.s * 0.7));
           ctx.transform(1, 0, fluid.k, 1, 0, 0);
-          ctx.rotate(body.spin - axisAngle);
+          // back to screen frame: the taijitu holds a fixed orientation,
+          // only the deformation tracks the direction of travel
+          ctx.rotate(-axisAngle);
 
           // jagged splat rim, clipped over the disc; straight segments
           // between samples keep the edge sharp rather than glassy
@@ -242,50 +244,79 @@
           circle(0, 0, R * 0.2);
           ctx.restore();
 
-          // ---- drips hang from the bottom in screen space ----
+          // ---- drips: one continuous column of liquid leaving the disc ----
+          // The column is the envelope of densely overlapping circles, so
+          // its outline is a smooth curve rather than a visible chain of
+          // beads. It is anchored inside the disc, and a surface-tension
+          // neck thins just above the head until the head pinches off.
           for (const d of drips) {
             if (speed < 2.5) d.len += d.rate;
             else d.len = Math.max(d.len - speed * 0.12, 3);
 
             const c = colors[d.color];
-            if (d.len > d.maxLen) {
+            const stretch = Math.min(d.len / d.maxLen, 1);
+            const dx = body.x + d.offset * R;
+            const headY = body.y + R * 0.5 + d.len;
+            const headR = lerp(R * 0.15, R * 0.26, stretch);
+
+            if (stretch >= 1) {
+              // pinch-off: the head leaves with the filament it snapped from
               droplets.push({
-                x: body.x + d.offset * R,
-                y: body.y + R * 0.55 + d.len,
-                vy: 0.4,
-                r: R * 0.22,
-                born: body.y + R * 0.55 + d.len,
+                x: dx,
+                y: headY,
+                vy: 0.5,
+                r: headR,
+                tail: R * 0.7,
+                born: headY,
                 color: [c[0], c[1], c[2]],
               });
-              d.len = 4 + Math.random() * 4;
+              d.len = 3 + Math.random() * 4;
               d.maxLen = 22 + Math.random() * 16;
+              continue;
             }
 
-            ctx.fillStyle = rgba(c, 0.9 * alpha);
-            const dx = body.x + d.offset * R;
-            const baseY = body.y + R * 0.45;
-            const steps = Math.max(Math.ceil(d.len / (R * 0.3)), 2);
+            ctx.fillStyle = rgba(c, 0.92 * alpha);
+            const topY = body.y + R * 0.1;
+            const span = headY - topY;
+            const steps = Math.max(Math.ceil(span / (R * 0.07)), 8);
             for (let i = 0; i <= steps; i++) {
               const t = i / steps;
-              const r =
-                t < 1 ? lerp(R * 0.34, R * 0.16, t) : R * 0.22; // drip head bulb
-              circle(dx, baseY + d.len * t, r);
+              // fat where it leaves the body, tapering toward the head
+              const taper = lerp(R * 0.42, headR * 0.66, Math.min(t * 1.15, 1));
+              // gaussian neck just above the head, deepening as it stretches
+              const z = (t - 0.82) / 0.2;
+              const neck = 1 - 0.55 * stretch * Math.exp(-z * z);
+              circle(dx, topY + span * t, taper * neck);
             }
+            circle(dx, headY, headR);
           }
 
-          // detached droplets fall, shrink, fade
+          // detached droplets fall, stretch with speed, and fade
           for (let i = droplets.length - 1; i >= 0; i--) {
             const p = droplets[i];
             p.vy += 0.3;
             p.y += p.vy;
-            p.r *= 0.985;
+            p.r *= 0.99;
+            p.tail = Math.max(p.tail - 1.1, 0); // the filament snaps back
             const fade = Math.max(1 - (p.y - p.born) / 140, 0);
             if (fade <= 0.02 || p.r < 0.8) {
               droplets.splice(i, 1);
               continue;
             }
             ctx.fillStyle = rgba(p.color, 0.9 * fade * alpha);
-            circle(p.x, p.y, p.r);
+            // retracting filament above the head
+            if (p.tail > 0.5) {
+              const steps = Math.max(Math.ceil(p.tail / (R * 0.07)), 3);
+              for (let j = 0; j <= steps; j++) {
+                const t = j / steps;
+                circle(p.x, p.y - p.tail * t, lerp(p.r * 0.8, p.r * 0.12, t));
+              }
+            }
+            // freefall elongates the head along its fall
+            const e = Math.min(p.vy * 0.014, 0.3);
+            ctx.beginPath();
+            ctx.ellipse(p.x, p.y, p.r / (1 + e), p.r * (1 + e), 0, 0, PI * 2);
+            ctx.fill();
           }
           if (droplets.length > 40) droplets.splice(0, droplets.length - 40);
 
