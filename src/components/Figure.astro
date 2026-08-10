@@ -8,6 +8,8 @@ interface Props {
   video?: string | undefined;
   poster?: string | undefined;
   image?: string | undefined;
+  /** Two clips side by side in one frame; wins over `image` when set. */
+  pair?: readonly { image: string; alt: string }[] | undefined;
   alt: string;
   caption: string;
   /** Eager-load only the hero figure on a detail page. */
@@ -16,7 +18,7 @@ interface Props {
   href?: string | undefined;
 }
 
-const { number, video, poster, image, alt, caption, eager = false, href } =
+const { number, video, poster, image, pair, alt, caption, eager = false, href } =
   Astro.props;
 const label = `FIG. ${String(number).padStart(2, "0")}`;
 const Media = href ? "a" : "div";
@@ -26,9 +28,20 @@ const Media = href ? "a" : "div";
   <div class="figure-rule" aria-hidden="true">
     <span class="figure-number">{label}</span>
   </div>
-  <Media class="figure-media" href={href}>
+  <Media class:list={["figure-media", pair && "figure-pair"]} href={href}>
     {
-      video ? (
+      pair ? (
+        pair.map((item) => (
+          <img
+            src={item.image}
+            alt={item.alt}
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+            width="560"
+            height="440"
+          />
+        ))
+      ) : video ? (
         <video
           data-loop
           playsinline

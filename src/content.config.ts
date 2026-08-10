@@ -32,6 +32,13 @@ const projects = defineCollection({
     video: z.string().optional(),
     poster: z.string().optional(),
     image: z.string().optional(),
+    // Two clips shown side by side inside the hero figure, both playing
+    // at once (a good/bad pair reads better together than in sequence).
+    // `image` stays the single-frame fallback for list thumbnails.
+    pair: z
+      .array(z.object({ image: z.string(), alt: z.string().max(160) }))
+      .length(2)
+      .optional(),
     alt: z.string().max(160),
     figcaption: z.string().max(120),
     // Named demo sections on the detail page (e.g. one per model), each

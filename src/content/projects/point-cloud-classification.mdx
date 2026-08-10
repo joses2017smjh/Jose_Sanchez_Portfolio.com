@@ -16,8 +16,13 @@ result: >-
   baseline. Graduate coursework — code not publicly released.
 tags: ["Python", "PyTorch", "LiDAR", "Point Clouds", "Attention"]
 image: "/media/pointcloud/pointtransformer_architecture.svg"
-alt: "Architecture diagram of the Point Transformer classifier."
-figcaption: "Point Transformer classifier architecture."
+pair:
+  - image: "/media/pointcloud/pointtransformer_good_monitor.gif"
+    alt: "Rotating point cloud of a monitor, correctly classified by the Point Transformer."
+  - image: "/media/pointcloud/pointtransformer_bad_desk.gif"
+    alt: "Rotating point cloud of a desk, misclassified as a table by the Point Transformer."
+alt: "Two rotating ModelNet10 point clouds: a monitor classified correctly, a desk misread as a table."
+figcaption: "Point Transformer on ModelNet10 — a hit and a miss, side by side."
 sections:
   - heading: "PointNet — hits and misses"
     body: >-

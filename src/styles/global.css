@@ -297,6 +297,20 @@ main:not(.full) .figure-media video {
   padding: var(--space-1);
 }
 
+/* two clips sharing one frame, both running at once, split by a hairline */
+.figure-media.figure-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  column-gap: 1px;
+  background: var(--hairline);
+}
+
+.figure-pair img {
+  background: var(--surface);
+  padding: 0;
+}
+
 .figure figcaption {
   font-family: var(--font-mono);
   font-size: var(--text-xs);

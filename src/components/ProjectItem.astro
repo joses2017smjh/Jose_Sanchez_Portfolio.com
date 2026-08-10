@@ -10,8 +10,19 @@ interface Props {
 }
 
 const { project, number } = Astro.props;
-const { title, summary, tags, repo, date, video, poster, image, alt, figcaption } =
-  project.data;
+const {
+  title,
+  summary,
+  tags,
+  repo,
+  date,
+  video,
+  poster,
+  image,
+  pair,
+  alt,
+  figcaption,
+} = project.data;
 const href = `/projects/${project.id}`;
 ---
 
@@ -22,6 +33,7 @@ const href = `/projects/${project.id}`;
       video={video}
       poster={poster}
       image={image}
+      pair={pair}
       alt={alt}
       caption={figcaption}
       href={href}
