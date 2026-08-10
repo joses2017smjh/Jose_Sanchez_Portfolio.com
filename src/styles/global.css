@@ -411,6 +411,13 @@ a.figure-media:hover {
   aspect-ratio: auto;
 }
 
+/* On the card only, a clip is zoomed until the top and bottom 17% fall
+   outside the frame (showing the middle 66%, so scale = 1/0.66). The
+   detail page still shows the whole thing uncropped. */
+.project-carousel .figure-media video {
+  transform: scale(1.5152);
+}
+
 /* cards keep the FIG. rule but not the caption line — the caption lives
    on the detail page; here the picture itself is the link */
 .project-carousel .figure figcaption {
