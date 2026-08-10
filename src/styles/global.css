@@ -295,7 +295,7 @@ a:focus-visible {
   padding: 0 var(--space-3) var(--space-2);
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: min(70vw, 26rem);
+  grid-auto-columns: min(77vw, 28.6rem);
   gap: var(--space-4);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -555,6 +555,57 @@ main.full {
 .panel-inner {
   max-width: var(--measure);
   margin-inline: auto;
+}
+
+/* Full-rectangle cover label: giant two-tone letters on the panel's own
+   ground, fading away once the pointer is on (or focus is in) the panel. */
+.panel-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-content: center;
+  background: var(--bg);
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 0.94;
+  color: var(--text);
+  pointer-events: none;
+  user-select: none;
+  opacity: 1;
+  transition: opacity 450ms ease;
+}
+
+.panel:hover > .panel-cover,
+.panel:focus-within > .panel-cover {
+  opacity: 0;
+}
+
+.cover-line {
+  display: block;
+  font-size: min(13vw, 12rem);
+}
+
+#beyond .cover-line {
+  font-size: min(8.5vw, 7.75rem);
+}
+
+.cover-red .hot {
+  color: var(--red);
+}
+
+.cover-blue .hot {
+  color: var(--blue);
+}
+
+/* touch screens and the stacked mobile layout have no hover to lift the
+   curtain — skip it there */
+@media (hover: none), (max-width: 48rem) {
+  .panel-cover {
+    display: none;
+  }
 }
 
 .panel-label {

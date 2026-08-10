@@ -29,9 +29,16 @@ const projects = await sortedProjects();
     </section>
 
     <section class="panel" id="projects" aria-label="Projects">
+      <div class="panel-cover cover-red" aria-hidden="true">
+        <span class="cover-line">
+          {"PROJECTS".split("").map((ch, i) => (
+            <span class={i % 2 === 0 ? "hot" : undefined}>{ch}</span>
+          ))}
+        </span>
+      </div>
       <div class="panel-inner">
         <p class="meta panel-label">02 — Projects</p>
-        <h2 class="panel-title">Projects</h2>
+        <h2 class="sr-only">Projects</h2>
       </div>
       <ul class="project-carousel">
         {
@@ -43,9 +50,18 @@ const projects = await sortedProjects();
     </section>
 
     <section class="panel" id="beyond" aria-label="Beyond programming">
+      <div class="panel-cover cover-blue" aria-hidden="true">
+        {["BEYOND", "PROGRAMMING"].map((word, w) => (
+          <span class="cover-line">
+            {word.split("").map((ch, i) => (
+              <span class={(i + w) % 2 === 0 ? "hot" : undefined}>{ch}</span>
+            ))}
+          </span>
+        ))}
+      </div>
       <div class="panel-inner">
         <p class="meta panel-label">03 — Beyond programming</p>
-        <h2 class="panel-title">Beyond programming</h2>
+        <h2 class="sr-only">Beyond programming</h2>
         <ul class="beyond-list">
           {
             resume.beyond.map((item) => (
