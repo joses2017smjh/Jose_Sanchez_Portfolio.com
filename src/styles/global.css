@@ -305,10 +305,93 @@ a:focus-visible {
 
 .project-carousel > li {
   scroll-snap-align: center;
+  min-height: 0;
 }
 
 .project-carousel .figure {
   margin-top: 0;
+}
+
+/* When the media is a link, the picture is the click target — the caption
+   below it is plain text. */
+a.figure-media {
+  display: block;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+a.figure-media:hover {
+  border-color: var(--blue);
+  box-shadow: 0 2px 12px rgba(31, 63, 166, 0.16);
+}
+
+/* The projects rectangle never scrolls vertically: the header keeps its
+   size, each card gives the leftover height to its figure, and the only
+   travel is side to side. */
+.panel#projects {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
+
+.panel#projects .panel-inner {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+/* the header scales with viewport height so short windows still leave
+   the cards room */
+.panel#projects .panel-label {
+  margin-bottom: var(--space-2);
+}
+
+.panel#projects .panel-title {
+  font-size: clamp(1.75rem, 6.5vh, 4.5rem);
+  margin-bottom: var(--space-2);
+}
+
+.panel#projects .project-carousel {
+  flex: 1;
+  min-height: 0;
+}
+
+.project-carousel article {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.project-carousel .figure {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+}
+
+.project-carousel .figure-media {
+  flex: 1;
+  min-height: 4rem;
+  aspect-ratio: auto;
+}
+
+/* cards keep the FIG. rule but not the caption line — the caption lives
+   on the detail page; here the picture itself is the link */
+.project-carousel .figure figcaption {
+  display: none;
+}
+
+.project-carousel .project-summary {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: var(--space-1);
+}
+
+.project-carousel .project-links {
+  margin-top: var(--space-1);
 }
 
 /* title ——— year rows with a hairline leader */
@@ -443,28 +526,28 @@ main.full {
    blue/red and themed to the panel's content. */
 /* 01 About — ripples (perception), blue, ~40% */
 .panel:nth-of-type(1) {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%231f3fa6'%3E%3Ccircle cx='100' cy='100' r='30' stroke-opacity='.14'/%3E%3Ccircle cx='100' cy='100' r='55' stroke-opacity='.11'/%3E%3Ccircle cx='100' cy='100' r='80' stroke-opacity='.08'/%3E%3Ccircle cx='100' cy='100' r='98' stroke-opacity='.05'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%231f3fa6' stroke-width='3.5'%3E%3Ccircle cx='100' cy='100' r='30' stroke-opacity='.14'/%3E%3Ccircle cx='100' cy='100' r='55' stroke-opacity='.11'/%3E%3Ccircle cx='100' cy='100' r='80' stroke-opacity='.08'/%3E%3Ccircle cx='100' cy='100' r='96' stroke-opacity='.05'/%3E%3C/g%3E%3C/svg%3E");
   background-position: right -8% top -8%;
   background-size: 40% auto;
 }
 
 /* 02 Projects — point-cloud dot grid, red, ~25% */
 .panel:nth-of-type(2) {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3Cpattern id='p' width='24' height='24' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='5' cy='5' r='2.4' fill='%23a31621' fill-opacity='.12'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23p)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3Cpattern id='p' width='24' height='24' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='5' cy='5' r='3.4' fill='%23a31621' fill-opacity='.12'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23p)'/%3E%3C/svg%3E");
   background-position: left 4% bottom 6%;
   background-size: 25% auto;
 }
 
 /* 03 Beyond — robot joint, blue, ~70% */
 .panel:nth-of-type(3) {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%231f3fa6' stroke-opacity='.09'%3E%3Ccircle cx='100' cy='100' r='60'/%3E%3Ccircle cx='100' cy='100' r='14'/%3E%3Cpath d='M100 20v40M100 140v40M20 100h40M140 100h40M44 44l28 28M156 44l-28 28M44 156l28-28M156 156l-28-28'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%231f3fa6' stroke-opacity='.09' stroke-width='3.5'%3E%3Ccircle cx='100' cy='100' r='60'/%3E%3Ccircle cx='100' cy='100' r='14'/%3E%3Cpath d='M100 20v40M100 140v40M20 100h40M140 100h40M44 44l28 28M156 44l-28 28M44 156l28-28M156 156l-28-28'/%3E%3C/g%3E%3C/svg%3E");
   background-position: right -12% center;
   background-size: 70% auto;
 }
 
 /* 04 Resume — ruled document lines, red, ~40% */
 .panel:nth-of-type(4) {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 200'%3E%3Cg stroke='%23a31621' stroke-opacity='.10' stroke-width='5' stroke-linecap='round'%3E%3Cpath d='M20 30h120M20 55h120M20 80h88M20 105h120M20 130h72'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 200'%3E%3Cg stroke='%23a31621' stroke-opacity='.10' stroke-width='9' stroke-linecap='round'%3E%3Cpath d='M20 30h120M20 55h120M20 80h88M20 105h120M20 130h72'/%3E%3C/g%3E%3C/svg%3E");
   background-position: left 6% top 4%;
   background-size: 40% auto;
 }
@@ -653,6 +736,30 @@ main.full {
 
   .panel {
     margin-bottom: var(--space-2);
+  }
+
+  /* stacked panels have no fixed height for cards to fill — give the
+     carousel figures their natural 16:9 sizing back */
+  .panel#projects {
+    display: block;
+    overflow-y: visible;
+  }
+
+  .project-carousel article {
+    display: block;
+    height: auto;
+  }
+
+  .project-carousel .figure {
+    overflow: visible;
+  }
+
+  .project-carousel .figure figcaption {
+    display: block;
+  }
+
+  .project-carousel .figure-media {
+    aspect-ratio: 16 / 9;
   }
 }
 

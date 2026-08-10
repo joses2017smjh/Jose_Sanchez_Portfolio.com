@@ -4,8 +4,10 @@
  * and a red teardrop (classic taijitu construction), with opposite-color
  * dots. The halves stay distinct — mixing is limited to a faint violet
  * seam at the center. At rest, one blue and one red drip grow from the
- * bottom edge and detach as falling droplets; fast movement retracts the
- * drips, squashes the disc, and spins it faster. Hovering a link pulls
+ * bottom edge and detach as falling droplets; movement warps the whole
+ * disc — stretched along its direction of travel on an underdamped
+ * spring, so it wobbles back into a circle when the pointer stops —
+ * retracts the drips, and spins it faster. Hovering a link pulls
  * both halves toward that link's color. Fine pointers only; disabled for
  * prefers-reduced-motion and touch, where the native cursor remains.
  */
@@ -40,6 +42,13 @@
       let visible = false;
 
       const body = { x: mouse.x, y: mouse.y, vx: 0, vy: 0, spin: 0 };
+      // Droplet dynamics, Rayleigh-style: aerodynamic drag stretches the
+      // disc along its motion axis (mode-2 deformation), direction changes
+      // slosh it sideways (shear), and when the pointer stops surface
+      // tension pulls it back to a circle through underdamped oscillation.
+      // The deformation axis has inertia so the wobble keeps pointing
+      // along the last real direction of travel instead of jittering.
+      const fluid = { s: 0, sv: 0, k: 0, kv: 0, ax: 1, ay: 0, pvx: 0, pvy: 0 };
       const colors = {
         blue: [...BLUE] as [number, number, number],
         red: [...RED] as [number, number, number],
@@ -118,8 +127,31 @@
 
           const speed = Math.hypot(body.vx, body.vy);
           body.spin += 0.015 + Math.min(speed * 0.004, 0.08);
-          const squash = Math.min(speed / 60, 0.25);
-          const velAngle = Math.atan2(body.vy, body.vx);
+
+          // deformation axis follows real motion only, with inertia
+          if (speed > 0.7) {
+            const t = Math.min(speed * 0.05, 0.25);
+            fluid.ax = lerp(fluid.ax, body.vx / speed, t);
+            fluid.ay = lerp(fluid.ay, body.vy / speed, t);
+            const n = Math.hypot(fluid.ax, fluid.ay) || 1;
+            fluid.ax /= n;
+            fluid.ay /= n;
+          }
+          const axisAngle = Math.atan2(fluid.ay, fluid.ax);
+
+          // mode 2 — drag stretch vs surface tension (underdamped spring)
+          fluid.sv += (Math.min(speed / 24, 0.5) - fluid.s) * 0.14;
+          fluid.sv *= 0.86;
+          fluid.s = Math.max(fluid.s + fluid.sv, -0.24);
+
+          // slosh — sideways acceleration shears the drop, then rings down
+          const sideAccel =
+            (body.vx - fluid.pvx) * -fluid.ay + (body.vy - fluid.pvy) * fluid.ax;
+          fluid.pvx = body.vx;
+          fluid.pvy = body.vy;
+          fluid.kv += sideAccel * 0.02 - fluid.k * 0.12;
+          fluid.kv *= 0.85;
+          fluid.k = Math.max(Math.min(fluid.k + fluid.kv, 0.5), -0.5);
 
           for (let i = 0; i < 3; i++) {
             colors.blue[i] = lerp(colors.blue[i], (hoverColor ?? BLUE)[i], 0.07);
@@ -129,9 +161,13 @@
           // ---- the yin-yang disc ----
           ctx.save();
           ctx.translate(body.x, body.y);
-          ctx.rotate(velAngle);
-          ctx.scale(1 + squash, 1 - squash * 0.5);
-          ctx.rotate(body.spin - velAngle);
+          // the whole taijitu (halves, dots, seam) deforms under one
+          // transform: stretch along the axis of travel, pinch across it
+          // (volume roughly conserved), sheared by the slosh mode
+          ctx.rotate(axisAngle);
+          ctx.scale(1 + fluid.s, 1 / (1 + fluid.s * 0.7));
+          ctx.transform(1, 0, fluid.k, 1, 0, 0);
+          ctx.rotate(body.spin - axisAngle);
 
           ctx.fillStyle = rgba(colors.blue, 0.92 * alpha);
           circle(0, 0, R);

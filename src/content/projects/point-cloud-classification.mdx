@@ -18,6 +18,34 @@ tags: ["Python", "PyTorch", "LiDAR", "Point Clouds", "Attention"]
 image: "/media/pointcloud/pointtransformer_architecture.svg"
 alt: "Architecture diagram of the Point Transformer classifier."
 figcaption: "Point Transformer classifier architecture."
+sections:
+  - heading: "PointNet — hits and misses"
+    body: >-
+      A shared per-point MLP with max-pool aggregation classifies clean,
+      distinctive silhouettes reliably — but with no local geometry,
+      box-like furniture blurs together, and night stand vs dresser is its
+      characteristic confusion. Rotating ModelNet10 test shapes, 2,048
+      sampled points each.
+    figures:
+      - image: "/media/pointcloud/pointnet_good_chair.gif"
+        alt: "Rotating point cloud of a chair, correctly classified by PointNet."
+        caption: "PointNet: chair classified correctly (ModelNet10 test, 2,048 points)."
+      - image: "/media/pointcloud/pointnet_bad_nightstand.gif"
+        alt: "Rotating point cloud of a night stand, misclassified as a dresser by PointNet."
+        caption: "PointNet: night stand read as dresser — its characteristic box-furniture miss."
+  - heading: "Point Transformer — sharper, not flawless"
+    body: >-
+      Self-attention over local neighborhoods recovers the fine structure
+      PointNet throws away, lifting accuracy across ModelNet10. The
+      residual errors concentrate where geometry alone is ambiguous — a
+      flat slab on legs reads as desk or table.
+    figures:
+      - image: "/media/pointcloud/pointtransformer_good_monitor.gif"
+        alt: "Rotating point cloud of a monitor, correctly classified by the Point Transformer."
+        caption: "Point Transformer: monitor classified correctly (ModelNet10 test, 2,048 points)."
+      - image: "/media/pointcloud/pointtransformer_bad_desk.gif"
+        alt: "Rotating point cloud of a desk, misclassified as a table by the Point Transformer."
+        caption: "Point Transformer: desk read as table — the dominant residual confusion."
 gallery:
   - image: "/media/pointcloud/pointnet_architecture.svg"
     alt: "Architecture diagram of the PointNet classifier."

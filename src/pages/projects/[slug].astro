@@ -30,8 +30,18 @@ const {
   image,
   alt,
   figcaption,
+  sections = [],
   gallery,
 } = project.data;
+
+// One FIG. NNA…NNZ letter sequence across every strip on the page:
+// section strips letter first, the gallery continues after them.
+const sectionOffsets: number[] = [];
+let letterCount = 0;
+for (const s of sections) {
+  sectionOffsets.push(letterCount);
+  letterCount += s.figures.length;
+}
 ---
 
 <Base title={`${title} — Jose Sanchez Gonzalez`} description={summary}>
@@ -60,10 +70,24 @@ const {
   <p>{result}</p>
 
   {
+    sections.map((section, i) => (
+      <>
+        <h2>{section.heading}</h2>
+        {section.body && <p>{section.body}</p>}
+        <FigureStrip
+          number={number}
+          items={section.figures}
+          letterOffset={sectionOffsets[i]}
+        />
+      </>
+    ))
+  }
+
+  {
     gallery && gallery.length > 0 && (
       <>
         <h2>Figures</h2>
-        <FigureStrip number={number} items={gallery} />
+        <FigureStrip number={number} items={gallery} letterOffset={letterCount} />
       </>
     )
   }

@@ -34,6 +34,28 @@ const projects = defineCollection({
     image: z.string().optional(),
     alt: z.string().max(160),
     figcaption: z.string().max(120),
+    // Named demo sections on the detail page (e.g. one per model), each
+    // with its own figure strip. Their letters run first; the gallery's
+    // continue after them.
+    sections: z
+      .array(
+        z.object({
+          heading: z.string().max(60),
+          body: z.string().max(400).optional(),
+          figures: z
+            .array(
+              z.object({
+                image: z.string(),
+                alt: z.string().max(160),
+                caption: z.string().max(120),
+              }),
+            )
+            .min(1)
+            .max(4),
+        }),
+      )
+      .max(4)
+      .optional(),
     // Extra figures shown as a horizontal scroll-snap strip on the
     // detail page (FIG. NNA, NNB, ...).
     gallery: z

@@ -6,16 +6,19 @@
 interface Props {
   number: number;
   items: readonly { image: string; alt: string; caption: string }[];
+  /** Start lettering at A + offset, so multiple strips on one page keep
+      a single FIG. NNA…NNZ sequence. */
+  letterOffset?: number;
 }
 
-const { number, items } = Astro.props;
+const { number, items, letterOffset = 0 } = Astro.props;
 const pad = String(number).padStart(2, "0");
 ---
 
 <div class="figure-strip" role="group" aria-label="Additional figures">
   {
     items.map((item, i) => {
-      const label = `FIG. ${pad}${String.fromCharCode(65 + i)}`;
+      const label = `FIG. ${pad}${String.fromCharCode(65 + letterOffset + i)}`;
       return (
         <figure class="figure strip-item">
           <div class="figure-rule" aria-hidden="true">

@@ -12,17 +12,21 @@ interface Props {
   caption: string;
   /** Eager-load only the hero figure on a detail page. */
   eager?: boolean;
+  /** Make the media itself a link (the caption stays plain text). */
+  href?: string | undefined;
 }
 
-const { number, video, poster, image, alt, caption, eager = false } = Astro.props;
+const { number, video, poster, image, alt, caption, eager = false, href } =
+  Astro.props;
 const label = `FIG. ${String(number).padStart(2, "0")}`;
+const Media = href ? "a" : "div";
 ---
 
 <figure class="figure">
   <div class="figure-rule" aria-hidden="true">
     <span class="figure-number">{label}</span>
   </div>
-  <div class="figure-media">
+  <Media class="figure-media" href={href}>
     {
       video ? (
         <video
@@ -46,6 +50,6 @@ const label = `FIG. ${String(number).padStart(2, "0")}`;
         />
       )
     }
-  </div>
+  </Media>
   <figcaption>{label} — {caption}</figcaption>
 </figure>
