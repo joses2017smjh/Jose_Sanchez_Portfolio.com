@@ -1,0 +1,43 @@
+---
+/**
+ * The write-up itself: rendered pages laid out left to right, read by
+ * scrolling sideways the way the project carousel does. Each page links
+ * to the PDF, so the caption stays plain text.
+ */
+interface Props {
+  /** Path to the PDF, e.g. /media/papers/dom-paper.pdf */
+  pdf: string;
+  /** Page image path pattern with {n}, e.g. /media/papers/dom-page-{n}.jpg */
+  pages: string;
+  count: number;
+  title: string;
+}
+
+const { pdf, pages, count, title } = Astro.props;
+const nums = Array.from({ length: count }, (_, i) => i + 1);
+---
+
+<div class="paper">
+  <ol class="paper-strip" aria-label={`${title} — ${count} pages`}>
+    {
+      nums.map((n) => (
+        <li>
+          <a href={pdf} class="paper-page" aria-label={`${title}, page ${n} of ${count} (opens the PDF)`}>
+            <img
+              src={pages.replace("{n}", String(n))}
+              alt={`Page ${n} of ${title}`}
+              width="1275"
+              height="1651"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="paper-folio" aria-hidden="true">{n}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="meta paper-note">
+    Scroll sideways to read · <a href={pdf}>open the PDF</a>
+  </p>
+</div>

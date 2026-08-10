@@ -22,3 +22,6 @@ instrunciton for inspiration-1.pdf
 # local source footage (not published)
 success_low.mp4
 Kantaro-recording.mp4
+
+# paper sources (compiled output is committed under public/media/papers)
+*.zip

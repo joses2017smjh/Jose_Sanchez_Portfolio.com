@@ -537,6 +537,84 @@ a.figure-media:hover {
 }
 
 /* ---------------------------------------------------------------------------
+   Paper strip — the write-up's pages, read by scrolling sideways
+   --------------------------------------------------------------------------- */
+.paper {
+  margin: var(--space-3) 0;
+}
+
+.paper-rule {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.paper-rule::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--hairline);
+  transform: translateY(-0.25em);
+}
+
+.paper-strip {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 var(--space-1);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(78%, 30rem);
+  gap: var(--space-2);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline) transparent;
+}
+
+.paper-strip > li {
+  scroll-snap-align: center;
+}
+
+.paper-page {
+  position: relative;
+  display: block;
+  border: 1px solid var(--hairline);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 2px 12px rgba(19, 19, 19, 0.07);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.paper-page:hover {
+  border-color: var(--blue);
+  box-shadow: 0 4px 18px rgba(31, 63, 166, 0.16);
+}
+
+.paper-page img {
+  width: 100%;
+  height: auto;
+}
+
+/* folio number, bottom-right of each sheet */
+.paper-folio {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--faint);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  padding: 0 0.35em;
+  border-radius: 2px;
+}
+
+.paper-note {
+  margin-top: var(--space-1);
+}
+
+/* ---------------------------------------------------------------------------
    Big rectangles — the homepage is four full-height panels paged
    horizontally: About | Projects | Beyond programming | Resume
    --------------------------------------------------------------------------- */

@@ -26,6 +26,15 @@ const projects = defineCollection({
     // Omit for private/coursework projects with no public repo.
     repo: z.string().url().optional(),
     paper: z.string().url().optional(),
+    // The write-up, rendered page by page and read by scrolling sideways.
+    paperStrip: z
+      .object({
+        pdf: z.string(),
+        // page image path with {n} standing in for the page number
+        pages: z.string(),
+        count: z.number().int().positive().max(30),
+      })
+      .optional(),
     demo: z.string().url().optional(),
     // Media, from /public. Provide video (mp4/webm) when a motion asset
     // exists; poster is required with video (reduced-motion fallback).

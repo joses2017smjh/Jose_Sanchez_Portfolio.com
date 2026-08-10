@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import Figure from "../../components/Figure.astro";
 import FigureStrip from "../../components/FigureStrip.astro";
+import PaperStrip from "../../components/PaperStrip.astro";
 import ScrollRuler from "../../components/ScrollRuler.astro";
 import TagList from "../../components/TagList.astro";
 import { sortedProjects } from "../../lib/projects";
@@ -24,6 +25,7 @@ const {
   tags,
   repo,
   paper,
+  paperStrip,
   demo,
   video,
   poster,
@@ -90,6 +92,20 @@ for (const s of sections) {
       <>
         <h2>Figures</h2>
         <FigureStrip number={number} items={gallery} letterOffset={letterCount} />
+      </>
+    )
+  }
+
+  {
+    paperStrip && (
+      <>
+        <h2>Paper</h2>
+        <PaperStrip
+          pdf={paperStrip.pdf}
+          pages={paperStrip.pages}
+          count={paperStrip.count}
+          title={title}
+        />
       </>
     )
   }
