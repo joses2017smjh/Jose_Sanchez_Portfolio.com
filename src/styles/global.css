@@ -938,6 +938,16 @@ main.full {
   .project-carousel .figure-media {
     aspect-ratio: 16 / 9;
   }
+
+  /* Two portrait clips side by side leave each only half a phone's width,
+     which shrinks their label/prediction readout past legibility. Stack
+     them instead so each gets the full card width. */
+  .figure-media.figure-pair {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
+    row-gap: 1px;
+    aspect-ratio: auto;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
