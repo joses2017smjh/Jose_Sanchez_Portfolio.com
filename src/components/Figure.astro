@@ -10,8 +10,6 @@ interface Props {
   image?: string | undefined;
   /** Two clips side by side in one frame; wins over `image` when set. */
   pair?: readonly { image: string; alt: string }[] | undefined;
-  /** Seconds into the clip to begin (and loop back to). */
-  start?: number | undefined;
   alt: string;
   caption: string;
   /** Eager-load only the hero figure on a detail page. */
@@ -26,7 +24,6 @@ const {
   poster,
   image,
   pair,
-  start,
   alt,
   caption,
   eager = false,
@@ -56,12 +53,9 @@ const Media = href ? "a" : "div";
       ) : video ? (
         <video
           data-loop
-          data-start={start}
           playsinline
           muted
-          {/* a start offset needs metadata up front so the first painted
-              frame is already the trimmed one, not frame zero */}
-          preload={start ? "metadata" : "none"}
+          preload="none"
           poster={poster}
           aria-label={alt}
         >
