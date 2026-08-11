@@ -1,0 +1,60 @@
+---
+title: "Metric Depth to Volumetric Twin"
+summary: "Open-source recreation of semi-automated offside tech: broadcast footage to metric 3D ball and player positions."
+problem: >-
+  Semi-automated offside systems turn broadcast footage into metric 3D
+  positions, but the published research stops at a monocular ball baseline
+  with several metres of error. Reproducing that baseline exactly is the
+  only way to know whether an improvement is real or just a different
+  evaluation.
+approach: >-
+  Anchored everything to SoccerNet-v3D (CVPR CVSports 2025) because it
+  publishes frozen splits, weights and metrics. Rebuilt the loader and
+  camera geometry from the release files, reproduced the detection and
+  monocular localization baselines, then attacked the depth error with a
+  gravity-constrained trajectory fit — solving a ballistic arc over a
+  360 ms window of one camera's 2D track instead of inferring depth from
+  blur-inflated apparent ball size.
+result: >-
+  Baselines reproduced within 0.003 AP (0.813 vs 0.81 published) and
+  reprojection matched to a median of 0.002 px across 4,051 frames.
+  Physics-constrained depth cut median error 3.26 m to 2.82 m and returned
+  5.4x more estimates inside 2 m. 12/12 tests pass.
+tags:
+  [
+    "Python",
+    "PyTorch",
+    "3D Perception",
+    "Camera Calibration",
+    "YOLO",
+    "Triangulation",
+  ]
+repo: "https://github.com/joses2017smjh/Metric-Depth-to-Volumetric-Twin"
+paper: "https://arxiv.org/abs/2504.10106"
+image: "/media/twin/phase1-reproduction.png"
+alt: "Bar charts comparing reproduced detection AP and monocular 3D error against the published SoccerNet-v3D baselines."
+figcaption: "Phase 1 — published baselines reproduced on the paper's own test split."
+sections:
+  - heading: "Reproduce before improving"
+    body: >-
+      Phase 1 rebuilds the paper's numbers on its own frozen test split, so
+      later changes are measured against something real rather than a
+      re-implementation that quietly moved the goalposts. Detection lands
+      within 0.003 AP of the published figure, monocular localization comes
+      in slightly better than the paper's 4.2 m, and the custom AP metric
+      cross-checks against Ultralytics' own val to within 0.003.
+  - heading: "Depth from physics, not from blur"
+    body: >-
+      A ball's apparent diameter is a terrible depth cue when motion blur
+      inflates it. Track 2 fits a gravity-constrained trajectory across a
+      360 ms window of 2D detections, anchored by the size prior, and beats
+      the per-frame prior on 73% of windows. The write-up also records where
+      it fails: single-view depth-from-gravity is ill-posed on its own and
+      diverges without the anchor.
+    figures:
+      - image: "/media/twin/track2-physics.png"
+        alt: "Median depth error falling from 3.26 m to 2.82 m and the fraction of estimates within 2 m rising from 0.07 to 0.37."
+        caption: "Ballistic window vs size prior on ISSIA-3D."
+date: 2026-08-08
+order: 2
+---

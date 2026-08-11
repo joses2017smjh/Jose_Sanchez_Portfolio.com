@@ -26,6 +26,11 @@ const projects = defineCollection({
     // Omit for private/coursework projects with no public repo.
     repo: z.string().url().optional(),
     paper: z.string().url().optional(),
+    // Extra links with their own labels (a sibling repo, a mirror, a demo).
+    links: z
+      .array(z.object({ label: z.string().max(40), href: z.string().url() }))
+      .max(4)
+      .optional(),
     // The write-up, rendered page by page and read by scrolling sideways.
     paperStrip: z
       .object({
@@ -61,6 +66,7 @@ const projects = defineCollection({
         z.object({
           heading: z.string().max(60),
           body: z.string().max(400).optional(),
+          // Optional: some sections are prose that sits between figures.
           figures: z
             .array(
               z.object({
@@ -69,8 +75,8 @@ const projects = defineCollection({
                 caption: z.string().max(120),
               }),
             )
-            .min(1)
-            .max(4),
+            .max(4)
+            .optional(),
         }),
       )
       .max(4)

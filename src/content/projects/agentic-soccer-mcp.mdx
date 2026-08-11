@@ -1,0 +1,87 @@
+---
+title: "Agentic Soccer Prediction over MCP"
+summary: "Calibrated match forecasts served by a LangGraph agent across three MCP servers, with human approval before any stake."
+problem: >-
+  Betting markets are a strong probability oracle, so the interesting
+  problem isn't beating them — it's producing forecasts that are calibrated,
+  internally consistent across correlated markets, and honest about their
+  own uncertainty, then serving them through an agent where every number
+  traces back to a tool call.
+approach: >-
+  Phase A is an offline stack: leakage-guarded features to XGBoost with
+  isotonic calibration and split-conformal sets, a Dixon-Coles score grid
+  reconciled exactly to its own marginals, goal-timing and player-prop
+  layers, shipped as one versioned artifact bundle. Phase B serves it — a
+  FastAPI gateway into a LangGraph orchestrator driving three MCP servers
+  (odds, news/injuries, inference), with a human-in-the-loop interrupt
+  before any staking suggestion and conformal sets the agent must surface.
+result: >-
+  On 102 real World Cup 2026 matches, trained strictly pre-tournament:
+  0.9013 log loss and 62.7% accuracy vs 47.1% for the prior, with conformal
+  coverage at 0.951 against a 0.90 target. On EPL the closing line wins and
+  the report says so.
+tags:
+  [
+    "Python",
+    "LangGraph",
+    "MCP",
+    "XGBoost",
+    "FastAPI",
+    "Conformal Prediction",
+    "Next.js",
+    "Docker",
+  ]
+repo: "https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP"
+links:
+  - label: "Same code: Cognitive-Swarm repo"
+    href: "https://github.com/joses2017smjh/MCP-Driven-Cognitive-Swarm"
+image: "/media/soccer/ui-league-hub.jpg"
+alt: "The MatchIntel league hub: league cards, standings and tournament brackets in a dark UI."
+figcaption: "League hub — standings, in-league Elo, and a matchup projector."
+sections:
+  - heading: "What it predicts, and what it admits"
+    body: >-
+      Five layers — outcome, exact score, event sequence, player props,
+      market value — all derived from one Dixon-Coles grid so no market
+      contradicts another. The suggestion layer caps its own confidence to
+      "low" whenever a pick falls outside the conformal set. Backtests are
+      walk-forward with asserted temporal separation, scored against the
+      de-vigged closing line rather than a friendly baseline.
+    figures:
+      - image: "/media/soccer/ui-dashboard.jpg"
+        alt: "Agent console showing a prediction with conformal uncertainty, market value and a human approval step."
+        caption: "Agent console — uncertainty, evidence trail, approval before any stake."
+      - image: "/media/soccer/conformal_rolling.jpg"
+        alt: "Rolling conformal coverage tracking the target level over time."
+        caption: "Rolling conformal coverage against its target."
+  - heading: "The honest part"
+    body: >-
+      On EPL 2019-2025 (1,520 matches) the closing line beats the model on
+      every metric in every fold, and the suggestion layer returns -1.8% ROI
+      over 1,795 bets — betting into the close with a close-anchored model
+      doesn't clear the vig. The value here is calibrated structure, not
+      out-predicting Pinnacle. The served bundle is still a demo model, and
+      unsupported tools fail loudly rather than bluffing.
+    figures:
+      - image: "/media/soccer/ui-bracket.jpg"
+        alt: "Tournament bracket with advance probabilities on each tie."
+        caption: "Bracket view — advance probability per tie, drillable to the data."
+      - image: "/media/soccer/conformal_frontier.jpg"
+        alt: "Conformal set size plotted against coverage."
+        caption: "Set size against coverage — the price of a guarantee."
+gallery:
+  - image: "/media/soccer/ui-league-detail.jpg"
+    alt: "League detail view with standings, Elo, latest results and a matchup projector."
+    caption: "League detail — standings, Elo and a matchup projector."
+  - image: "/media/soccer/conformal_alpha.jpg"
+    alt: "Coverage and set size as the conformal alpha parameter varies."
+    caption: "Coverage vs alpha."
+  - image: "/media/soccer/ui-mobile-league.jpg"
+    alt: "The league view on a phone."
+    caption: "Mobile league view."
+  - image: "/media/soccer/ui-mobile-bracket.jpg"
+    alt: "The bracket view on a phone."
+    caption: "Mobile bracket view."
+date: 2026-07-23
+order: 3
+---

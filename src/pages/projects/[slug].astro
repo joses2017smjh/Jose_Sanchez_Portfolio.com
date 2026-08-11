@@ -26,6 +26,7 @@ const {
   repo,
   paper,
   paperStrip,
+  links = [],
   demo,
   video,
   poster,
@@ -43,7 +44,7 @@ const sectionOffsets: number[] = [];
 let letterCount = 0;
 for (const s of sections) {
   sectionOffsets.push(letterCount);
-  letterCount += s.figures.length;
+  letterCount += s.figures?.length ?? 0;
 }
 ---
 
@@ -78,11 +79,13 @@ for (const s of sections) {
       <>
         <h2>{section.heading}</h2>
         {section.body && <p>{section.body}</p>}
-        <FigureStrip
-          number={number}
-          items={section.figures}
-          letterOffset={sectionOffsets[i]}
-        />
+        {section.figures && section.figures.length > 0 && (
+          <FigureStrip
+            number={number}
+            items={section.figures}
+            letterOffset={sectionOffsets[i]}
+          />
+        )}
       </>
     ))
   }
@@ -114,13 +117,16 @@ for (const s of sections) {
   <TagList tags={tags} />
 
   {
-    (repo || paper || demo) && (
+    (repo || paper || demo || links.length > 0) && (
       <>
         <h2>Links</h2>
         <div class="project-links">
           {repo && <a href={repo}>GitHub</a>}
           {paper && <a href={paper}>Paper</a>}
           {demo && <a href={demo}>Demo</a>}
+          {links.map((l) => (
+            <a href={l.href}>{l.label}</a>
+          ))}
         </div>
       </>
     )
