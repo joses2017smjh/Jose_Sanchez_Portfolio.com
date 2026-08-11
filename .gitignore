@@ -25,3 +25,6 @@ Kantaro-recording.mp4
 
 # paper sources (compiled output is committed under public/media/papers)
 *.zip
+
+# source media for the humanoid build log (processed copies live in public/media/humanoid)
+Berkley_Robot/

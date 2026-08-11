@@ -546,6 +546,72 @@ a.figure-media:hover {
 }
 
 /* ---------------------------------------------------------------------------
+   Build log — the humanoid build, step by step, scrolled sideways
+   --------------------------------------------------------------------------- */
+.buildlog-title {
+  margin-top: 0;
+}
+
+.buildlog-status {
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: var(--space-3);
+}
+
+.buildlog {
+  list-style: none;
+  margin: var(--space-2) calc(-1 * var(--space-3)) var(--space-2);
+  padding: 0 var(--space-3) var(--space-1);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(74vw, 20rem);
+  gap: var(--space-2);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline) transparent;
+  counter-reset: step;
+}
+
+.buildlog > li {
+  scroll-snap-align: center;
+}
+
+.buildlog figure {
+  margin: 0;
+}
+
+.buildlog-media {
+  aspect-ratio: 4 / 3;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.buildlog-media img,
+.buildlog-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.buildlog figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--faint);
+  margin-top: var(--space-1);
+}
+
+.buildlog-step {
+  color: var(--red);
+  margin-right: 0.6em;
+}
+
+/* ---------------------------------------------------------------------------
    Paper strip — the write-up's pages, read by scrolling sideways
    --------------------------------------------------------------------------- */
 .paper {

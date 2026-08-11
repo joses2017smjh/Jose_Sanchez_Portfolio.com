@@ -1,6 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import ProjectItem from "../components/ProjectItem.astro";
+import BuildLog from "../components/BuildLog.astro";
+import { humanoid } from "../humanoid.config";
 import { site } from "../site.config";
 import { resume } from "../resume.config";
 import { sortedProjects } from "../lib/projects";
@@ -50,6 +52,16 @@ const projects = await sortedProjects();
       </div>
       <div class="panel-inner">
         <h2 class="sr-only">Beyond programming</h2>
+        <h3 class="buildlog-title">{humanoid.title} — build log</h3>
+        <p class="dim">{humanoid.standfirst}</p>
+      </div>
+
+      <BuildLog />
+
+      <div class="panel-inner">
+        {humanoid.notes.map((note) => <p class="dim">{note}</p>)}
+        <p class="meta buildlog-status">{humanoid.status}</p>
+
         <ul class="beyond-list">
           {
             resume.beyond.map((item) => (

@@ -61,11 +61,9 @@ export const resume = {
     },
   ],
   /** The "Beyond programming" panel pulls from here. */
+  // The humanoid build has its own log on the homepage (humanoid.config.ts),
+  // so it isn't repeated in this list.
   beyond: [
-    {
-      title: "Berkeley Humanoid Lite build (in progress)",
-      body: "Independently building the open-source Berkeley Humanoid Lite — hands-on mechanical assembly, soldering, and CAD modeling — with ROS2 and Isaac Sim integration for motion control and reinforcement learning.",
-    },
     {
       title: "ICPC Club",
       body: "Programming contests and competitive coding practice sessions.",

@@ -1,0 +1,33 @@
+---
+/**
+ * The humanoid build log: numbered steps read by scrolling sideways,
+ * same gesture as the project carousel and the paper strips.
+ */
+import { humanoid } from "../humanoid.config";
+
+const { steps } = humanoid;
+---
+
+<ol class="buildlog" aria-label={`${humanoid.title} build log, ${steps.length} steps`}>
+  {
+    steps.map((step, i) => (
+      <li>
+        <figure>
+          <div class="buildlog-media">
+            {step.kind === "video" ? (
+              <video data-loop playsinline muted preload="none" poster={step.poster} aria-label={step.alt}>
+                <source src={step.src} type="video/mp4" />
+              </video>
+            ) : (
+              <img src={step.src} alt={step.alt} loading="lazy" decoding="async" />
+            )}
+          </div>
+          <figcaption>
+            <span class="buildlog-step">{String(i + 1).padStart(2, "0")}</span>
+            {step.caption}
+          </figcaption>
+        </figure>
+      </li>
+    ))
+  }
+</ol>
