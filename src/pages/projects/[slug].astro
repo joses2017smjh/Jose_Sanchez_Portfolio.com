@@ -26,6 +26,7 @@ const {
   repo,
   paper,
   paperStrip,
+  diagram,
   links = [],
   demo,
   video,
@@ -73,6 +74,20 @@ for (const s of sections) {
 
   <h2>Result</h2>
   <p>{result}</p>
+
+  {
+    diagram && (
+      <>
+        <h2>Architecture</h2>
+        <figure class="diagram">
+          <a href={diagram.image} class="diagram-media">
+            <img src={diagram.image} alt={diagram.alt} loading="lazy" decoding="async" />
+          </a>
+          <figcaption>{diagram.caption}</figcaption>
+        </figure>
+      </>
+    )
+  }
 
   {
     sections.map((section, i) => (

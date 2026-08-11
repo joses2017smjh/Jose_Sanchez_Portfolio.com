@@ -35,6 +35,10 @@ repo: "https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP"
 links:
   - label: "Same code: Cognitive-Swarm repo"
     href: "https://github.com/joses2017smjh/MCP-Driven-Cognitive-Swarm"
+diagram:
+  image: "/media/soccer/architecture.png"
+  alt: "System diagram: client to FastAPI gateway to a LangGraph orchestrator calling three MCP servers (odds, news, inference); inference and offline training share a versioned artifact bundle."
+  caption: "Gateway to LangGraph orchestrator to three MCP servers; offline training and inference share one versioned artifact bundle."
 image: "/media/soccer/ui-league-hub.jpg"
 alt: "The MatchIntel league hub: league cards, standings and tournament brackets in a dark UI."
 figcaption: "League hub — standings, in-league Elo, and a matchup projector."

@@ -26,6 +26,15 @@ const projects = defineCollection({
     // Omit for private/coursework projects with no public repo.
     repo: z.string().url().optional(),
     paper: z.string().url().optional(),
+    // A system diagram, shown full width at its own proportions rather
+    // than squeezed into the 16:9 figure box — detail has to stay legible.
+    diagram: z
+      .object({
+        image: z.string(),
+        alt: z.string().max(200),
+        caption: z.string().max(160),
+      })
+      .optional(),
     // Extra links with their own labels (a sibling repo, a mirror, a demo).
     links: z
       .array(z.object({ label: z.string().max(40), href: z.string().url() }))
