@@ -5,8 +5,8 @@
 export const beyond = [
   {
     slug: "humanoid",
-    title: "Berkeley Humanoid Lite",
-    kicker: "The build",
+    title: "Open source robotics",
+    kicker: "Berkeley Humanoid Lite",
     blurb:
       "Building an open-source humanoid from scratch, self-funded, in a garage — soldering, actuators, CAD, and eventually reinforcement learning in Isaac Sim.",
     tile: "/media/beyond/humanoid-tile.jpg",
@@ -19,7 +19,7 @@ export const beyond = [
   {
     slug: "hiking",
     title: "Hiking",
-    kicker: "Outside",
+    kicker: "Trails and water",
     blurb: "I love waterfalls and lakes — the colder the better, apparently.",
     tile: "/media/beyond/hiking-tile.jpg",
     tileAlt: "A turquoise glacial lake below a cirque of snow-streaked mountains.",

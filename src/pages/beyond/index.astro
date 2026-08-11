@@ -2,7 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import { beyond } from "../../beyond.config";
 
-const title = "Outside — Jose Sanchez Gonzalez";
+const title = "Beyond coding — Jose Sanchez Gonzalez";
 const description =
   "Outside the code: building a humanoid, hiking to lakes and waterfalls, three dogs, jiu-jitsu and the bench.";
 ---
@@ -10,7 +10,7 @@ const description =
 <Base title={title} description={description} full>
   <div class="beyond-page">
     <div class="beyond-head">
-      <h1 class="panel-title">Outside</h1>
+      <h1 class="panel-title">Beyond coding</h1>
       <p class="dim">{description}</p>
     </div>
 
@@ -18,7 +18,12 @@ const description =
       {
         beyond.map((tile, i) => (
           <li>
-            <a class="tile" href={`/beyond/${tile.slug}`}>
+            {/* accent alternates blue, red, blue, red down the grid */}
+            <a class:list={["tile", i % 2 === 0 ? "tile-blue" : "tile-red"]} href={`/beyond/${tile.slug}`}>
+              <div class="tile-head">
+                <h2 class="tile-title">{tile.title}</h2>
+                <p class="meta tile-kicker">{tile.kicker}</p>
+              </div>
               <div class="tile-media">
                 <img
                   src={tile.tile}
@@ -28,8 +33,6 @@ const description =
                 />
               </div>
               <div class="tile-text">
-                <p class="meta tile-kicker">{tile.kicker}</p>
-                <h2 class="tile-title">{tile.title}</h2>
                 <p class="dim">{tile.blurb}</p>
               </div>
             </a>
