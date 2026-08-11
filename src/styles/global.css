@@ -648,6 +648,160 @@ a.tile:hover {
   }
 }
 
+/* --- a section's own page: back nav, photo strip, dog switcher --- */
+.section-back {
+  margin-bottom: var(--space-3);
+}
+
+.section-back-end {
+  margin-top: var(--space-4);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--hairline);
+}
+
+/* multiple shots scroll sideways, with the prose either side of them */
+.section-strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(88%, 26rem);
+  gap: var(--space-2);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  margin: var(--space-3) 0;
+  padding-bottom: var(--space-1);
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline) transparent;
+}
+
+.section-shot {
+  margin: 0;
+  scroll-snap-align: center;
+}
+
+.section-shot-media {
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.section-shot-media img,
+.section-shot-media video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.section-shot figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--faint);
+  margin-top: var(--space-1);
+}
+
+.dogs {
+  margin: var(--space-3) 0 var(--space-4);
+}
+
+.dogs-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.dogs-name {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--blue);
+  background: none;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 0.3em 0.9em;
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.dogs-name:hover {
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.dogs-name[aria-pressed="true"] {
+  color: var(--bg);
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.dogs-frame {
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--surface);
+  display: grid;
+  place-items: center;
+}
+
+.dogs-shot {
+  width: 100%;
+  height: auto;
+  max-height: 60vh;
+  object-fit: contain;
+  display: block;
+}
+
+/* the display rules above would otherwise beat the hidden attribute */
+.dogs-shot[hidden],
+.dogs-blurb[hidden] {
+  display: none;
+}
+
+.dogs-caption {
+  margin-top: var(--space-2);
+}
+
+.dogs-blurb {
+  color: var(--dim);
+  max-width: var(--measure);
+}
+
+.dogs-blurb strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.dogs-line {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--faint);
+  margin-top: var(--space-1);
+}
+
+
+/* homepage Beyond panel: a preview of the Outside page, click to open */
+.outside-preview {
+  display: block;
+  margin: 0 0 var(--space-2);
+  border: 1px solid var(--hairline);
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(19, 19, 19, 0.07);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.outside-preview:hover {
+  border-color: var(--blue);
+  box-shadow: 0 4px 20px rgba(31, 63, 166, 0.16);
+}
+
+.outside-preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* ---------------------------------------------------------------------------
    Build log — the humanoid build, step by step, scrolled sideways
    --------------------------------------------------------------------------- */

@@ -1,0 +1,70 @@
+---
+import Base from "../../layouts/Base.astro";
+import BuildLog from "../../components/BuildLog.astro";
+import DogSwitcher from "../../components/DogSwitcher.astro";
+import { beyond } from "../../beyond.config";
+import { humanoid } from "../../humanoid.config";
+
+export function getStaticPaths() {
+  return beyond.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { slug, title, kicker, body, media } = entry;
+
+// Text and media alternate: a paragraph, then the strip it belongs to.
+const lead = body.slice(0, 1);
+const rest = body.slice(1);
+---
+
+<Base title={`${title} — Jose Sanchez Gonzalez`} description={entry.blurb}>
+  <p class="meta section-back">
+    <a href="/beyond">&larr; Outside</a> · <a href="/">Home</a>
+  </p>
+
+  <p class="meta tile-kicker">{kicker}</p>
+  <h1>{title}</h1>
+
+  {lead.map((p) => <p class="detail-summary">{p}</p>)}
+
+  {slug === "humanoid" && (
+    <>
+      <p class="detail-summary">{humanoid.standfirst}</p>
+      <BuildLog />
+      {humanoid.notes.map((note) => <p class="dim">{note}</p>)}
+      <p class="meta">{humanoid.status}</p>
+    </>
+  )}
+
+  {slug === "dogs" && <DogSwitcher />}
+
+  {
+    media.length > 0 && (
+      <div class="section-strip" role="group" aria-label={`${title} photos`}>
+        {media.map((m) => (
+          <figure class="section-shot">
+            <div class="section-shot-media">
+              {m.kind === "video" ? (
+                <video data-loop playsinline muted preload="none" poster={m.poster} aria-label={m.alt}>
+                  <source src={m.src} type="video/mp4" />
+                </video>
+              ) : (
+                <img src={m.src} alt={m.alt} loading="lazy" decoding="async" />
+              )}
+            </div>
+            <figcaption>{m.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
+    )
+  }
+
+  {rest.map((p) => <p class="dim">{p}</p>)}
+
+  <p class="meta section-back section-back-end">
+    <a href="/beyond">&larr; Back to Outside</a> · <a href="/">Home</a>
+  </p>
+</Base>

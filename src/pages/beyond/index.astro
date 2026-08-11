@@ -1,0 +1,41 @@
+---
+import Base from "../../layouts/Base.astro";
+import { beyond } from "../../beyond.config";
+
+const title = "Outside — Jose Sanchez Gonzalez";
+const description =
+  "Outside the code: building a humanoid, hiking to lakes and waterfalls, three dogs, jiu-jitsu and the bench.";
+---
+
+<Base title={title} description={description} full>
+  <div class="beyond-page">
+    <div class="beyond-head">
+      <h1 class="panel-title">Outside</h1>
+      <p class="dim">{description}</p>
+    </div>
+
+    <ul class="tile-grid">
+      {
+        beyond.map((tile, i) => (
+          <li>
+            <a class="tile" href={`/beyond/${tile.slug}`}>
+              <div class="tile-media">
+                <img
+                  src={tile.tile}
+                  alt={tile.tileAlt}
+                  loading={i < 2 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              </div>
+              <div class="tile-text">
+                <p class="meta tile-kicker">{tile.kicker}</p>
+                <h2 class="tile-title">{tile.title}</h2>
+                <p class="dim">{tile.blurb}</p>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>

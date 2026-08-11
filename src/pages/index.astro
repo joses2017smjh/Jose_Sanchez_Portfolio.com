@@ -1,8 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 import ProjectItem from "../components/ProjectItem.astro";
-import BuildLog from "../components/BuildLog.astro";
-import { humanoid } from "../humanoid.config";
 import { site } from "../site.config";
 import { resume } from "../resume.config";
 import { sortedProjects } from "../lib/projects";
@@ -52,15 +50,21 @@ const projects = await sortedProjects();
       </div>
       <div class="panel-inner">
         <h2 class="sr-only">Beyond programming</h2>
-        <h3 class="buildlog-title">{humanoid.title} — build log</h3>
-        <p class="dim">{humanoid.standfirst}</p>
-      </div>
 
-      <BuildLog />
-
-      <div class="panel-inner">
-        {humanoid.notes.map((note) => <p class="dim">{note}</p>)}
-        <p class="meta buildlog-status">{humanoid.status}</p>
+        <a class="outside-preview" href="/beyond">
+          <img
+            src="/media/beyond/outside-preview.jpg"
+            alt="The Outside page: four tiles — the humanoid build, hiking, three dogs, and jiu-jitsu."
+            width="1400"
+            height="875"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+        <p class="meta">
+          Everything outside the code — the humanoid build, lakes, the dogs,
+          the mat: <a href="/beyond">/beyond</a>
+        </p>
 
         <ul class="beyond-list">
           {
@@ -73,8 +77,7 @@ const projects = await sortedProjects();
           }
         </ul>
         <p class="meta">
-          Everything outside the code: <a href="/beyond">/beyond</a> · Running
-          log of what I'm building: <a href="/now">/now</a>
+          Running log of what I'm building: <a href="/now">/now</a>
         </p>
       </div>
     </section>

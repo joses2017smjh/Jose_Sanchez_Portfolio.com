@@ -1,0 +1,97 @@
+---
+/**
+ * Three dogs: the group shot holds the middle until you pick a name,
+ * then that dog takes the frame with what the name means. Buttons are
+ * real buttons, so it works from the keyboard; without JS every dog is
+ * still on the page.
+ */
+import { dogs } from "../beyond.config";
+---
+
+<div class="dogs">
+  <div class="dogs-names" role="group" aria-label="Choose a dog">
+    {
+      dogs.map((dog) => (
+        <button type="button" class="dogs-name" data-dog={dog.id} aria-pressed="false">
+          {dog.name}
+        </button>
+      ))
+    }
+    <button type="button" class="dogs-name dogs-all" data-dog="all" aria-pressed="true">
+      All three
+    </button>
+  </div>
+
+  <figure class="dogs-stage">
+    <div class="dogs-frame">
+      <img
+        class="dogs-shot"
+        data-dog="all"
+        src="/media/beyond/dogs-three.jpg"
+        alt="Xolotl, Cosito and Tlaloc crowded together on a snowy barrel."
+        width="1600"
+        height="1600"
+      />
+      {
+        dogs.map((dog) =>
+          dog.kind === "video" ? (
+            <video
+              class="dogs-shot"
+              data-dog={dog.id}
+              data-loop
+              playsinline
+              muted
+              preload="none"
+              poster={dog.poster}
+              aria-label={dog.alt}
+              hidden
+            >
+              <source src={dog.src} type="video/mp4" />
+            </video>
+          ) : (
+            <img class="dogs-shot" data-dog={dog.id} src={dog.src} alt={dog.alt} loading="lazy" decoding="async" hidden />
+          ),
+        )
+      }
+    </div>
+
+    <figcaption class="dogs-caption">
+      <p class="dogs-blurb" data-dog="all">
+        Xolotl, Cosito and Tlaloc. Pick a name to meet one.
+      </p>
+      {
+        dogs.map((dog) => (
+          <p class="dogs-blurb" data-dog={dog.id} hidden>
+            <strong>{dog.name}</strong> — {dog.meaning}
+            <span class="dogs-line">{dog.line}</span>
+          </p>
+        ))
+      }
+    </figcaption>
+  </figure>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>(".dogs");
+  if (root) {
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>(".dogs-name"));
+    const shots = Array.from(root.querySelectorAll<HTMLElement>(".dogs-shot"));
+    const blurbs = Array.from(root.querySelectorAll<HTMLElement>(".dogs-blurb"));
+
+    const show = (id: string) => {
+      for (const b of buttons) b.setAttribute("aria-pressed", String(b.dataset.dog === id));
+      for (const group of [shots, blurbs]) {
+        for (const el of group) {
+          const on = el.dataset.dog === id;
+          el.hidden = !on;
+          if (!on && el instanceof HTMLVideoElement) el.pause();
+          if (on && el instanceof HTMLVideoElement) el.play().catch(() => {});
+        }
+      }
+    };
+
+    for (const b of buttons) {
+      b.addEventListener("click", () => show(b.dataset.dog ?? "all"));
+    }
+  }
+</script>
