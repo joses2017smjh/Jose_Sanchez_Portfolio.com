@@ -310,9 +310,18 @@ main:not(.full) .figure-media video {
 .figure-media.figure-pair {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: center;
+  align-items: stretch;
   column-gap: 1px;
   background: var(--hairline);
+}
+
+/* Demo clips are authored at their own proportions — portrait for the
+   point clouds, tall for the DoM decodes. Let those frames follow the
+   asset instead of forcing 16:9, which would letterbox them down to
+   nothing. Still images (charts, diagrams) keep the uniform box. */
+main:not(.full) .figure-media:has(> img[src$=".gif"]),
+main:not(.full) .figure-pair:has(img[src$=".gif"]) {
+  aspect-ratio: auto;
 }
 
 .figure-pair img {
