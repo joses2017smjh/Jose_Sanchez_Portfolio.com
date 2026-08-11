@@ -1,0 +1,52 @@
+---
+import Base from "../layouts/Base.astro";
+import { beyond } from "../beyond.config";
+
+const title = "Beyond coding — Jose Sanchez Gonzalez";
+const description =
+  "Outside the code: building a humanoid, hiking to lakes and waterfalls, three dogs, jiu-jitsu and the bench.";
+---
+
+<Base title={title} description={description} full>
+  <div class="beyond-page">
+    <div class="beyond-head">
+      <h1 class="panel-title">Beyond coding</h1>
+      <p class="dim">{description}</p>
+    </div>
+
+    <ul class="tile-grid">
+      {
+        beyond.map((tile, i) => {
+          const Card = tile.href ? "a" : "div";
+          return (
+            <li>
+              <Card class:list={["tile", tile.media.length > 1 && "tile-split"]} href={tile.href}>
+                <div class="tile-media">
+                  {tile.media.map((m) =>
+                    m.kind === "video" ? (
+                      <video data-loop playsinline muted preload="none" poster={m.poster} aria-label={m.alt}>
+                        <source src={m.src} type="video/mp4" />
+                      </video>
+                    ) : (
+                      <img
+                        src={m.src}
+                        alt={m.alt}
+                        loading={i < 2 ? "eager" : "lazy"}
+                        decoding="async"
+                      />
+                    ),
+                  )}
+                </div>
+                <div class="tile-text">
+                  <p class="meta tile-kicker">{tile.kicker}</p>
+                  <h2 class="tile-title">{tile.title}</h2>
+                  <p class="dim">{tile.body}</p>
+                </div>
+              </Card>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</Base>

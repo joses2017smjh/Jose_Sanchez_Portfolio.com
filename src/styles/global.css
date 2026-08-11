@@ -546,6 +546,109 @@ a.figure-media:hover {
 }
 
 /* ---------------------------------------------------------------------------
+   /beyond — four big tiles, one per thing outside the code
+   --------------------------------------------------------------------------- */
+.beyond-page {
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-bottom: var(--space-4);
+}
+
+.beyond-head {
+  max-width: var(--measure);
+  margin: 0 auto var(--space-4);
+  text-align: center;
+}
+
+.beyond-head .panel-title {
+  font-size: clamp(2.25rem, 7vw, 4.5rem);
+  margin-bottom: var(--space-2);
+}
+
+.tile-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+a.tile:hover {
+  border-color: var(--blue);
+  box-shadow: 0 4px 20px rgba(31, 63, 166, 0.14);
+}
+
+.tile-media {
+  aspect-ratio: 4 / 3;
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  overflow: hidden;
+}
+
+/* two clips share the frame, side by side */
+.tile-split .tile-media {
+  grid-template-columns: 1fr 1fr;
+  background: var(--hairline);
+}
+
+.tile-media img,
+.tile-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--surface);
+}
+
+.tile-text {
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+
+.tile-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--text-xs);
+  color: var(--red);
+  margin-bottom: var(--space-1);
+}
+
+.tile-title {
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--text);
+  margin: 0 0 var(--space-1);
+}
+
+.tile-text p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 48rem) {
+  .tile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Build log — the humanoid build, step by step, scrolled sideways
    --------------------------------------------------------------------------- */
 .buildlog-title {

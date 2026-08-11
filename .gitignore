@@ -28,3 +28,6 @@ Kantaro-recording.mp4
 
 # source media for the humanoid build log (processed copies live in public/media/humanoid)
 Berkley_Robot/
+
+# source media for the /beyond tiles (processed copies live in public/media/beyond)
+pic_beyond/
