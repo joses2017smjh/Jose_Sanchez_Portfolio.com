@@ -2,7 +2,10 @@
 import "@fontsource-variable/instrument-sans";
 import "@fontsource/fragment-mono";
 import "../styles/global.css";
-import LiquidCursor from "../components/LiquidCursor.astro";
+// The liquid cursor is parked for now — it repaints every frame and the
+// native cursor is doing no harm. Re-enable by restoring <LiquidCursor />
+// in the body below; the component is untouched.
+// import LiquidCursor from "../components/LiquidCursor.astro";
 import { site } from "../site.config";
 
 interface Props {
@@ -80,7 +83,7 @@ const person = {
     <main id="main" class:list={{ full }}>
       <slot />
     </main>
-    <LiquidCursor />
+    {/* <LiquidCursor /> — parked, see the import note above */}
     <footer class="site-footer">
       <p class="meta" style="margin: 0;">
         &copy; {new Date().getFullYear()} {site.name}

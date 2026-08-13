@@ -254,33 +254,122 @@ const projects = await sortedProjects();
     }
   </script>
 
-  {/* Vertical wheel pages between panels; inner scrollers (the project
-      carousel, a panel's own vertical overflow) get first claim. */}
+  {/* Wheel pages between the rectangles; inner scrollers (the project
+      carousel, a panel's own vertical overflow) get first claim.
+
+      Two things make this feel smooth rather than sticky. A page is held
+      until the scroll actually finishes — `scrollend` where it exists,
+      with a timeout as the fallback — instead of an arbitrary 500 ms, so
+      short trips release early and long ones are never cut off. And a
+      trackpad's momentum tail is ignored: after a page, the wheel has to
+      go quiet before it can trigger the next one, so one flick moves one
+      rectangle instead of three. */}
   <script>
     const panels = document.getElementById("panels");
     if (panels && window.matchMedia("(pointer: fine)").matches) {
       const sections = Array.from(panels.querySelectorAll<HTMLElement>(".panel"));
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      let lock = false;
+
+      let paging = false;
+      let lastWheel = 0;
+      let releaseTimer = 0;
+
+      const release = () => {
+        window.clearTimeout(releaseTimer);
+        releaseTimer = window.setTimeout(() => {
+          // only hand control back once the wheel has actually settled
+          if (performance.now() - lastWheel < 120) {
+            release();
+            return;
+          }
+          paging = false;
+        }, 140);
+      };
+
+      const supportsScrollEnd = "onscrollend" in window;
+      if (supportsScrollEnd) {
+        panels.addEventListener("scrollend", release, { passive: true });
+      }
+
+      const pageTo = (index: number) => {
+        const el = sections[index];
+        if (!el) return;
+        paging = true;
+        const left = el.offsetLeft - (panels.clientWidth - el.offsetWidth) / 2;
+        panels.scrollTo({ left, behavior: reduced ? "auto" : "smooth" });
+        // fallback for browsers without scrollend, and a safety net if the
+        // smooth scroll is interrupted
+        window.clearTimeout(releaseTimer);
+        releaseTimer = window.setTimeout(release, reduced ? 80 : 420);
+      };
+
+      /** Index of the child whose center is nearest the scroller's center. */
+      const nearest = (scroller: HTMLElement, kids: HTMLElement[]) => {
+        const mid = scroller.scrollLeft + scroller.clientWidth / 2;
+        let best = 0;
+        let bestDist = Infinity;
+        kids.forEach((s, i) => {
+          const d = Math.abs(s.offsetLeft + s.offsetWidth / 2 - mid);
+          if (d < bestDist) {
+            bestDist = d;
+            best = i;
+          }
+        });
+        return best;
+      };
+
+      const currentIndex = () => nearest(panels, sections);
+
+      /** Step a horizontal strip one item, landing on its snap point. */
+      const stepStrip = (strip: HTMLElement, dir: number) => {
+        const kids = Array.from(strip.children) as HTMLElement[];
+        if (kids.length === 0) return false;
+        const i = nearest(strip, kids);
+        const next = Math.min(Math.max(i + dir, 0), kids.length - 1);
+        if (next === i) return false;
+        const el = kids[next];
+        paging = true;
+        strip.scrollTo({
+          left: el.offsetLeft - (strip.clientWidth - el.offsetWidth) / 2,
+          behavior: reduced ? "auto" : "smooth",
+        });
+        window.clearTimeout(releaseTimer);
+        releaseTimer = window.setTimeout(release, reduced ? 80 : 420);
+        return true;
+      };
+
       panels.addEventListener(
         "wheel",
         (e) => {
           if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // native horizontal gesture
-          // let an inner scroller consume the wheel until it hits its edge
+          lastWheel = performance.now();
+
+          // let an inner scroller consume the wheel until it hits its edge.
+          // Strips step one item per flick: a raw delta would be dragged
+          // back by the snap, and a half-scrolled card looks broken.
           let el = e.target as HTMLElement | null;
           while (el && el !== panels) {
-            if (el.scrollWidth > el.clientWidth + 1) {
-              const more =
+            // "content is taller than the box" is not the same as "the box
+            // scrolls" — a panel with hidden overflow would otherwise
+            // swallow the wheel and go nowhere
+            const style = getComputedStyle(el);
+            const scrollsX = /auto|scroll/.test(style.overflowX);
+            const scrollsY = /auto|scroll/.test(style.overflowY);
+
+            if (scrollsX && el.scrollWidth > el.clientWidth + 1) {
+              const atEnd =
                 e.deltaY > 0
-                  ? el.scrollLeft + el.clientWidth < el.scrollWidth - 1
-                  : el.scrollLeft > 0;
-              if (more) {
-                el.scrollLeft += e.deltaY;
+                  ? el.scrollLeft + el.clientWidth >= el.scrollWidth - 2
+                  : el.scrollLeft <= 1;
+              if (!atEnd) {
                 e.preventDefault();
+                if (!paging && Math.abs(e.deltaY) >= 4) {
+                  stepStrip(el, e.deltaY > 0 ? 1 : -1);
+                }
                 return;
               }
             }
-            if (el.scrollHeight > el.clientHeight + 1) {
+            if (scrollsY && el.scrollHeight > el.clientHeight + 1) {
               const more =
                 e.deltaY > 0
                   ? el.scrollTop + el.clientHeight < el.scrollHeight - 1
@@ -289,24 +378,16 @@ const projects = await sortedProjects();
             }
             el = el.parentElement;
           }
+
           e.preventDefault();
-          if (lock) return;
-          const current = Math.round(
-            panels.scrollLeft / (sections[1]?.offsetLeft - sections[0]?.offsetLeft || 1),
-          );
+          if (paging) return;
+          if (Math.abs(e.deltaY) < 4) return; // ignore the tail of a glide
+
           const next = Math.min(
-            Math.max(current + (e.deltaY > 0 ? 1 : -1), 0),
+            Math.max(currentIndex() + (e.deltaY > 0 ? 1 : -1), 0),
             sections.length - 1,
           );
-          if (next !== current) {
-            lock = true;
-            sections[next]?.scrollIntoView({
-              behavior: reduced ? "auto" : "smooth",
-              inline: "center",
-              block: "nearest",
-            });
-            setTimeout(() => (lock = false), reduced ? 100 : 500);
-          }
+          if (next !== currentIndex()) pageTo(next);
         },
         { passive: false },
       );
