@@ -2,22 +2,24 @@
 title: "Vision-Based Metric Depth Estimation for Robotic Pruning"
 summary: "Metric depth estimation for dormant orchard scenes, built to guide robotic pruning."
 problem: >-
-  Robotic pruning needs centimeter-accurate depth on thin, cluttered branches,
-  where commodity sensors and off-the-shelf monocular models fall short.
-  Collecting real orchard data with ground-truth depth at that precision is
-  slow, seasonal, and expensive.
+  A pruning robot has to know where a branch is, how thick it is, and how far
+  it sits from the cutter — centimetre accuracy on thin, cluttered structure.
+  Commodity depth sensors and off-the-shelf monocular models both fall apart
+  there, and collecting real orchard data with ground truth at that precision
+  is slow, seasonal, and expensive.
 approach: >-
-  Built a synthetic-orchard pipeline in Blender that renders RGB, ground-truth
-  depth maps, masks, and full camera intrinsics and extrinsics for dormant
-  apple tree scenes. Compared monocular, calibrated, fine-tuned, and
-  multi-view RGB-D depth models on those scenes, then refined predictions
-  with a DINOv2-based RGB+D multi-view model. Profiled deployment latency
-  alongside accuracy to make the speed/precision trade-off explicit.
+  Rendered a synthetic orchard in Blender: RGB, per-pixel ground-truth depth,
+  masks, and full camera intrinsics and extrinsics for dormant apple trees.
+  Benchmarked monocular, scale-calibrated, fine-tuned, and multi-view RGB-D
+  models under one protocol — 10 trees, 5 seeds, a fixed frame budget, one
+  design change at a time. The winning configuration refines fine-tuned
+  monocular depth with a DINOv2 RGB+D multi-view model. Latency was profiled
+  alongside accuracy so the speed/precision trade-off stays explicit.
 result: >-
-  Validation RMSE improved from 0.0550 m to 0.0445 ± 0.0057 m with DINOv2
-  RGB+D multi-view refinement. Latency: 484.7 ms per 6-view group (80.8 ms
-  amortized per depth map) vs 333.6 ms per monocular frame — higher accuracy
-  at the cost of a slower minimum inference unit.
+  Validation RMSE 0.0550 m → 0.0445 ± 0.0057 m with DINOv2 RGB+D refinement
+  over 3 stereo pairs. Latency: 484.7 ms per 6-view group (80.8 ms amortized
+  per depth map) vs 333.6 ms per monocular frame — more accuracy, a slower
+  minimum inference unit.
 tags:
   [
     "Python",
@@ -35,32 +37,73 @@ poster: "/media/depth/orchard_rig_poster.jpg"
 image: "/media/depth/arch_dino_dsb.jpg"
 alt: "UR robot arm with a 3D-printed camera end-effector sweeping along a dormant apple orchard row."
 figcaption: "The deployment target: camera end-effector scanning dormant apple trees in the field."
+sections:
+  - heading: "Why a synthetic orchard"
+    body: >-
+      Real depth sensors lose thin branches in noise, and hand-measuring
+      metric depth in an orchard is not practical at scale. Blender renders
+      the scene and its exact per-pixel depth together — 100 trees, 6 shots,
+      4 bark types — with segmentation masks and camera poses for free.
+    figures:
+      - image: "/media/depth/Noisey_lidar.jpg"
+        alt: "Real orchard photo beside a noisy sensor depth map where branch structure is lost in blocky colour."
+        caption: "The starting point: real sensor depth loses the branches entirely."
+      - image: "/media/depth/Complex_blender.jpg"
+        alt: "Procedurally generated dormant apple tree on a trellis, rendered in Blender."
+        caption: "A procedural dormant tree on trellis wire, rendered in Blender."
+      - image: "/media/depth/gt_depth_example.png"
+        alt: "Ground-truth depth render of the same tree, every spur and wire resolved in colour-coded distance."
+        caption: "Its exact ground-truth depth — every spur and wire resolved."
+  - heading: "Off-the-shelf depth broke on the branches"
+    body: >-
+      Depth Anything V3, metric and relative, produced unstable maps that
+      dropped spurs completely. A streaming least-squares fit of scale and
+      shift over trunk pixels recovered metric alignment in one constant-memory
+      pass over 24k images, and preprocessing cut error further — but even the
+      best calibrated model still sat at 0.138 m, far short of a cutter's
+      tolerance.
+    figures:
+      - image: "/media/depth/Pro_Comparison.png"
+        alt: "Four panels: orchard RGB, DA3 metric depth, DA3 relative depth, and tiled PRO depth on the same scene."
+        caption: "Same scene, four models. Only the tiled PRO pass keeps the thin branches."
+      - image: "/media/depth/calibration_vs_preprocessing.png"
+        alt: "Bar chart of RMSE per model at three stages: uncalibrated, calibration only, and calibration with preprocessing."
+        caption: "Log axis: DA3 metric falls 18.99 m to 0.138 m through calibration and preprocessing."
+  - heading: "Two refinement architectures"
+    body: >-
+      Both take predicted depth plus RGB from several nearby views and fuse
+      them at the bottleneck. The CNN U-Net trains from scratch with shared
+      encoders. The DINOv2 variant freezes a pretrained ViT-L on the RGB path
+      and trains a CNN side branch for depth, because a ViT cannot simply take
+      depth as a fourth channel.
+    figures:
+      - image: "/media/depth/arch_cnn_unet.jpg"
+        alt: "Shared CNN U-Net encoder diagram: two views encoded with tied weights, bottlenecks concatenated and fused."
+        caption: "Baseline — shared U-Net encoders, concat plus 1x1 conv fusion."
+      - image: "/media/depth/arch_dino_dsb.jpg"
+        alt: "Diagram of a frozen DINOv2 ViT-L RGB path fused with a trainable CNN depth side branch before a decoder."
+        caption: "Frozen DINOv2 ViT-L on RGB, trainable CNN side branch on depth."
+  - heading: "What actually moved the number"
+    body: >-
+      The depth input mattered more than the architecture: fine-tuning DA2 on
+      masked synthetic depth set the floor, and multi-view refinement took it
+      the rest of the way. Three stereo pairs was the sweet spot — a fourth
+      added nothing. Pretrained DINOv2 features beat the from-scratch CNN at
+      every view count.
+    figures:
+      - image: "/media/depth/multiview_ablation_rmse.png"
+        alt: "Grouped bar chart of validation RMSE for DINO and CNN refiners at one, two, three and four stereo pairs."
+        caption: "Best run: DINO RGB+D, 3 pairs, 0.0445 m against a 0.0550 m fine-tuned baseline."
 paperStrip:
   pdf: "/media/papers/depth-capstone-paper.pdf"
   pages: "/media/papers/cap-page-{n}.jpg"
   count: 11
-gallery:
-  - image: "/media/depth/arch_dino_dsb.jpg"
-    alt: "Architecture diagram: frozen DINOv2 ViT-L RGB encoder and a trainable depth branch, fused before a decoder predicts refined metric depth."
-    caption: "DINOv2 RGB-D refinement — frozen ViT-L RGB encoder fused with a trainable depth branch."
-  - image: "/media/depth/gt_depth_example.png"
-    alt: "Synthetic orchard image beside its ground-truth depth map rendered in Blender."
-    caption: "Synthetic orchard RGB with Blender ground-truth depth."
-  - image: "/media/depth/Complex_blender.jpg"
-    alt: "Procedurally generated dormant apple tree scene rendered in Blender."
-    caption: "Procedural dormant apple tree scene in Blender."
-  - image: "/media/depth/Noisey_lidar.jpg"
-    alt: "Noisy LiDAR-style depth capture of orchard branches before refinement."
-    caption: "Noisy depth input the refinement model must clean up."
-  - image: "/media/depth/Pro_Comparison.png"
-    alt: "Side-by-side outputs of several monocular depth models on a dormant tree scene."
-    caption: "Monocular depth model comparison on a dormant-tree scene."
-  - image: "/media/depth/arch_cnn_unet.jpg"
-    alt: "Architecture diagram of the shared CNN stereo U-Net with view features fused at the bottleneck."
-    caption: "CNN stereo U-Net baseline — shared encoders, bottleneck view fusion."
-  - image: "/media/depth/full_spur_rmse_by_model_variant.png"
-    alt: "Bar chart of validation RMSE across all evaluated depth model variants."
-    caption: "Validation RMSE by model variant."
 date: 2026-06-01
 order: 1
 ---
+
+## Where it goes next
+
+All of this is synthetic. The open question is whether masked fine-tuning and
+multi-view refinement survive the move to real orchard images — and whether
+the same models can be fine-tuned directly on real stereo pruning scenes.
