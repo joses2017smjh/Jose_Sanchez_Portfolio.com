@@ -4,18 +4,20 @@ summary: "Semantic search and automated organization for files scattered across 
 problem: >-
   File collections sprawl across local directories, cloud storage, web
   content, and databases. Filename search can't answer questions about what
-  files contain, how they relate, or where they belong.
+  files contain, how they relate, or where they belong — and the answer is
+  usually spread across several documents rather than sitting in one.
 approach: >-
   Built a retrieval pipeline that extracts and indexes content from
   heterogeneous sources with LlamaIndex, stores embeddings in PostgreSQL with
   pgvector, and serves everything through FastAPI. Retrieval-augmented
   generation with locally hosted models via Ollama powers semantic search,
   metadata extraction, hierarchical indexing, and automated file structuring.
-  The whole stack ships as Docker services.
+  An index manager tracks per-file changes so unchanged files are never
+  re-processed. The whole stack ships as Docker services.
 result: >-
   A working production-style RAG system: containerized services answering
   semantic queries and reorganizing files across local, cloud, web, and
-  database sources.
+  database sources, running entirely on locally hosted models.
 tags:
   [
     "Python",
@@ -30,32 +32,44 @@ tags:
 repo: "https://github.com/klaurie/MetaNaviT"
 image: "/media/metanavit/workflow.png"
 alt: "MetaNaviT workflow diagram: files chunked and embedded into a vector DB; queries answered by the LLM with chat history and tools."
-figcaption: "Workflow — MetaNaviT employs a client-server architecture: indexing into a vector DB, then querying through the LLM."
+figcaption: "Workflow — client-server architecture: indexing into a vector DB, then querying through the LLM."
 sections:
-  - heading: "Demo — extract & transform"
+  - heading: "Extract and transform"
     body: >-
-      From the narrated demo: MetaNaviT indexes a folder of Robotnav
-      experiment logs, gathering file metadata — names, timestamps, formats —
-      plus content signals like keywords, structure, and tabular data. Asked
-      for a CSV, the RAG pipeline reasons over all five .docx logs and writes
-      robot_nav_results.csv, previewing the rows in chat while the agent
-      workflow streams in the terminal.
+      MetaNaviT indexes a folder of Robotnav experiment logs, gathering file
+      metadata — names, timestamps, formats — plus content signals like
+      keywords, structure, and tabular data. Asked for a CSV, the pipeline
+      reasons across all five .docx logs and writes robot_nav_results.csv,
+      previewing the rows in chat while the agent workflow streams in the
+      terminal.
     figures:
       - image: "/media/metanavit/demo_extract.mp4"
         alt: "Screen recording: MetaNaviT chat extracts five Robotnav logs into robot_nav_results.csv while agent steps log in a terminal."
-        caption: "Extract & transform — five Robotnav logs consolidated into robot_nav_results.csv."
-  - heading: "Demo — organize by topic"
+        caption: "Five Robotnav logs consolidated into one CSV, answered from retrieval."
+  - heading: "Organize by topic"
     body: >-
-      The second narrated demo: automatic organization. MetaNaviT scans a
-      mixed documents folder — PDFs, images, text — combining file metadata
-      (names, types, modification dates) with content signals, and files
-      everything into topic groups under organized_by_topic/. An index
-      manager tracks per-file changes so unchanged files are never
-      re-processed.
+      The second demo is automatic organization. MetaNaviT scans a mixed
+      folder of PDFs, images, and text, combines file metadata with content
+      signals, and files everything into topic groups under
+      organized_by_topic/. The index manager tracks per-file changes, so a
+      re-run only touches what actually moved.
     figures:
       - image: "/media/metanavit/demo_organize.mp4"
         alt: "Screen recording: MetaNaviT reorganizes a documents folder into topic subfolders and lists the created structure."
-        caption: "Organize — a mixed folder auto-filed into topic groups under organized_by_topic/."
+        caption: "A mixed folder auto-filed into topic groups under organized_by_topic/."
 date: 2025-06-01
 order: 4
 ---
+
+## Where it goes next
+
+The honest gap is that this version has no numbers attached to it. v2 starts
+with an eval harness — a frozen corpus, a hand-labeled question set, and
+retrieval metrics reported alongside latency — so every change after it can be
+measured rather than asserted.
+
+Then the retrieval itself: hybrid BM25 and dense search fused with reciprocal
+rank fusion, a cross-encoder reranker, and late chunking so each chunk vector
+carries its document's context. After that, the architecture shifts — moving
+retrieval inside a LangGraph agent loop that rewrites its own queries, and
+exposing the corpus as an MCP server so any client can drive it.

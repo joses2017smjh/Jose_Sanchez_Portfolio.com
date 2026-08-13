@@ -14,6 +14,24 @@ export const humanoid = {
   ],
   status:
     "Arms mostly assembled and calibration underway; next up is finishing the limbs and moving to Isaac Sim for motion control and RL.",
+  // The upstream project this build follows — design files, docs and paper.
+  credit:
+    "This is my build of Berkeley Humanoid Lite, the open-source 3D-printed humanoid from the Hybrid Robotics Lab at UC Berkeley. The design files, assembly documentation and the RSS 2025 paper behind it all live upstream:",
+  links: [
+    { label: "Project page", href: "https://lite.berkeley-humanoid.org/" },
+    {
+      label: "Paper (arXiv)",
+      href: "https://arxiv.org/abs/2504.17249",
+    },
+    {
+      label: "Build docs",
+      href: "https://berkeley-humanoid-lite.gitbook.io/docs",
+    },
+    {
+      label: "GitHub",
+      href: "https://github.com/HybridRobotics/Berkeley-Humanoid-Lite",
+    },
+  ],
   steps: [
     {
       kind: "image" as const,

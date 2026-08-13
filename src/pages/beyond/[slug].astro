@@ -36,6 +36,12 @@ const rest = body.slice(1);
       <BuildLog />
       {humanoid.notes.map((note) => <p class="dim">{note}</p>)}
       <p class="meta">{humanoid.status}</p>
+      <p class="dim">{humanoid.credit}</p>
+      <div class="project-links">
+        {humanoid.links.map((l) => (
+          <a href={l.href}>{l.label}</a>
+        ))}
+      </div>
     </>
   )}
 

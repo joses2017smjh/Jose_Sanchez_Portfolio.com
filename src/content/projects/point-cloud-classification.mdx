@@ -2,14 +2,16 @@
 title: "Point Cloud Classification"
 summary: "Point-based deep learning models that classify 3D objects from raw point clouds."
 problem: >-
-  Point clouds are unordered and irregular, so standard CNNs don't apply:
-  models must be invariant to point permutation while still capturing local
+  Point clouds are unordered and irregular, so standard CNNs don't apply: a
+  model has to be invariant to point permutation while still capturing local
   spatial structure and long-range relationships.
 approach: >-
   Designed point-based architectures inspired by PointNet and
-  PointConvFormer, combining shared per-point encoders with attention
-  mechanisms to model spatial relationships directly on raw points. Trained
-  and evaluated on the ModelNet and ShapeNet benchmarks.
+  PointConvFormer, combining shared per-point encoders with attention over
+  local neighborhoods to model spatial relationships directly on raw points.
+  Trained and evaluated on the ModelNet and ShapeNet benchmarks, with the
+  same sampling budget across variants so the comparison isolates the
+  architecture.
 result: >-
   Working 3D object classifiers on ModelNet and ShapeNet; attention-based
   variants improved classification performance over the PointNet-style
@@ -31,43 +33,48 @@ sections:
   - heading: "PointNet — hits and misses"
     body: >-
       A shared per-point MLP with max-pool aggregation classifies clean,
-      distinctive silhouettes reliably — but with no local geometry,
-      box-like furniture blurs together, and night stand vs dresser is its
-      characteristic confusion. Rotating ModelNet10 test shapes, 2,048
-      sampled points each.
+      distinctive silhouettes reliably. But with no local geometry, box-like
+      furniture blurs together, and night stand vs dresser becomes its
+      characteristic confusion. Rotating ModelNet10 test shapes, 2,048 sampled
+      points each.
     figures:
+      - image: "/media/pointcloud/pointnet_architecture.svg"
+        alt: "Architecture diagram of the PointNet classifier: shared per-point MLP into a max-pool global feature."
+        caption: "PointNet — shared per-point MLP, max-pooled to one global feature."
       - image: "/media/pointcloud/pointnet_good_chair.mp4"
         alt: "Rotating point cloud of a chair, correctly classified by PointNet."
-        caption: "PointNet: chair classified correctly (ModelNet10 test, 2,048 points)."
+        caption: "Chair classified correctly — a distinctive silhouette."
       - image: "/media/pointcloud/pointnet_bad_nightstand.mp4"
         alt: "Rotating point cloud of a night stand, misclassified as a dresser by PointNet."
-        caption: "PointNet: night stand read as dresser — its characteristic box-furniture miss."
+        caption: "Night stand read as dresser — its characteristic box-furniture miss."
   - heading: "Point Transformer — sharper, not flawless"
     body: >-
       Self-attention over local neighborhoods recovers the fine structure
-      PointNet throws away, lifting accuracy across ModelNet10. The
-      residual errors concentrate where geometry alone is ambiguous — a
-      flat slab on legs reads as desk or table.
+      PointNet throws away, lifting accuracy across ModelNet10. The residual
+      errors concentrate exactly where geometry alone is ambiguous — a flat
+      slab on legs reads as desk or table, and no amount of attention settles
+      which.
     figures:
       - image: "/media/pointcloud/pointtransformer_good_monitor.mp4"
         alt: "Rotating point cloud of a monitor, correctly classified by the Point Transformer."
-        caption: "Point Transformer: monitor classified correctly (ModelNet10 test, 2,048 points)."
+        caption: "Monitor classified correctly (ModelNet10 test, 2,048 points)."
       - image: "/media/pointcloud/pointtransformer_bad_desk.mp4"
         alt: "Rotating point cloud of a desk, misclassified as a table by the Point Transformer."
-        caption: "Point Transformer: desk read as table — the dominant residual confusion."
-gallery:
-  - image: "/media/pointcloud/pointnet_architecture.svg"
-    alt: "Architecture diagram of the PointNet classifier."
-    caption: "PointNet classifier architecture."
-  - image: "/media/pointcloud/pointtransformer_modelnet10.svg"
-    alt: "Point Transformer training curves on ModelNet10."
-    caption: "Point Transformer training on ModelNet10."
-  - image: "/media/pointcloud/pointtransformer_modelnet10_confusion_matrix.svg"
-    alt: "Confusion matrix for the Point Transformer on ModelNet10."
-    caption: "Point Transformer confusion matrix on ModelNet10."
-  - image: "/media/pointcloud/modelnet10_num_points.svg"
-    alt: "Chart of classification accuracy versus point cloud size on ModelNet10."
-    caption: "Accuracy vs point cloud size, ModelNet10."
+        caption: "Desk read as table — the dominant residual confusion."
+  - heading: "Where the errors land"
+    body: >-
+      The confusion matrix puts the remaining mistakes in one place: the
+      box-furniture cluster, not scattered across the ten classes. Accuracy
+      also saturates well before the full point budget, which is the useful
+      deployment finding — most of the shape information is present in far
+      fewer points than the benchmark hands you.
+    figures:
+      - image: "/media/pointcloud/pointtransformer_modelnet10_confusion_matrix.svg"
+        alt: "Confusion matrix for the Point Transformer on ModelNet10, with errors clustered among box-like furniture classes."
+        caption: "Errors cluster in box-like furniture, not across all ten classes."
+      - image: "/media/pointcloud/modelnet10_num_points.svg"
+        alt: "Chart of classification accuracy versus point cloud size on ModelNet10, saturating early."
+        caption: "Accuracy vs point count — saturates well before the full budget."
 date: 2025-12-01
 order: 5
 ---

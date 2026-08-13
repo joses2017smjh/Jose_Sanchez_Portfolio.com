@@ -4,22 +4,21 @@ summary: "Open-source recreation of semi-automated offside tech: broadcast foota
 problem: >-
   Semi-automated offside systems turn broadcast footage into metric 3D
   positions, but the published research stops at a monocular ball baseline
-  with several metres of error. Reproducing that baseline exactly is the
-  only way to know whether an improvement is real or just a different
-  evaluation.
+  with several metres of error. Reproducing that baseline exactly is the only
+  way to know whether an improvement is real or just a different evaluation.
 approach: >-
   Anchored everything to SoccerNet-v3D (CVPR CVSports 2025) because it
-  publishes frozen splits, weights and metrics. Rebuilt the loader and
-  camera geometry from the release files, reproduced the detection and
-  monocular localization baselines, then attacked the depth error with a
-  gravity-constrained trajectory fit — solving a ballistic arc over a
-  360 ms window of one camera's 2D track instead of inferring depth from
+  publishes frozen splits, weights, and metrics. Rebuilt the loader and camera
+  geometry from the release files, reproduced the detection and monocular
+  localization baselines, then attacked the depth error with a
+  gravity-constrained trajectory fit — solving a ballistic arc over a 360 ms
+  window of one camera's 2D track instead of inferring depth from
   blur-inflated apparent ball size.
 result: >-
-  Baselines reproduced within 0.003 AP (0.813 vs 0.81 published) and
-  reprojection matched to a median of 0.002 px across 4,051 frames.
-  Physics-constrained depth cut median error 3.26 m to 2.82 m and returned
-  5.4x more estimates inside 2 m. 12/12 tests pass.
+  Baselines reproduced within 0.003 AP (0.813 vs 0.81 published), reprojection
+  matched to a median of 0.002 px across 4,051 frames. Physics-constrained
+  depth cut median error from 3.26 m to 2.82 m and returned 5.4x more
+  estimates inside 2 m. 12/12 tests pass.
 tags:
   [
     "Python",
@@ -38,11 +37,10 @@ sections:
   - heading: "Reproduce before improving"
     body: >-
       Phase 1 rebuilds the paper's numbers on its own frozen test split, so
-      later changes are measured against something real rather than a
+      every later change is measured against something real rather than a
       re-implementation that quietly moved the goalposts. Detection lands
-      within 0.003 AP of the published figure, monocular localization comes
-      in slightly better than the paper's 4.2 m, and the custom AP metric
-      cross-checks against Ultralytics' own val to within 0.003.
+      within 0.003 AP of the published figure, and monocular localization
+      comes in slightly better than the paper's 4.2 m.
   - heading: "Depth from physics, not from blur"
     body: >-
       A ball's apparent diameter is a terrible depth cue when motion blur
@@ -50,11 +48,18 @@ sections:
       360 ms window of 2D detections, anchored by the size prior, and beats
       the per-frame prior on 73% of windows. The write-up also records where
       it fails: single-view depth-from-gravity is ill-posed on its own and
-      diverges without the anchor.
+      diverges without that anchor.
     figures:
       - image: "/media/twin/track2-physics.png"
         alt: "Median depth error falling from 3.26 m to 2.82 m and the fraction of estimates within 2 m rising from 0.07 to 0.37."
-        caption: "Ballistic window vs size prior on ISSIA-3D."
+        caption: "Ballistic window vs size prior on ISSIA-3D — error down, confident estimates up 5.4x."
+  - heading: "Uncertainty as a first-class output"
+    body: >-
+      Track 4 propagates per-detection pixel noise into a 3x3 covariance on
+      every triangulated point, so the system reports how much to trust each
+      3D position instead of emitting a bare number. That matters downstream:
+      an offside call made from a low-confidence point should be flagged, not
+      rendered with the same authority as a clean one.
 date: 2026-08-08
 order: 2
 ---
@@ -62,12 +67,6 @@ order: 2
 ## Where it goes next
 
 Track 5 is the one that turns "reproducing a paper" into "recreating SAOT":
-lifting players, not just the ball, by triangulating keypoints from the same
-synced replay pairs and fitting SMPL bodies — scored as MPJPE against
+lifting players rather than just the ball, triangulating keypoints from the
+same synced replay pairs and fitting SMPL bodies — scored as MPJPE against
 WorldPose ground truth.
-
-![Ballistic window vs size prior on ISSIA-3D](/media/twin/track2-physics.png)
-
-Uncertainty-aware triangulation (Track 4) runs underneath all of it:
-propagating per-detection pixel noise into a 3x3 covariance, so the system
-can say how much to trust each 3D point instead of reporting a bare number.
