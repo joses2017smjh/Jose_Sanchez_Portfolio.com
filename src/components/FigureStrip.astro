@@ -25,14 +25,20 @@ const pad = String(number).padStart(2, "0");
             <span class="figure-number">{label}</span>
           </div>
           <div class="figure-media">
-            <img
-              src={item.image}
-              alt={item.alt}
-              loading="lazy"
-              decoding="async"
-              width="1280"
-              height="720"
-            />
+            {item.image.endsWith(".mp4") ? (
+              <video data-loop playsinline muted preload="none" aria-label={item.alt}>
+                <source src={item.image} type="video/mp4" />
+              </video>
+            ) : (
+              <img
+                src={item.image}
+                alt={item.alt}
+                loading="lazy"
+                decoding="async"
+                width="1280"
+                height="720"
+              />
+            )}
           </div>
           <figcaption>{label} — {item.caption}</figcaption>
         </figure>

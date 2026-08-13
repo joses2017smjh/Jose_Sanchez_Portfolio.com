@@ -17,9 +17,9 @@ result: >-
 tags: ["Python", "PyTorch", "LiDAR", "Point Clouds", "Attention"]
 image: "/media/pointcloud/pointtransformer_architecture.svg"
 pair:
-  - image: "/media/pointcloud/pointtransformer_good_monitor.gif"
+  - image: "/media/pointcloud/pointtransformer_good_monitor.mp4"
     alt: "Rotating point cloud of a monitor, correctly classified by the Point Transformer."
-  - image: "/media/pointcloud/pointtransformer_bad_desk.gif"
+  - image: "/media/pointcloud/pointtransformer_bad_desk.mp4"
     alt: "Rotating point cloud of a desk, misclassified as a table by the Point Transformer."
 alt: "Two rotating ModelNet10 point clouds: a monitor classified correctly, a desk misread as a table."
 figcaption: "Point Transformer on ModelNet10 — a hit and a miss, side by side."
@@ -36,10 +36,10 @@ sections:
       characteristic confusion. Rotating ModelNet10 test shapes, 2,048
       sampled points each.
     figures:
-      - image: "/media/pointcloud/pointnet_good_chair.gif"
+      - image: "/media/pointcloud/pointnet_good_chair.mp4"
         alt: "Rotating point cloud of a chair, correctly classified by PointNet."
         caption: "PointNet: chair classified correctly (ModelNet10 test, 2,048 points)."
-      - image: "/media/pointcloud/pointnet_bad_nightstand.gif"
+      - image: "/media/pointcloud/pointnet_bad_nightstand.mp4"
         alt: "Rotating point cloud of a night stand, misclassified as a dresser by PointNet."
         caption: "PointNet: night stand read as dresser — its characteristic box-furniture miss."
   - heading: "Point Transformer — sharper, not flawless"
@@ -49,10 +49,10 @@ sections:
       residual errors concentrate where geometry alone is ambiguous — a
       flat slab on legs reads as desk or table.
     figures:
-      - image: "/media/pointcloud/pointtransformer_good_monitor.gif"
+      - image: "/media/pointcloud/pointtransformer_good_monitor.mp4"
         alt: "Rotating point cloud of a monitor, correctly classified by the Point Transformer."
         caption: "Point Transformer: monitor classified correctly (ModelNet10 test, 2,048 points)."
-      - image: "/media/pointcloud/pointtransformer_bad_desk.gif"
+      - image: "/media/pointcloud/pointtransformer_bad_desk.mp4"
         alt: "Rotating point cloud of a desk, misclassified as a table by the Point Transformer."
         caption: "Point Transformer: desk read as table — the dominant residual confusion."
 gallery:

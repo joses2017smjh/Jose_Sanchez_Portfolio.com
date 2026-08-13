@@ -29,7 +29,7 @@
 
       let dpr = 1;
       const resize = () => {
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        dpr = Math.min(window.devicePixelRatio || 1, 1.5);
         canvas.width = window.innerWidth * dpr;
         canvas.height = window.innerHeight * dpr;
       };
@@ -145,9 +145,15 @@
       const rgba = (c: [number, number, number], a: number) =>
         `rgba(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])},${a})`;
 
+      // Clearing the whole window each frame is the single most expensive
+      // thing this canvas does; track what was painted and clear only that.
+      let dirty = { x: 0, y: 0, w: 0, h: 0 };
+
       const frame = () => {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (dirty.w > 0) {
+          ctx.clearRect(dirty.x, dirty.y, dirty.w, dirty.h);
+        }
         alpha = lerp(alpha, visible ? 1 : 0, 0.12);
 
         if (alpha > 0.01) {
@@ -307,7 +313,7 @@
             ctx.fillStyle = rgba(c, 0.92 * alpha);
             const topY = body.y + R * 0.1;
             const span = headY - topY;
-            const steps = Math.max(Math.ceil(span / (R * 0.07)), 8);
+            const steps = Math.max(Math.ceil(span / (R * 0.14)), 6);
             for (let i = 0; i <= steps; i++) {
               const t = i / steps;
               // fat where it leaves the body, tapering toward the head
@@ -335,7 +341,7 @@
             ctx.fillStyle = rgba(p.color, 0.9 * fade * alpha);
             // retracting filament above the head
             if (p.tail > 0.5) {
-              const steps = Math.max(Math.ceil(p.tail / (R * 0.07)), 3);
+              const steps = Math.max(Math.ceil(p.tail / (R * 0.14)), 3);
               for (let j = 0; j <= steps; j++) {
                 const t = j / steps;
                 circle(p.x, p.y - p.tail * t, lerp(p.r * 0.8, p.r * 0.12, t));
@@ -352,6 +358,21 @@
           // crisp dot at the true pointer position, for precision
           ctx.fillStyle = `rgba(19,19,19,${0.95 * alpha})`;
           circle(mouse.x, mouse.y, 4);
+
+          // bounds of everything drawn: disc, drips, falling droplets
+          let lowest = body.y + R * 2;
+          for (const p of droplets) lowest = Math.max(lowest, p.y + p.r);
+          const pad = R * 3;
+          const minX = Math.min(body.x, mouse.x) - pad;
+          const minY = Math.min(body.y, mouse.y) - pad;
+          dirty = {
+            x: minX,
+            y: minY,
+            w: Math.max(body.x, mouse.x) + pad - minX,
+            h: Math.max(lowest, mouse.y) + pad - minY,
+          };
+        } else {
+          dirty = { x: 0, y: 0, w: 0, h: 0 };
         }
 
         requestAnimationFrame(frame);

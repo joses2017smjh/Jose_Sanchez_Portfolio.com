@@ -5,6 +5,7 @@ import FigureStrip from "../../components/FigureStrip.astro";
 import PaperStrip from "../../components/PaperStrip.astro";
 import ScrollRuler from "../../components/ScrollRuler.astro";
 import TagList from "../../components/TagList.astro";
+import { render } from "astro:content";
 import { sortedProjects } from "../../lib/projects";
 
 export async function getStaticPaths() {
@@ -38,6 +39,11 @@ const {
   sections = [],
   gallery,
 } = project.data;
+
+// Anything written below the frontmatter renders here, in the order it is
+// written — plain markdown, so text and pictures can be reshuffled freely
+// without touching a component. See EDITING.md.
+const { Content } = await render(project);
 
 // One FIG. NNA…NNZ letter sequence across every strip on the page:
 // section strips letter first, the gallery continues after them.
@@ -127,6 +133,11 @@ for (const s of sections) {
       </>
     )
   }
+
+  {/* free-form markdown written under the frontmatter, in its own order */}
+  <div class="prose">
+    <Content />
+  </div>
 
   <h2>Stack</h2>
   <TagList tags={tags} />

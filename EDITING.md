@@ -17,6 +17,51 @@ you can see on the site comes from the files below. Edit, save, refresh.
 | Colors, fonts, spacing | the `:root` block at the top of `src/styles/global.css` |
 | Section headings ("Projects", "Now"), nav labels | `src/pages/index.astro`, `src/pages/now.astro`, `src/layouts/Base.astro` |
 
+## The quick way: just write markdown
+
+Every project file has two halves. The top half (between the `---` lines) is
+labeled fields — title, tags, the hero picture. **Below the closing `---` you
+can write plain markdown, and it appears on the page in exactly the order you
+write it.** That is the place to reshuffle text and pictures without touching
+any field or component:
+
+```markdown
+---
+title: "Point Cloud Classification"
+...frontmatter stays up here...
+---
+
+## How it started
+
+A paragraph. Just type it.
+
+![A rotating chair point cloud](/media/pointcloud/pointnet_good_chair.mp4)
+
+Another paragraph, after the picture. Move this block above the picture and
+it moves on the page. Nothing else needs to change.
+
+## What broke
+
+- bullets work
+- so do `code`, **bold**, and [links](https://example.com)
+```
+
+Rules of thumb:
+
+- Order in the file = order on the page. Cut and paste blocks to reorder.
+- `![alt text](/media/folder/file.jpg)` for a picture; the same syntax with a
+  `.mp4` gives a looping clip.
+- Pictures live in `public/media/<project>/`; the path in the markdown always
+  starts at `/media/`.
+- This free-form section renders after Problem / Approach / Result and the
+  numbered figure sections, and before Stack. If you only want free-form
+  writing, leave the optional `sections:` field out of the frontmatter
+  entirely.
+
+Use the labeled fields when you want the strict, consistent look (the card
+summary, the FIG. NN figure strips). Use the markdown body when you just want
+to write.
+
 ## Editing project text
 
 Open the project's file in `src/content/projects/`. It's all labeled fields:

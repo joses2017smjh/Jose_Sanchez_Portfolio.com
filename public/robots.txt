@@ -1,0 +1,12 @@
+# This is a portfolio. Being read — by search engines, by AI assistants, by
+# whatever a recruiter is using this year — is the entire point. So nothing
+# is disallowed, and the sitemap is advertised below.
+#
+# (Blocking GPTBot / CCBot / PerplexityBot and friends is for publishers who
+# don't want their work in training sets. The trade here runs the other way:
+# a blocked site can't be cited or summarised when someone asks about me.)
+
+User-agent: *
+Allow: /
+
+Sitemap: https://jose-sanchez-portfolio-com.vercel.app/sitemap-index.xml

@@ -40,16 +40,24 @@ const Media = href ? "a" : "div";
   <Media class:list={["figure-media", pair && "figure-pair"]} href={href}>
     {
       pair ? (
-        pair.map((item) => (
-          <img
-            src={item.image}
-            alt={item.alt}
-            loading={eager ? "eager" : "lazy"}
-            decoding="async"
-            width="480"
-            height="520"
-          />
-        ))
+        /* demo clips ship as mp4 — hardware decoded, and paused when
+           off-screen, which an animated GIF can never be */
+        pair.map((item) =>
+          item.image.endsWith(".mp4") ? (
+            <video data-loop playsinline muted preload="none" aria-label={item.alt}>
+              <source src={item.image} type="video/mp4" />
+            </video>
+          ) : (
+            <img
+              src={item.image}
+              alt={item.alt}
+              loading={eager ? "eager" : "lazy"}
+              decoding="async"
+              width="480"
+              height="520"
+            />
+          ),
+        )
       ) : video ? (
         <video
           data-loop

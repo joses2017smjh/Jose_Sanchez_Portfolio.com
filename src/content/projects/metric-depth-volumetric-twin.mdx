@@ -58,3 +58,16 @@ sections:
 date: 2026-08-08
 order: 2
 ---
+
+## Where it goes next
+
+Track 5 is the one that turns "reproducing a paper" into "recreating SAOT":
+lifting players, not just the ball, by triangulating keypoints from the same
+synced replay pairs and fitting SMPL bodies — scored as MPJPE against
+WorldPose ground truth.
+
+![Ballistic window vs size prior on ISSIA-3D](/media/twin/track2-physics.png)
+
+Uncertainty-aware triangulation (Track 4) runs underneath all of it:
+propagating per-detection pixel noise into a 3x3 covariance, so the system
+can say how much to trust each 3D point instead of reporting a bare number.
