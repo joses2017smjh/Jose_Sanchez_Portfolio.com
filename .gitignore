@@ -13,6 +13,10 @@ node_modules/
 .vercel/
 # personal inspiration material — not for the public repo
 instrunciton for inspiration.pdf
+
+# private job-search material — NEVER commit to the public repo
+halluminate/
+METANAVIT_UPGRADE.txt
 # paper/figure source archives — extracted assets live in public/media
 Capstone_Metric/
 AI_535_Final_Paper__final_copy.zip

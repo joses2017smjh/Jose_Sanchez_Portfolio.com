@@ -1,84 +1,88 @@
 ---
-title: "Agentic Soccer Prediction over MCP"
-summary: "Calibrated match forecasts served by a LangGraph agent across three MCP servers, with human approval before any stake."
+
+title: “Agentic Soccer Prediction over MCP”
+summary: “Calibrated match forecasts served by a LangGraph agent across three MCP servers, with human approval before any stake.”
 problem: >-
-  Betting markets are a strong probability oracle, so the interesting problem
-  isn't beating them — it's producing forecasts that are calibrated,
-  internally consistent across correlated markets, and honest about their own
-  uncertainty, then serving them through an agent where every number traces
-  back to a tool call.
+Betting markets provide robust probability estimates, making the primary challenge not outperforming them, but instead generating forecasts that are calibrated, internally consistent across correlated markets, and transparent regarding uncertainty.
+The objective is not to surpass market accuracy, but to produce forecasts that are calibrated, internally consistent, and explicit about uncertainty.
+Forecasts must maintain internal consistency across correlated markets and provide honest quantification of uncertainty.
+Each forecast is served through an agentic system, ensuring every output is traceable to a tool invocation.
+All numerical outputs are directly attributable to specific tool calls.
 approach: >-
-  Phase A is an offline stack: leakage-guarded features into XGBoost with
-  isotonic calibration and split-conformal sets, a Dixon-Coles score grid
-  reconciled exactly to its own marginals, plus goal-timing and player-prop
-  layers, shipped as one versioned artifact bundle. Phase B serves it — a
-  FastAPI gateway into a LangGraph orchestrator driving three MCP servers
-  (odds, news/injuries, inference), with a human-in-the-loop interrupt before
-  any staking suggestion and conformal sets the agent must surface.
+Phase A consists of an offline pipeline: features are guarded against data leakage and input to XGBoost, followed by isotonic calibration and split-conformal prediction sets.
+A Dixon-Coles score grid is reconciled to its own marginal distributions, with additional layers for goal timing and player-specific propositions. The entire stack is versioned and bundled as a single artifact.
+Goal-timing and player-prop layers are integrated to enhance granularity, with all components versioned for reproducibility.
+Phase B exposes the artifact via a FastAPI gateway, orchestrated by LangGraph, which coordinates three MCP servers (odds, news/injuries, inference).
+A human-in-the-loop interrupt is enforced before any staking recommendation, and conformal prediction sets are surfaced to the user.
+The agent must present conformal sets, ensuring transparency in uncertainty quantification prior to any staking action.
+any staking suggestion and conformal sets the agent must surface.
 result: >-
-  On 102 real World Cup 2026 matches, trained strictly pre-tournament: 0.9013
-  log loss and 62.7% accuracy vs 47.1% for the prior, with conformal coverage
-  at 0.951 against a 0.90 target. On EPL the closing line wins and the report
-  says so.
+Evaluation on 102 World Cup 2026 matches, using models trained exclusively on pre-tournament data, yielded a log loss of 0.9013 and accuracy of 62.7%, compared to 47.1% for the baseline. Conformal coverage was 0.951 against a 0.90 target.
+On EPL data, the closing line outperformed the model, and this is explicitly reported.
+Performance limitations are documented, and the model does not exceed market benchmarks.
+says so.
 tags:
-  [
-    "Python",
-    "LangGraph",
-    "MCP",
-    "XGBoost",
-    "FastAPI",
-    "Conformal Prediction",
-    "Next.js",
-    "Docker",
-  ]
-repo: "https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP"
+[
+“Python”,
+“LangGraph”,
+“MCP”,
+“XGBoost”,
+“FastAPI”,
+“Conformal Prediction”,
+“Next.js”,
+“Docker”,
+]
+repo: “https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP”
 links:
-  - label: "Same code: Cognitive-Swarm repo"
-    href: "https://github.com/joses2017smjh/MCP-Driven-Cognitive-Swarm"
+
+* label: “Same code: Cognitive-Swarm repo”
+href: “https://github.com/joses2017smjh/MCP-Driven-Cognitive-Swarm”
 diagram:
-  image: "/media/soccer/architecture.png"
-  alt: "System diagram: client to FastAPI gateway to a LangGraph orchestrator calling three MCP servers (odds, news, inference); inference and offline training share a versioned artifact bundle."
-  caption: "Gateway to LangGraph orchestrator to three MCP servers; offline training and inference share one versioned artifact bundle."
-image: "/media/soccer/ui-league-hub.jpg"
-alt: "The MatchIntel league hub: league cards, standings and tournament brackets in a dark UI."
-figcaption: "League hub — standings, in-league Elo, and a matchup projector."
+image: “/media/soccer/architecture.png”
+alt: “System diagram: client to FastAPI gateway to a LangGraph orchestrator calling three MCP servers (odds, news, inference); inference and offline training share a versioned artifact bundle.”
+caption: “Gateway to LangGraph orchestrator to three MCP servers; offline training and inference share one versioned artifact bundle.”
+image: “/media/soccer/ui-league-hub.jpg”
+alt: “The MatchIntel league hub: league cards, standings and tournament brackets in a dark UI.”
+figcaption: “League hub — standings, in-league Elo, and a matchup projector.”
 sections:
-  - heading: "Five layers, one grid"
-    body: >-
-      Outcome, exact score, event sequence, player props, and market value all
-      derive from a single Dixon-Coles grid, so no market can contradict
-      another. Every number the agent shows traces back to a tool call, and
-      the suggestion layer caps its own confidence to "low" whenever a pick
-      falls outside the conformal set.
-    figures:
-      - image: "/media/soccer/ui-dashboard.jpg"
-        alt: "Agent console showing a prediction with conformal uncertainty, market value and a human approval step."
-        caption: "Agent console — uncertainty, evidence trail, approval before any stake."
-      - image: "/media/soccer/ui-bracket.jpg"
-        alt: "Tournament bracket with advance probabilities on each tie."
-        caption: "Bracket view — advance probability per tie, drillable to the data."
-  - heading: "Calibrated, and it says so"
-    body: >-
-      A forecast that can't state its own reliability isn't much use. Rolling
-      conformal coverage tracks its 0.90 target across the season, and the
-      set-size curve makes the price of that guarantee explicit: tighter
-      coverage means larger prediction sets, and the agent surfaces both
-      rather than reporting a point estimate alone.
-    figures:
-      - image: "/media/soccer/conformal_rolling.jpg"
-        alt: "Rolling conformal coverage tracking the target level over time."
-        caption: "Rolling coverage against its 0.90 target."
-      - image: "/media/soccer/conformal_frontier.jpg"
-        alt: "Conformal set size plotted against coverage."
-        caption: "Set size against coverage — the price of a guarantee."
-  - heading: "The honest part"
-    body: >-
-      On EPL 2019-2025 (1,520 matches) the closing line beats the model on
-      every metric in every fold, and the suggestion layer returns -1.8% ROI
-      over 1,795 bets: betting into the close with a close-anchored model
-      doesn't clear the vig. The value here is calibrated structure, not
-      out-predicting Pinnacle. Backtests are walk-forward, and unsupported
-      tools fail loudly rather than bluffing.
+* heading: “Five layers, one grid”
+body: >-
+Outcome, exact score, event sequence, player propositions, and market value are all derived from a unified Dixon-Coles grid, ensuring internal consistency across markets.
+This structure prevents contradictions between markets.
+All agent outputs are traceable to specific tool invocations.
+The suggestion layer restricts confidence to 'low' when predictions fall outside the conformal set.
+falls outside the conformal set.
+figures:
+  * image: “/media/soccer/ui-dashboard.jpg”
+alt: “Agent console showing a prediction with conformal uncertainty, market value and a human approval step.”
+caption: “Agent console — uncertainty, evidence trail, approval before any stake.”
+  * image: “/media/soccer/ui-bracket.jpg”
+alt: “Tournament bracket with advance probabilities on each tie.”
+caption: “Bracket view — advance probability per tie, drillable to the data.”
+* heading: “Calibrated, and it says so”
+body: >-
+Forecasts must quantify their own reliability. Rolling conformal coverage is tracked against a 0.90 target throughout the season.
+conformal coverage tracks its 0.90 target across the season, and the
+The set-size curve quantifies the trade-off: achieving tighter coverage necessitates larger prediction sets.
+Both coverage and set size are surfaced to the user, rather than reporting only point estimates.
+rather than reporting a point estimate alone.
+figures:
+  * image: “/media/soccer/conformal_rolling.jpg”
+alt: “Rolling conformal coverage tracking the target level over time.”
+caption: “Rolling coverage against its 0.90 target.”
+  * image: “/media/soccer/conformal_frontier.jpg”
+alt: “Conformal set size plotted against coverage.”
+caption: “Set size against coverage — the price of a guarantee.”
+* heading: “The honest part”
+body: >-
+On EPL 2019-2025 (1,520 matches), the closing line outperforms the model across all metrics and validation folds.
+The suggestion layer yields a -1.8% ROI over 1,795 bets, indicating that betting into the close with a close-anchored model does not overcome the vig.
+The primary value is in calibrated structure and transparency, not in outperforming market benchmarks.
+Backtests are conducted in a walk-forward manner, and unsupported tools are designed to fail explicitly rather than provide misleading outputs.
+Out-predicting Pinnacle. Backtests are walk-forward, and unsupported
+tools fail loudly rather than bluffing.
 date: 2026-07-23
 order: 2
+
 ---
+
