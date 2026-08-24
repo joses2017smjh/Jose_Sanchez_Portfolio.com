@@ -57,6 +57,9 @@ const projects = defineCollection({
     // A separately cut clip for the card, when the card wants a tighter
     // edit than the detail page (the full take stays in `video`).
     cardVideo: z.string().optional(),
+    // Portrait card clips letterbox in the wide card box; this zooms them
+    // to fill it. Wide clips must leave it off or they lose their edges.
+    cardZoom: z.boolean().default(false),
     image: z.string().optional(),
     // Two clips shown side by side inside the hero figure, both playing
     // at once (a good/bad pair reads better together than in sequence).

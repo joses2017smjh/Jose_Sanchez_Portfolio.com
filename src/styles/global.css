@@ -425,11 +425,56 @@ a.figure-media:hover {
   aspect-ratio: auto;
 }
 
-/* On the card only, a clip is zoomed until the top and bottom 17% fall
-   outside the frame (showing the middle 66%, so scale = 1/0.66). The
-   detail page still shows the whole thing uncropped. */
-.project-carousel .figure-media video {
+/* Opt-in card zoom. A portrait clip letterboxes badly in the wide card
+   box, so `cardZoom: true` blows it up until the top and bottom 17% fall
+   outside the frame (the middle 66%, so scale = 1/0.66). Wide clips must
+   never get this — it would eat their edges — so the default is no zoom.
+   The detail page always shows the whole thing uncropped. */
+.project-carousel > li.card-zoom .figure-media video {
   transform: scale(1.5152);
+}
+
+/* "1 of 3" under a strip that actually overflows. */
+.strip-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  color: var(--dim);
+}
+
+.strip-counter.is-hidden {
+  display: none;
+}
+
+.strip-dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.strip-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--hairline);
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.strip-dots i.is-on {
+  background: var(--blue);
+  transform: scale(1.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strip-dots i {
+    transition: none;
+  }
 }
 
 /* cards keep the FIG. rule but not the caption line — the caption lives

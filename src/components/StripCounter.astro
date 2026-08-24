@@ -1,0 +1,85 @@
+---
+/**
+ * "1 of 3" under every horizontally scrolling strip. The snap-scrollers
+ * read as a single figure until you happen to drag them, so each strip
+ * that actually overflows gets a position readout and a dot per item.
+ *
+ * Progressive enhancement: no script, no counter, and the strips still
+ * scroll exactly as before. Decorative — the underlying lists are already
+ * labelled for assistive tech, so the readout is aria-hidden.
+ */
+---
+
+<script>
+  type Spec = readonly [stripSelector: string, itemSelector: string];
+
+  /* Every horizontal scroller on the site, with the child that counts as
+     one "slide". Keep this list in step with the strips in global.css. */
+  const SPECS: readonly Spec[] = [
+    [".figure-strip", ".strip-item"],
+    [".project-carousel", "li"],
+    [".paper-strip", "li"],
+    [".buildlog", "li"],
+    [".section-strip", ".section-shot"],
+  ];
+
+  function attach(strip: HTMLElement, itemSelector: string) {
+    const items = Array.from(
+      strip.querySelectorAll<HTMLElement>(`:scope > ${itemSelector}`),
+    );
+    if (items.length < 2) return;
+
+    const counter = document.createElement("p");
+    counter.className = "strip-counter";
+    counter.setAttribute("aria-hidden", "true");
+
+    const dots = document.createElement("span");
+    dots.className = "strip-dots";
+    for (const _ of items) dots.appendChild(document.createElement("i"));
+
+    const readout = document.createElement("span");
+    counter.append(dots, readout);
+    strip.insertAdjacentElement("afterend", counter);
+
+    const pips = Array.from(dots.querySelectorAll("i"));
+    let queued = 0;
+
+    const update = () => {
+      queued = 0;
+      /* Nothing to page through once every item fits — say nothing. */
+      const overflows = strip.scrollWidth - strip.clientWidth > 2;
+      counter.classList.toggle("is-hidden", !overflows);
+      if (!overflows) return;
+
+      const box = strip.getBoundingClientRect();
+      const middle = box.left + box.width / 2;
+      let current = 0;
+      let closest = Infinity;
+      items.forEach((item, i) => {
+        const r = item.getBoundingClientRect();
+        const distance = Math.abs(r.left + r.width / 2 - middle);
+        if (distance < closest) {
+          closest = distance;
+          current = i;
+        }
+      });
+
+      readout.textContent = `${current + 1} of ${items.length}`;
+      pips.forEach((pip, i) => pip.classList.toggle("is-on", i === current));
+    };
+
+    const schedule = () => {
+      if (!queued) queued = requestAnimationFrame(update);
+    };
+
+    strip.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    update();
+  }
+
+  for (const [stripSelector, itemSelector] of SPECS) {
+    document
+      .querySelectorAll<HTMLElement>(stripSelector)
+      .forEach((strip) => attach(strip, itemSelector));
+  }
+</script>

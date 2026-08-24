@@ -18,6 +18,7 @@ const {
   date,
   video,
   cardVideo,
+  cardZoom,
   poster,
   image,
   pair,
@@ -27,7 +28,7 @@ const {
 const href = `/projects/${project.id}`;
 ---
 
-<li>
+<li class:list={{ "card-zoom": cardZoom }}>
   <article>
     <Figure
       number={number}

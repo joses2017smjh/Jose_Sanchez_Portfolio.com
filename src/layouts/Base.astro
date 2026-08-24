@@ -7,6 +7,7 @@ import "../styles/global.css";
 // in the body below; the component is untouched.
 // import LiquidCursor from "../components/LiquidCursor.astro";
 import { site } from "../site.config";
+import StripCounter from "../components/StripCounter.astro";
 
 interface Props {
   title: string;
@@ -89,6 +90,8 @@ const person = {
         &copy; {new Date().getFullYear()} {site.name}
       </p>
     </footer>
+
+    <StripCounter />
 
     {/* Videos autoplay only in-viewport and only when motion is welcome. */}
     <script>
