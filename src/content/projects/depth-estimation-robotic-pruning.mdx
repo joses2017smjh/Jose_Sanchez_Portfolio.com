@@ -1,6 +1,6 @@
 ---
 title: "Vision-Based Metric Depth Estimation for Robotic Pruning"
-summary: "Metric depth estimation for dormant orchard scenes, built to guide robotic pruning."
+summary: "Metric depth for a pruning cut, served as an API — metres, not a pretty PNG."
 problem: >-
   A pruning robot has to know where a branch is, how thick it is, and how far
   it sits from the cutter — centimetre accuracy on thin, cluttered structure.
@@ -13,24 +13,27 @@ approach: >-
   Benchmarked monocular, scale-calibrated, fine-tuned, and multi-view RGB-D
   models under one protocol — 10 trees, 5 seeds, a fixed frame budget, one
   design change at a time. The winning configuration refines fine-tuned
-  monocular depth with a DINOv2 RGB+D multi-view model. Latency was profiled
-  alongside accuracy so the speed/precision trade-off stays explicit.
+  monocular depth with a DINOv2 RGB+D multi-view model, and now ships as a
+  containerized service with a split ONNX graph and per-GPU latency budgets.
 result: >-
-  Validation RMSE 0.0550 m → 0.0445 ± 0.0057 m with DINOv2 RGB+D refinement
-  over 3 stereo pairs. Latency: 484.7 ms per 6-view group (80.8 ms amortized
-  per depth map) vs 333.6 ms per monocular frame — more accuracy, a slower
-  minimum inference unit.
+  Validation RMSE 0.0550 m to 0.0445 ± 0.0057 m with DINOv2 RGB+D refinement
+  over 3 stereo pairs. Served as an API at p50 156 ms on a Tesla V100 at fp16,
+  393 ms at fp32, with Torch-versus-ONNX agreement at 1.5e-5.
 tags:
   [
     "Python",
     "PyTorch",
     "DINOv2",
-    "CNNs",
+    "ONNX Runtime",
+    "FastAPI",
     "Blender",
-    "OpenCV",
+    "Docker",
     "3D Perception",
   ]
-repo: "https://github.com/joses2017smjh/Vision-Based-Metric-Depth-Estimation-for-Robotic-Pruning"
+repo: "https://github.com/joses2017smjh/spur-depth-service"
+links:
+  - label: "Training experiments repo"
+    href: "https://github.com/joses2017smjh/Vision-Based-Metric-Depth-Estimation-for-Robotic-Pruning"
 video: "/media/depth/orchard_rig.mp4"
 cardVideo: "/media/depth/orchard_rig_card.mp4"
 poster: "/media/depth/orchard_rig_poster.jpg"
@@ -40,10 +43,10 @@ figcaption: "The deployment target: camera end-effector scanning dormant apple t
 sections:
   - heading: "Why a synthetic orchard"
     body: >-
-      Real depth sensors lose thin branches in noise, and hand-measuring
-      metric depth in an orchard is not practical at scale. Blender renders
-      the scene and its exact per-pixel depth together — 100 trees, 6 shots,
-      4 bark types — with segmentation masks and camera poses for free.
+      Real depth sensors lose thin branches in noise, and hand-measuring metric
+      depth in an orchard is not practical at scale. Blender renders the scene
+      and its exact per-pixel depth together — 100 trees, 6 shots, 4 bark types
+      — with segmentation masks and camera poses for free.
     figures:
       - image: "/media/depth/Noisey_lidar.jpg"
         alt: "Real orchard photo beside a noisy sensor depth map where branch structure is lost in blocky colour."
@@ -72,10 +75,11 @@ sections:
   - heading: "Two refinement architectures"
     body: >-
       Both take predicted depth plus RGB from several nearby views and fuse
-      them at the bottleneck. The CNN U-Net trains from scratch with shared
-      encoders. The DINOv2 variant freezes a pretrained ViT-L on the RGB path
-      and trains a CNN side branch for depth, because a ViT cannot simply take
-      depth as a fourth channel.
+      them at the bottleneck. The CNN U-Net trains from scratch; the DINOv2
+      variant freezes a pretrained ViT-L on the RGB path and trains a CNN side
+      branch for depth. The depth input mattered more than the architecture —
+      fine-tuning DA2 set the floor, and three stereo pairs took it the rest of
+      the way. A fourth pair added nothing.
     figures:
       - image: "/media/depth/arch_cnn_unet.jpg"
         alt: "Shared CNN U-Net encoder diagram: two views encoded with tied weights, bottlenecks concatenated and fused."
@@ -83,17 +87,27 @@ sections:
       - image: "/media/depth/arch_dino_dsb.jpg"
         alt: "Diagram of a frozen DINOv2 ViT-L RGB path fused with a trainable CNN depth side branch before a decoder."
         caption: "Frozen DINOv2 ViT-L on RGB, trainable CNN side branch on depth."
-  - heading: "What actually moved the number"
-    body: >-
-      The depth input mattered more than the architecture: fine-tuning DA2 on
-      masked synthetic depth set the floor, and multi-view refinement took it
-      the rest of the way. Three stereo pairs was the sweet spot — a fourth
-      added nothing. Pretrained DINOv2 features beat the from-scratch CNN at
-      every view count.
-    figures:
       - image: "/media/depth/multiview_ablation_rmse.png"
         alt: "Grouped bar chart of validation RMSE for DINO and CNN refiners at one, two, three and four stereo pairs."
         caption: "Best run: DINO RGB+D, 3 pairs, 0.0445 m against a 0.0550 m fine-tuned baseline."
+  - heading: "From paper to service"
+    body: >-
+      The research now runs as a service. One endpoint takes a single RGB frame
+      through DA2-ft; another takes six views through the DINOv2 refiner. The
+      ONNX graph is split — encoder 1.2 GB, fuse and decode 26 MB — so six
+      views do not unroll 144 ViT-L blocks, and Torch-versus-ONNX agreement is
+      1.5e-5. Reconstruction back-projects those metres through the cameras
+      already logged. No second network.
+    figures:
+      - image: "/media/depth/service_reconstruct.mp4"
+        alt: "Orbiting view of a fused metric point cloud of a dormant apple tree, reconstructed from four cameras."
+        caption: "Back-projected metres, four cameras, Blender intrinsics and extrinsics."
+      - image: "/media/depth/service_stack_orbit.mp4"
+        alt: "Dense stereo flow and trunk detection boxes cycling across neighbouring camera rigs."
+        caption: "Flow and detection cycling across neighbouring rigs — sensors add, they do not vote."
+      - image: "/media/depth/service_latency.png"
+        alt: "Bar chart of p50 inference latency by GPU and precision, comparing Quadro RTX 8000 and Tesla V100 at fp32 and fp16."
+        caption: "Latency named by GPU: V100 fp16 p50 156 ms, fp32 393 ms."
 paperStrip:
   pdf: "/media/papers/depth-capstone-paper.pdf"
   pages: "/media/papers/cap-page-{n}.jpg"
@@ -102,8 +116,15 @@ date: 2026-06-01
 order: 1
 ---
 
-## Where it goes next
+## What sim-to-real actually costs
 
-All of this is synthetic. The open question is whether masked fine-tuning and
-multi-view refinement survive the move to real orchard images — and whether
-the same models can be fine-tuned directly on real stereo pruning scenes.
+Everything above is synthetic — the model has never seen a real orchard. A
+hold-out affine fit on the two paper validation trees puts DA2-ft at 0.0344 m
+against Blender ground truth, and a TinyUNet trunk segmenter reaches 0.894 IoU.
+But running the same depth through *predicted* masks instead of ground-truth
+ones moves error from 0.031 m to 0.110 m. That gap, not the headline, is the
+number to beat.
+
+Stereo fusion is not shipped: naive flow with guessed variance made things
+worse, and epipolar gating left too few valid trunk pixels to score. There is
+no TensorRT plan on disk, so there is no TensorRT number.

@@ -1,84 +1,106 @@
 ---
 title: "Agentic Soccer Prediction over MCP"
-summary: "Calibrated match forecasts served by a LangGraph agent across three MCP servers, with human approval before any stake."
+summary: "Calibrated forecasts served by a LangGraph agent over MCP, with a GRPO staking policy and human approval."
 problem: >-
-  Betting markets provide robust probability estimates, so the challenge is not
-  outperforming them but generating forecasts that are calibrated, internally
-  consistent across correlated markets, and transparent about uncertainty —
-  served through an agent where every number traces back to a tool call.
+  Betting markets are a strong probability oracle, so the interesting problem
+  isn't beating them — it's producing forecasts that are calibrated,
+  internally consistent across correlated markets, and honest about their own
+  uncertainty, then serving them through an agent where every number traces
+  back to a tool call.
 approach: >-
-  Phase A is an offline pipeline: leakage-guarded features feed XGBoost,
-  followed by isotonic calibration and split-conformal prediction sets. A
-  Dixon-Coles score grid is reconciled to its own marginal distributions, with
-  goal-timing and player-prop layers added for granularity, and the whole stack
-  versioned as a single artifact bundle. Phase B exposes that artifact via a
-  FastAPI gateway orchestrated by LangGraph across three MCP servers (odds,
-  news/injuries, inference), with a human-in-the-loop interrupt enforced before
-  any staking recommendation and conformal sets the agent must surface.
+  Phase A is an offline stack: leakage-guarded features into XGBoost with
+  isotonic calibration and split-conformal sets, a Dixon-Coles score grid
+  reconciled exactly to its own marginals, shipped as one versioned artifact
+  bundle. Phase B serves it — a FastAPI gateway into a LangGraph orchestrator
+  driving MCP servers for odds, news and inference, with a human-in-the-loop
+  interrupt before any staking suggestion. A GRPO-trained staking policy and a
+  tunable-efficiency market simulator sit on top, tested against a fidelity
+  ladder and six adversarial reward-hacking attacks.
 result: >-
-  Evaluation on 102 World Cup 2026 matches, trained exclusively on
-  pre-tournament data, yielded 0.9013 log loss and 62.7% accuracy against 47.1%
-  for the baseline, with conformal coverage at 0.951 against a 0.90 target. On
-  EPL the closing line outperformed the model, and the report says so.
+  On 102 World Cup 2026 matches, trained strictly pre-tournament: 0.9013 log
+  loss and 62.7% accuracy against 47.1% for the prior, conformal coverage 0.951
+  against a 0.90 target. The GRPO policy takes the best closing-line value of
+  any policy that bets, +0.016. On EPL the closing line still wins.
 tags:
   [
     "Python",
     "LangGraph",
     "MCP",
     "XGBoost",
-    "FastAPI",
+    "GRPO",
     "Conformal Prediction",
+    "FastAPI",
     "Next.js",
     "Docker",
   ]
 repo: "https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP"
+demo: "https://agentic-soccer-match-prediction-mcp.vercel.app"
 links:
-  - label: "Same code: Cognitive-Swarm repo"
-    href: "https://github.com/joses2017smjh/MCP-Driven-Cognitive-Swarm"
+  - label: "Technical report"
+    href: "https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP/blob/main/docs/REPORT_DRAFT.md"
 diagram:
   image: "/media/soccer/architecture.png"
-  alt: "System diagram: client to FastAPI gateway to a LangGraph orchestrator calling three MCP servers (odds, news, inference); inference and offline training share a versioned artifact bundle."
-  caption: "Gateway to LangGraph orchestrator to three MCP servers; offline training and inference share one versioned artifact bundle."
+  alt: "System diagram: client to FastAPI gateway to a LangGraph orchestrator calling MCP servers for odds, news and inference; inference and offline training share a versioned artifact bundle."
+  caption: "Gateway to LangGraph orchestrator to MCP servers; training and inference share one versioned bundle."
 image: "/media/soccer/ui-league-hub.jpg"
 alt: "The MatchIntel league hub: league cards, standings and tournament brackets in a dark UI."
 figcaption: "League hub — standings, in-league Elo, and a matchup projector."
 sections:
   - heading: "Five layers, one grid"
     body: >-
-      Outcome, exact score, event sequence, player props, and market value all
-      derive from a unified Dixon-Coles grid, so no market can contradict
-      another. Every number the agent reports is traceable to a tool call, and
-      the suggestion layer restricts its confidence to "low" whenever a pick
-      falls outside the conformal set.
+      Outcome, exact score, event sequence, player props and market value all
+      derive from a single Dixon-Coles bivariate Poisson grid, so no market can
+      contradict another — sweep the parameters and every market updates in
+      lockstep. A single prediction fires 11 tool calls across three MCP servers
+      in 239 ms, and every number the agent shows traces back to one of them.
     figures:
-      - image: "/media/soccer/ui-dashboard.jpg"
-        alt: "Agent console showing a prediction with conformal uncertainty, market value and a human approval step."
-        caption: "Agent console — uncertainty, evidence trail, approval before any stake."
-      - image: "/media/soccer/ui-bracket.jpg"
-        alt: "Tournament bracket with advance probabilities on each tie."
-        caption: "Bracket view — advance probability per tie, drillable to the data."
+      - image: "/media/soccer/grid_morph.mp4"
+        alt: "Dixon-Coles score grid morphing as parameters sweep, with every derived market updating in lockstep."
+        caption: "One grid, all markets — nothing can contradict anything else."
+      - image: "/media/soccer/agent_console.mp4"
+        alt: "Agent console answering a natural-language query with probabilities, a conformal set and a full evidence trail."
+        caption: "11 tool calls, 3 MCP servers, 239 ms — with the evidence trail attached."
   - heading: "Calibrated, and it says so"
     body: >-
-      A forecast that cannot quantify its own reliability is of little use.
-      Rolling conformal coverage is tracked against its 0.90 target across the
-      season, and the set-size curve quantifies the trade-off: tighter coverage
-      necessitates larger prediction sets. Both are surfaced rather than
-      reporting a point estimate alone.
+      A forecast that can't state its own reliability isn't much use. Running
+      conformal coverage converges on its 90% target as matches stream in, and
+      prediction sets widen to all three outcomes on genuinely uncertain
+      fixtures and collapse to singletons on lopsided ones. The suggestion layer
+      caps its own confidence to "low" whenever a pick falls outside the set.
     figures:
-      - image: "/media/soccer/conformal_rolling.jpg"
-        alt: "Rolling conformal coverage tracking the target level over time."
-        caption: "Rolling coverage against its 0.90 target."
-      - image: "/media/soccer/conformal_frontier.jpg"
-        alt: "Conformal set size plotted against coverage."
-        caption: "Set size against coverage — the price of a guarantee."
+      - image: "/media/soccer/conformal_coverage.mp4"
+        alt: "Running conformal coverage converging toward the 90 percent target as matches stream in."
+        caption: "Coverage converging on 0.90 — uncertainty surfaced, not overclaimed."
+  - heading: "A staking policy trained with GRPO"
+    body: >-
+      A 2,788-parameter MLP written from scratch in numpy maps per-fixture
+      features to skip or back one outcome, trained with Group Relative Policy
+      Optimization — no value network, just a group-relative baseline. It
+      takes +0.016 mean closing-line value, 25 bp per bet above the favourite.
+      A tunable-efficiency market simulator says where it transfers: eta = 0.85
+      is the only rung that survives real data.
+    figures:
+      - image: "/media/soccer/grpo_training.mp4"
+        alt: "GRPO training curve for the staking policy, with reward and closing-line value rising over iterations."
+        caption: "GRPO on staking — group-relative baseline, no value network."
+      - image: "/media/soccer/fidelity_ladder.mp4"
+        alt: "Fidelity ladder sweeping market efficiency eta and plotting simulated against real-world transfer."
+        caption: "eta = 0.85 is the only efficiency level with positive real transfer."
   - heading: "The honest part"
     body: >-
-      On EPL 2019-2025 (1,520 matches) the closing line outperforms the model
-      across all metrics and folds, and the suggestion layer yields -1.8% ROI
-      over 1,795 bets: betting into the close with a close-anchored model does
-      not overcome the vig. The value is calibrated structure, not
-      out-predicting Pinnacle. Backtests are walk-forward, and unsupported
-      tools fail loudly rather than bluffing.
-date: 2026-07-23
+      Six adversarial staking attacks were tested and blocked — the martingale
+      doubles after every loss until the per-bet cap and drawdown halt clip it.
+      No scripted policy beats the Pinnacle close. On EPL 2019-2025 the closing
+      line wins on every metric in every fold, and calibration transfers across
+      seasons far better than policy reward: ECE drift +0.0004, but held-out
+      policy reward drops 29%.
+    figures:
+      - image: "/media/soccer/martingale_blowup.mp4"
+        alt: "A martingale staking policy climbing dangerously until the per-bet cap and drawdown halt clip it."
+        caption: "Martingale blocked by the per-bet cap and drawdown halt."
+      - image: "/media/soccer/sim_to_real_transfer.png"
+        alt: "Calibration and reliability curves comparing simulated and real market performance across a season boundary."
+        caption: "Calibration transfers cleanly; policy reward does not — reported, not hidden."
+date: 2026-08-24
 order: 2
 ---

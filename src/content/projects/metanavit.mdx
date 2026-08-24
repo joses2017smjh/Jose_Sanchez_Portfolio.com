@@ -1,23 +1,25 @@
 ---
-title: "MetaNaviT: AI-Powered File Organizer"
-summary: "Semantic search and automated organization for files scattered across local, cloud, and web sources."
+title: "MetaNaviT: Agentic Retrieval over a Research Tree"
+summary: "Agentic retrieval over a personal research tree, measured on a frozen 136-question benchmark."
 problem: >-
-  File collections sprawl across local directories, cloud storage, web
-  content, and databases. Filename search can't answer questions about what
-  files contain, how they relate, or where they belong — and the answer is
-  usually spread across several documents rather than sitting in one.
+  Ask a research tree what the current learning rate is and generic RAG quotes
+  the archived config that still says 1e-5. Files sprawl across live configs,
+  superseded drafts, Slurm logs and checkpoints, and filename search cannot
+  tell which copy is the one that still counts.
 approach: >-
-  Built a retrieval pipeline that extracts and indexes content from
-  heterogeneous sources with LlamaIndex, stores embeddings in PostgreSQL with
-  pgvector, and serves everything through FastAPI. Retrieval-augmented
-  generation with locally hosted models via Ollama powers semantic search,
-  metadata extraction, hierarchical indexing, and automated file structuring.
-  An index manager tracks per-file changes so unchanged files are never
-  re-processed. The whole stack ships as Docker services.
+  Rebuilt retrieval as a measured stack rather than a one-shot top-k. BM25 and
+  dense search over pgvector fuse with reciprocal rank fusion at k=60, retrieve
+  50, rerank 8. A forty-line router skips embedding and reranking on exact-path
+  and aggregation queries. A staleness tier drops superseded versions before
+  answering, and typed personalized PageRank fuses ranks for multi-hop
+  questions. Retrieval sits inside an agent loop that grades its own results
+  and rewrites weak queries, exposed as an MCP filesystem where every mutation
+  returns a plan a human has to approve.
 result: >-
-  A working production-style RAG system: containerized services answering
-  semantic queries and reorganizing files across local, cloud, web, and
-  database sources, running entirely on locally hosted models.
+  Recall@50 0.938 and nDCG@10 0.493 on a frozen 136-question gold set over a
+  61-file tree, no LLM judge. The router lifts exact-path nDCG@10 from 0.596 to
+  0.938. Blind graph expansion stays in the table as the loser: recall 0.986,
+  nDCG 0.446, six times the wall clock.
 tags:
   [
     "Python",
@@ -25,51 +27,77 @@ tags:
     "PostgreSQL",
     "pgvector",
     "RAG",
-    "LlamaIndex",
-    "Ollama",
+    "BM25",
+    "GraphRAG",
+    "MCP",
     "Docker",
   ]
-repo: "https://github.com/klaurie/MetaNaviT"
+repo: "https://github.com/joses2017smjh/MetaNavT"
+video: "/media/metanavit/ask.mp4"
+poster: "/media/metanavit/ask_poster.jpg"
 image: "/media/metanavit/workflow.png"
-alt: "MetaNaviT workflow diagram: files chunked and embedded into a vector DB; queries answered by the LLM with chat history and tools."
-figcaption: "Workflow — client-server architecture: indexing into a vector DB, then querying through the LLM."
+alt: "Animated retrieval trace: the learning-rate question is typed, the archived config is dropped, and the live config is cited."
+figcaption: "The loop that is the product: route, search, drop the stale copy, cite bytes."
 sections:
-  - heading: "Extract and transform"
+  - heading: "One question, three copies of the answer"
     body: >-
-      MetaNaviT indexes a folder of Robotnav experiment logs, gathering file
-      metadata — names, timestamps, formats — plus content signals like
-      keywords, structure, and tabular data. Asked for a CSV, the pipeline
-      reasons across all five .docx logs and writes robot_nav_results.csv,
-      previewing the rows in chat while the agent workflow streams in the
-      terminal.
+      Three copies of the run-47 config exist. One still says 1e-5; the live one
+      says 3e-4. Generic RAG quotes the archive, so the first tier drops
+      superseded versions and surfaces the disagreement before answering. Every
+      citation resolves to a file path and a byte range — an unresolvable
+      citation is a failed generation, not a footnote.
     figures:
-      - image: "/media/metanavit/demo_extract.mp4"
-        alt: "Screen recording: MetaNaviT chat extracts five Robotnav logs into robot_nav_results.csv while agent steps log in a terminal."
-        caption: "Five Robotnav logs consolidated into one CSV, answered from retrieval."
-  - heading: "Organize by topic"
+      - image: "/media/metanavit/ask.mp4"
+        alt: "Typing the learning-rate question; the archived config is dropped and the live config cited at 3e-4."
+        caption: "Staleness tier drops the archived 1e-5 and cites the live config."
+  - heading: "Hybrid search, and a router that skips work"
     body: >-
-      The second demo is automatic organization. MetaNaviT scans a mixed
-      folder of PDFs, images, and text, combines file metadata with content
-      signals, and files everything into topic groups under
-      organized_by_topic/. The index manager tracks per-file changes, so a
-      re-run only touches what actually moved.
+      File search is full of tokens embeddings smear: run_047, --num_pairs=3,
+      .sbatch. BM25 catches those, dense catches "the run where fusion was off,"
+      and reciprocal rank fusion beats either alone. A forty-line router with no
+      extra model call skips embedding on 8 queries and reranking on 41, lifting
+      exact-path nDCG@10 from 0.596 to 0.938 without moving semantic recall.
     figures:
-      - image: "/media/metanavit/demo_organize.mp4"
-        alt: "Screen recording: MetaNaviT reorganizes a documents folder into topic subfolders and lists the created structure."
-        caption: "A mixed folder auto-filed into topic groups under organized_by_topic/."
-date: 2025-06-01
+      - image: "/media/metanavit/hybrid.mp4"
+        alt: "BM25 and dense result lists shown side by side, then fused into one reciprocal-rank-fusion ranking."
+        caption: "Two lists, one RRF ranking — the Recall@50 jump."
+      - image: "/media/metanavit/router.mp4"
+        alt: "The router cycling through its lexical, aggregation and semantic paths on different queries."
+        caption: "Lexical and aggregation queries skip embedding and reranking entirely."
+  - heading: "Multi-hop, with the loser left in"
+    body: >-
+      Typed personalized PageRank fuses ranks rather than raw PPR mass, which
+      sat on a different scale and could swamp a strong lexical hit. On a
+      four-hop chain, gold evidence moves from rank 22 to rank 4 without adding
+      any path outside the fused top-50. Blind graph expansion stays in the
+      table as the negative control: better recall, worse ranking, six times
+      the wall clock.
+    figures:
+      - image: "/media/metanavit/graph_multihop.mp4"
+        alt: "Hard multi-hop cases compared between single-query hybrid search and typed PageRank rank fusion."
+        caption: "Multi-hop chains: gold evidence from rank 22 to rank 4."
+  - heading: "MCP filesystem with a human interrupt"
+    body: >-
+      Any MCP client can drive the corpus. Retrieval tools read; every mutation
+      — move a file, write an artifact, apply a patch, run a generated chart —
+      returns a plan with a pending status and refuses to execute until a human
+      passes approval. Sandboxed execution is AST-gated with no os and no pip,
+      and a failed sandbox blocks the apply outright.
+    figures:
+      - image: "/media/metanavit/mcp_hitl.mp4"
+        alt: "A proposed file move returns pending approval, the apply call is blocked, then succeeds once approved."
+        caption: "propose_move returns a plan; apply_plan refuses until approved=true."
+date: 2026-08-23
 order: 4
 ---
 
 ## Where it goes next
 
-The honest gap is that this version has no numbers attached to it. v2 starts
-with an eval harness — a frozen corpus, a hand-labeled question set, and
-retrieval metrics reported alongside latency — so every change after it can be
-measured rather than asserted.
+The gold set is 136 questions over a 61-file demo tree. The next step is
+swapping that for a real capstone directory — thousands of files, where the
+staleness problem is genuinely adversarial — and re-running the same benchmark
+rather than a new one.
 
-Then the retrieval itself: hybrid BM25 and dense search fused with reciprocal
-rank fusion, a cross-encoder reranker, and late chunking so each chunk vector
-carries its document's context. After that, the architecture shifts — moving
-retrieval inside a LangGraph agent loop that rewrites its own queries, and
-exposing the corpus as an MCP server so any client can drive it.
+ColPali-style page-image retrieval is the other open lane: the PDFs in a
+research tree carry their results in figures and tables that text extraction
+destroys.
