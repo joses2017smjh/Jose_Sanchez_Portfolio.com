@@ -132,6 +132,7 @@ const now = defineCollection({
           image: z.string(),
           alt: z.string().max(160),
           caption: z.string().max(180),
+          when: z.string().max(24).optional(),
         }),
       )
       .max(10)

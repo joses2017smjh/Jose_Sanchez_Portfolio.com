@@ -1,0 +1,69 @@
+---
+/**
+ * Click a date on the rail to show that photo and caption.
+ * Latest is first. Radios keep it usable without JavaScript.
+ */
+interface Photo {
+  image: string;
+  alt: string;
+  caption: string;
+  when?: string | undefined;
+}
+
+interface Props {
+  id: string;
+  photos: Photo[];
+}
+
+const { id, photos } = Astro.props;
+const name = `now-timeline-${id}`;
+
+function whenLabel(photo: Photo) {
+  if (photo.when) return photo.when;
+  const dash = photo.caption.split(" — ")[0];
+  return dash || photo.caption.slice(0, 12);
+}
+---
+
+<div class="now-timeline">
+  {
+    photos.map((photo, i) => (
+      <input
+        class="now-timeline-check"
+        type="radio"
+        name={name}
+        id={`${name}-${i}`}
+        checked={i === 0}
+      />
+    ))
+  }
+  <ol class="now-timeline-rail" aria-label="Build dates, newest first">
+    {
+      photos.map((photo, i) => (
+        <li>
+          <label for={`${name}-${i}`}>
+            <span class="now-timeline-dot" aria-hidden="true"></span>
+            {whenLabel(photo)}
+          </label>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="now-timeline-stage">
+    {
+      photos.map((photo, i) => (
+        <figure class={`now-timeline-shot shot-${i}`}>
+          <img
+            src={photo.image}
+            alt={photo.alt}
+            width="768"
+            height="1024"
+            loading={i === 0 ? "eager" : "lazy"}
+            decoding="async"
+          />
+          <figcaption>{photo.caption}</figcaption>
+        </figure>
+      ))
+    }
+  </div>
+</div>

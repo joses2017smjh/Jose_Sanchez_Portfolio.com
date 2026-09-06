@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Base from "../layouts/Base.astro";
+import NowTimeline from "../components/NowTimeline.astro";
 
 const entries = (await getCollection("now")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -44,23 +45,7 @@ const fmt = new Intl.DateTimeFormat("en-US", {
             <Content />
           </div>
           {entry.data.photos && entry.data.photos.length > 0 && (
-            <ul class="now-shots">
-              {entry.data.photos.map((photo) => (
-                <li>
-                  <figure>
-                    <img
-                      src={photo.image}
-                      alt={photo.alt}
-                      width="768"
-                      height="1024"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <figcaption>{photo.caption}</figcaption>
-                  </figure>
-                </li>
-              ))}
-            </ul>
+            <NowTimeline id={entry.id} photos={entry.data.photos} />
           )}
         </li>
       ))

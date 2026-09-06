@@ -13,7 +13,7 @@ export const humanoid = {
     "The original goal was a fully tele-operated robot driven by an Oculus headset before the convention. Midterms, 2,000+ M3 inserts to count, and a few DIY 3D-printer repairs meant the project needed an extension.",
   ],
   status:
-    "Legs standing after returning from Mexico on 26 Aug. Compute is still Beelink → Nano → BNO085; an IM10A IMU is due 25 Sep. Waiting on RPLIDAR C1, a 7\" screen, and synchronized global-shutter stereo.",
+    "Upper stack off the frame as of 5 Sep for the hip stopper and IMU mount. Compute is still Beelink → Nano → BNO085; an IM10A IMU is due 25 Sep. Waiting on RPLIDAR C1, a 7\" screen, and synchronized global-shutter stereo.",
   // The upstream project this build follows — design files, docs and paper.
   credit:
     "This is my build of Berkeley Humanoid Lite, the open-source 3D-printed humanoid from the Hybrid Robotics Lab at UC Berkeley. The design files, assembly documentation and the RSS 2025 paper behind it all live upstream:",
@@ -139,15 +139,15 @@ export const humanoid = {
     },
     {
       kind: "image" as const,
-      src: "/media/humanoid/18-stopper-imu-cad.jpg",
-      alt: "Arms, extrusion frame, and actuators on the bench while waiting on hardware.",
-      caption: "4 Sep — Stopper and IMU mount are CAD-only; waiting on bolts.",
+      src: "/media/humanoid/19-arm-minipc.jpg",
+      alt: "Assembled orange humanoid arm with exposed wiring next to a monitor on the desk.",
+      caption: "4 Sep — Arm beside the mini PC; hands and compute next.",
     },
     {
       kind: "image" as const,
-      src: "/media/humanoid/19-arm-minipc.jpg",
-      alt: "Assembled orange humanoid arm with exposed wiring next to a monitor on the desk.",
-      caption: "5 Sep — Arm beside the mini PC; hands and compute next.",
+      src: "/media/humanoid/18-stopper-imu-cad.jpg",
+      alt: "Upper-body parts back on the bench — arms, extrusions, and actuators while the frame is apart.",
+      caption: "5 Sep — Dismantling the upper stack. Stopper and IMU mount are CAD-only; waiting on bolts.",
     },
   ],
 } as const;
