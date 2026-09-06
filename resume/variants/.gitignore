@@ -1,0 +1,11 @@
+# Build junk and local previews. Compiled PDFs live in public/.
+originals/
+preview/
+*.aux
+*.log
+*.out
+*.xdv
+*.pdf
+*.synctex.gz
+*.fls
+*.fdb_latexmk

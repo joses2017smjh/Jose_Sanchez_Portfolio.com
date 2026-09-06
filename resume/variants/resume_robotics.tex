@@ -1,0 +1,85 @@
+% Jose Sanchez Gonzalez -- Robotics variant; local application copy.
+% Compile with XeLaTeX in Overleaf. Standalone; no external assets required.
+% Nine project bullets. Claim provenance and limitations: CLAIMS_AUDIT.md.
+\documentclass[letterpaper,10pt]{article}
+\usepackage[letterpaper,margin=0.55in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{TeX Gyre Heros}
+  {\setmainfont{TeX Gyre Heros}[Ligatures=NoCommon]}
+  {\IfFontExistsTF{texgyreheros-regular.otf}
+    {\setmainfont{texgyreheros-regular.otf}[
+      BoldFont=texgyreheros-bold.otf,
+      ItalicFont=texgyreheros-italic.otf,
+      BoldItalicFont=texgyreheros-bolditalic.otf,
+      Ligatures=NoCommon]}
+    {\setmainfont{Liberation Sans}[Ligatures=NoCommon]}}
+\usepackage[hidelinks,unicode]{hyperref}
+\usepackage{enumitem}
+\hypersetup{pdfauthor={Jose Sanchez Gonzalez},pdftitle={Jose Sanchez Gonzalez -- Robotics Resume}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\raggedright
+\raggedbottom
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\setlist[itemize]{leftmargin=1.15em,itemsep=1.5pt,topsep=2pt,parsep=0pt,partopsep=0pt,label=\textbullet}
+\newcommand{\resumeSection}[1]{\par\vspace{7pt}{\large\bfseries #1}\par\vspace{3pt}}
+\newcommand{\project}[3]{\par\vspace{3pt}\textbf{\href{#2}{#1}}\enspace\textbar\enspace #3\par}
+\newcommand{\resumeItem}[1]{\item #1}
+\begin{document}
+{\fontsize{22}{25}\selectfont\bfseries Jose Sanchez Gonzalez}\par
+\vspace{2pt}
+\textbf{Robotics / Machine Learning Engineer}\par
+\vspace{3pt}
+{\fontsize{9}{10.5}\selectfont
+(503) 660-9763\enspace\textbar\enspace
+\href{mailto:joseszgz2021@gmail.com}{joseszgz2021@gmail.com}\enspace\textbar\enspace
+\href{https://github.com/joses2017smjh}{github.com/joses2017smjh}\par
+\href{https://linkedin.com/in/jose-j-sanchez-gonzalez-84a800257/}{linkedin.com/in/jose-j-sanchez-gonzalez-84a800257/}\enspace\textbar\enspace
+\href{https://jose-sanchez-portfolio-com.vercel.app/}{jose-sanchez-portfolio-com.vercel.app}\par}
+\resumeSection{Summary}
+Robotics engineer with an M.S. in Artificial Intelligence. Develops metric depth pipelines, simulation environments, and learned control policies; combines synthetic-data evaluation with hands-on actuator assembly and calibration.
+\resumeSection{Technical Skills}
+\textbf{Languages and Learning:} Python, C++, C, PyTorch, computer vision, imitation learning\par
+\textbf{Perception:} RGB-D, stereo depth, DINOv2, camera calibration, OpenCV, synthetic data\par
+\textbf{Simulation and Control:} Isaac Sim, Isaac Lab, MuJoCo, PhysX, OpenUSD, Blender, PPO, inverse kinematics\par
+\textbf{Engineering:} ROS 2, Docker, ONNX Runtime, FastAPI, Linux, Git, Slurm, CAD, actuator calibration\par
+\resumeSection{Projects}
+\project{SPUR: Metric Depth for Robotic Pruning}{https://github.com/joses2017smjh/spur-depth-service}{PyTorch, DINOv2, FastAPI}
+\begin{itemize}
+\resumeItem{Built Blender synthetic-data pipelines with RGB, depth, segmentation masks, and camera calibration; evaluated monocular and multi-view models under a fixed 10-tree, 5-seed validation protocol.}
+\resumeItem{Reduced synthetic validation depth RMSE from 0.0550 m to 0.0445 m (19\%) using DINOv2 RGB-D refinement across three stereo pairs; reported seed variation of 0.0057 m.}
+\resumeItem{Packaged inference in a Docker/FastAPI service with split ONNX export; benchmarked the PyTorch refiner at 156 ms p50 on a V100 (FP16, six precomputed-depth views).}
+\end{itemize}
+\project{Humanoid Robustness Ladder}{https://github.com/joses2017smjh/bhl-robustness-ladder}{Isaac Lab, MuJoCo, PPO, ONNX}
+\begin{itemize}
+\resumeItem{Built a headless simulation-to-simulation evaluation harness using the upstream deployment controller; automated policy export, domain-randomization sweeps, and MuJoCo rollout metrics.}
+\resumeItem{Evaluated five randomization settings over 450 MuJoCo episodes; measured 23.3\% falls without randomization versus 0\% for the default setting across 90 episodes per setting.}
+\end{itemize}
+\project{Isaac Sim Pruning Workflow}{https://github.com/joses2017smjh/isaac-sim-pruning-workflow}{Isaac Sim, PhysX, Python}
+\begin{itemize}
+\resumeItem{Built a UR5e simulation environment with differential inverse kinematics, contact sensing, dual 8-by-8 time-of-flight grids, and 200 procedurally generated orchard trees.}
+\resumeItem{Reduced range RMSE from 6.08 mm to 5.49 mm with dual-sensor fusion on 651 shared synthetic samples; evaluated sensor-blackout regressions alongside the nominal result.}
+\end{itemize}
+\project{Bimanual Garment Folding}{https://github.com/joses2017smjh/IsaacSimFolding}{SmolVLA, PyTorch, Isaac Sim}
+\begin{itemize}
+\resumeItem{Integrated a 450M-parameter vision-language-action policy with PhysX cloth, three camera views, and the LeHome folding checker; implemented an OpenUSD Storm observer for simulator rollouts.}
+\resumeItem{Fixed particle-to-mesh indexing behind invisible garments in 11 of 33 recorded episodes; added geometry checks and separated demonstration replay results from trained-policy evaluations.}
+\end{itemize}
+\resumeSection{Experience}
+\textbf{Graduate Teaching Assistant, Oregon State University}\enspace\textbar\enspace Sep 2025 -- Jun 2026\par
+\begin{itemize}
+\resumeItem{Led 2-hour studio sessions for 25+ students in Operating Systems I (C++) and Computational Methods (COMSOL); supported debugging, concurrency, memory management, and numerical simulation.}
+\end{itemize}
+\textbf{Math and Computer Science Tutor, Oregon State University}\enspace\textbar\enspace Nov 2022 -- Jun 2025\par
+\begin{itemize}
+\resumeItem{Tutored 50+ students in mathematics, programming, and computer science; adapted explanations and debugging guidance to individual learning needs.}
+\end{itemize}
+\resumeSection{Education}
+\textbf{Oregon State University}, Corvallis, OR\par
+Master of Science in Artificial Intelligence\enspace\textbar\enspace Jun 2026\par
+Bachelor of Science in Computer Science (Applied: Data Science); Mathematics Minor\enspace\textbar\enspace Jun 2025\par
+\resumeSection{Additional Experience}
+\textbf{Berkeley Humanoid Lite hardware build (in progress):} Soldered 22 magnetic encoders to motor controllers, 3D-printed structural parts, and began actuator calibration and limb assembly.
+\end{document}

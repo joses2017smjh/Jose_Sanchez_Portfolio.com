@@ -1,0 +1,85 @@
+% Jose Sanchez Gonzalez -- RAG and Applied ML variant; local application copy.
+% Compile with XeLaTeX in Overleaf. Standalone; no external assets required.
+% Nine project bullets. Claim provenance and limitations: CLAIMS_AUDIT.md.
+\documentclass[letterpaper,10pt]{article}
+\usepackage[letterpaper,margin=0.55in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{TeX Gyre Heros}
+  {\setmainfont{TeX Gyre Heros}[Ligatures=NoCommon]}
+  {\IfFontExistsTF{texgyreheros-regular.otf}
+    {\setmainfont{texgyreheros-regular.otf}[
+      BoldFont=texgyreheros-bold.otf,
+      ItalicFont=texgyreheros-italic.otf,
+      BoldItalicFont=texgyreheros-bolditalic.otf,
+      Ligatures=NoCommon]}
+    {\setmainfont{Liberation Sans}[Ligatures=NoCommon]}}
+\usepackage[hidelinks,unicode]{hyperref}
+\usepackage{enumitem}
+\hypersetup{pdfauthor={Jose Sanchez Gonzalez},pdftitle={Jose Sanchez Gonzalez -- RAG and Applied ML Resume}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\raggedright
+\raggedbottom
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\setlist[itemize]{leftmargin=1.15em,itemsep=1.5pt,topsep=2pt,parsep=0pt,partopsep=0pt,label=\textbullet}
+\newcommand{\resumeSection}[1]{\par\vspace{7pt}{\large\bfseries #1}\par\vspace{3pt}}
+\newcommand{\project}[3]{\par\vspace{3pt}\textbf{\href{#2}{#1}}\enspace\textbar\enspace #3\par}
+\newcommand{\resumeItem}[1]{\item #1}
+\begin{document}
+{\fontsize{22}{25}\selectfont\bfseries Jose Sanchez Gonzalez}\par
+\vspace{2pt}
+\textbf{Machine Learning Engineer / RAG and LLM Systems}\par
+\vspace{3pt}
+{\fontsize{9}{10.5}\selectfont
+(503) 660-9763\enspace\textbar\enspace
+\href{mailto:joseszgz2021@gmail.com}{joseszgz2021@gmail.com}\enspace\textbar\enspace
+\href{https://github.com/joses2017smjh}{github.com/joses2017smjh}\par
+\href{https://linkedin.com/in/jose-j-sanchez-gonzalez-84a800257/}{linkedin.com/in/jose-j-sanchez-gonzalez-84a800257/}\enspace\textbar\enspace
+\href{https://jose-sanchez-portfolio-com.vercel.app/}{jose-sanchez-portfolio-com.vercel.app}\par}
+\resumeSection{Summary}
+Machine learning engineer with an M.S. in Artificial Intelligence. Develops retrieval pipelines, agent workflows, and transformer models, with experience in ranking evaluation, constrained decoding, and containerized model serving.
+\resumeSection{Technical Skills}
+\textbf{Languages and Learning:} Python, SQL, C++, PyTorch, scikit-learn, XGBoost, Transformers\par
+\textbf{Retrieval:} Retrieval-Augmented Generation (RAG), BM25, reciprocal rank fusion, pgvector, graph retrieval\par
+\textbf{Agents and Evaluation:} LangGraph, Model Context Protocol (MCP), constrained decoding, nDCG, Recall@k\par
+\textbf{Systems:} FastAPI, PostgreSQL, Docker, ONNX Runtime, Linux, Git, Slurm\par
+\resumeSection{Projects}
+\project{MetaNaviT: Research File Retrieval}{https://github.com/joses2017smjh/MetaNavT}{Python, PostgreSQL, pgvector, MCP}
+\begin{itemize}
+\resumeItem{Implemented hybrid BM25/dense retrieval, reciprocal rank fusion, staleness filtering, and typed graph traversal; added query routing and approval-gated file operations through Model Context Protocol (MCP).}
+\resumeItem{Measured Recall@50 of 0.938 and nDCG@10 of 0.493 on 136 labeled queries over a 61-file fixture corpus, using hash embeddings and overlap reranking.}
+\resumeItem{Improved exact-path nDCG@10 from 0.596 to 0.938 with query routing; bypassed embedding on 8 of 136 queries and reranking on 41 of 136.}
+\end{itemize}
+\project{Agentic Match Forecasting}{https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP}{XGBoost, LangGraph, FastAPI}
+\begin{itemize}
+\resumeItem{Built a forecasting prototype with XGBoost, isotonic calibration, and conformal prediction sets; connected three MCP servers to a LangGraph orchestrator with explicit approval for staked recommendations.}
+\resumeItem{Reported 62.7\% accuracy versus a 47.1\% prior baseline and 0.9013 log loss on 102 World Cup 2026 matches in a historical evaluation with pre-tournament training.}
+\end{itemize}
+\project{DoM: Math Program Generation}{https://github.com/joses2017smjh/OMR_LLM}{Python, PyTorch, Transformers}
+\begin{itemize}
+\resumeItem{Co-developed a decoder-only transformer in PyTorch to translate MathQA word problems into computation graphs; implemented tokenization, data loading, training, and constrained decoding.}
+\resumeItem{Achieved 77.45\% exact graph match and 84.78\% 2-gram BLEU on the MathQA test set; constrained generated graph structure while analyzing remaining semantic errors.}
+\end{itemize}
+\project{SPUR: Metric Depth for Robotic Pruning}{https://github.com/joses2017smjh/spur-depth-service}{PyTorch, DINOv2, FastAPI}
+\begin{itemize}
+\resumeItem{Reduced synthetic validation depth RMSE from 0.0550 m to 0.0445 m (19\%) using DINOv2 RGB-D refinement across three stereo pairs; reported seed variation of 0.0057 m.}
+\resumeItem{Packaged inference in a Docker/FastAPI service with split ONNX export; benchmarked the PyTorch refiner at 156 ms p50 on a V100 (FP16, six precomputed-depth views).}
+\end{itemize}
+\resumeSection{Experience}
+\textbf{Graduate Teaching Assistant, Oregon State University}\enspace\textbar\enspace Sep 2025 -- Jun 2026\par
+\begin{itemize}
+\resumeItem{Led 2-hour studio sessions for 25+ students in Operating Systems I (C++) and Computational Methods (COMSOL); supported debugging, concurrency, memory management, and numerical simulation.}
+\end{itemize}
+\textbf{Math and Computer Science Tutor, Oregon State University}\enspace\textbar\enspace Nov 2022 -- Jun 2025\par
+\begin{itemize}
+\resumeItem{Tutored 50+ students in mathematics, programming, and computer science; adapted explanations and debugging guidance to individual learning needs.}
+\end{itemize}
+\resumeSection{Education}
+\textbf{Oregon State University}, Corvallis, OR\par
+Master of Science in Artificial Intelligence\enspace\textbar\enspace Jun 2026\par
+Bachelor of Science in Computer Science (Applied: Data Science); Mathematics Minor\enspace\textbar\enspace Jun 2025\par
+\resumeSection{Additional Experience}
+\textbf{Berkeley Humanoid Lite hardware build (in progress):} Soldered 22 magnetic encoders to motor controllers, 3D-printed structural parts, and began actuator calibration and limb assembly.
+\end{document}

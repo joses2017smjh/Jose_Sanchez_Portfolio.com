@@ -13,7 +13,13 @@ export const resume = {
   links: {
     pdf: "/resume.pdf",
     overleaf: "https://www.overleaf.com/read/fnncbxtzykhz#40bcb3",
-    linkedin: "https://www.linkedin.com/in/jose-j-sanchez-gonzalez/",
+    linkedin: "https://linkedin.com/in/jose-j-sanchez-gonzalez-84a800257/",
+    variants: [
+      { label: "AI/ML", href: "/resume.pdf" },
+      { label: "Robotics", href: "/resumes/resume_robotics.pdf" },
+      { label: "RAG / LLM", href: "/resumes/resume_rag-ml.pdf" },
+      { label: "RL / agents", href: "/resumes/resume_halluminate.pdf" },
+    ],
   },
   summary:
     "AI/ML engineer with hands-on experience across computer vision, 3D perception, and NLP — from quantified depth-estimation research for robotic pruning to from-scratch transformers and production-style RAG systems, plus an in-progress humanoid robotics build (ROS2, Isaac Sim, reinforcement learning).",
@@ -45,7 +51,7 @@ export const resume = {
     {
       role: "Graduate Teaching Assistant",
       org: "Oregon State University",
-      when: "Sept 2025 – Present",
+      when: "Sep 2025 – Jun 2026",
       bullets: [
         "Supported Operating Systems I (C++) and Computational Methods with COMSOL — concurrency, memory, file systems, numerical methods, and simulation workflows.",
         "Led 2-hour studio sessions for 25+ students, held office hours, graded assignments, and provided programming and debugging support.",

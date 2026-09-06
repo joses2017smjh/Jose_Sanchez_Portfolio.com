@@ -234,6 +234,14 @@ a:focus-visible {
   font-size: var(--text-sm);
 }
 
+.file-type {
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
 /* ---------------------------------------------------------------------------
    The figure system — every visual is a numbered figure
    --------------------------------------------------------------------------- */
