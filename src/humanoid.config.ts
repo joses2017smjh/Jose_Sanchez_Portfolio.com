@@ -13,7 +13,7 @@ export const humanoid = {
     "The original goal was a fully tele-operated robot driven by an Oculus headset before the convention. Midterms, 2,000+ M3 inserts to count, and a few DIY 3D-printer repairs meant the project needed an extension.",
   ],
   status:
-    "Arms mostly assembled and calibration underway; next up is finishing the limbs and moving to Isaac Sim for motion control and RL.",
+    "Legs standing after returning from Mexico on 26 Aug. Compute is still Beelink → Nano → BNO085; an IM10A IMU is due 25 Sep. Waiting on RPLIDAR C1, a 7\" screen, and synchronized global-shutter stereo.",
   // The upstream project this build follows — design files, docs and paper.
   credit:
     "This is my build of Berkeley Humanoid Lite, the open-source 3D-printed humanoid from the Hybrid Robotics Lab at UC Berkeley. The design files, assembly documentation and the RSS 2025 paper behind it all live upstream:",
@@ -106,6 +106,48 @@ export const humanoid = {
       src: "/media/humanoid/12-printer-fixed.jpg",
       alt: "The repaired 3D printer back in working order.",
       caption: "A stripped screw and one precise drill later: fixed.",
+    },
+    {
+      kind: "image" as const,
+      src: "/media/humanoid/13-left-leg-calibrated.jpg",
+      alt: "Six open-frame actuators on the bench, each wired to a blue motor controller.",
+      caption: "29 Aug — Left-leg motors calibrated; ESCs still off-chassis.",
+    },
+    {
+      kind: "image" as const,
+      src: "/media/humanoid/14-printer-ankles.jpg",
+      alt: "Open Bambu Lab X1-Carbon with the hotend in hand and tools on the build plate.",
+      caption: "1 Sep — Hotend out to reprint ankle parts.",
+    },
+    {
+      kind: "image" as const,
+      src: "/media/humanoid/15-attach-ankles.jpg",
+      alt: "A pair of orange 3D-printed humanoid legs on a folding table, wiring still external.",
+      caption: "2 Sep — Legs assembled, ready to pin the ankles.",
+    },
+    {
+      kind: "image" as const,
+      src: "/media/humanoid/16-legs-standing.jpg",
+      alt: "Humanoid lower body standing on carpet, orange printed legs on a black extrusion torso frame.",
+      caption: "3 Sep — Legs standing on the hip extrusion.",
+    },
+    {
+      kind: "image" as const,
+      src: "/media/humanoid/17-legs-standing-2.jpg",
+      alt: "Second view of the standing humanoid legs with a 3D printer in the background.",
+      caption: "3 Sep — Standing assembly, other side.",
+    },
+    {
+      kind: "image" as const,
+      src: "/media/humanoid/18-stopper-imu-cad.jpg",
+      alt: "Arms, extrusion frame, and actuators on the bench while waiting on hardware.",
+      caption: "4 Sep — Stopper and IMU mount are CAD-only; waiting on bolts.",
+    },
+    {
+      kind: "image" as const,
+      src: "/media/humanoid/19-arm-minipc.jpg",
+      alt: "Assembled orange humanoid arm with exposed wiring next to a monitor on the desk.",
+      caption: "5 Sep — Arm beside the mini PC; hands and compute next.",
     },
   ],
 } as const;

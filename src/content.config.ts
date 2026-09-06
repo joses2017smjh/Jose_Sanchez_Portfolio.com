@@ -126,6 +126,16 @@ const now = defineCollection({
   schema: z.object({
     date: z.coerce.date(),
     title: z.string().max(80),
+    photos: z
+      .array(
+        z.object({
+          image: z.string(),
+          alt: z.string().max(160),
+          caption: z.string().max(180),
+        }),
+      )
+      .max(10)
+      .optional(),
   }),
 });
 

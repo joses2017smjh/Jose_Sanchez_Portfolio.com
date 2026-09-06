@@ -43,6 +43,25 @@ const fmt = new Intl.DateTimeFormat("en-US", {
           <div class="entry-body">
             <Content />
           </div>
+          {entry.data.photos && entry.data.photos.length > 0 && (
+            <ul class="now-shots">
+              {entry.data.photos.map((photo) => (
+                <li>
+                  <figure>
+                    <img
+                      src={photo.image}
+                      alt={photo.alt}
+                      width="768"
+                      height="1024"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <figcaption>{photo.caption}</figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          )}
         </li>
       ))
     }

@@ -8,7 +8,7 @@ export const beyond = [
     title: "Open source robotics",
     kicker: "Berkeley Humanoid Lite",
     blurb:
-      "Building an open-source humanoid from scratch, self-funded, in a garage — soldering, actuators, CAD, and eventually reinforcement learning in Isaac Sim.",
+      "Building an open-source humanoid from scratch, self-funded, in a garage. Legs are standing; LiDAR and stereo vision hardware is still inbound.",
     tile: "/media/beyond/humanoid-tile.jpg",
     tileAlt:
       "The humanoid build log: workshop bench, actuator assembly and a wiring diagram in a row.",

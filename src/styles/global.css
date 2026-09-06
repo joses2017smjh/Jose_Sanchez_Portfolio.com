@@ -1515,6 +1515,47 @@ main.full {
   margin-bottom: 0;
 }
 
+.now-shots {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+.now-shots figure {
+  margin: 0;
+}
+
+.now-shots img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+}
+
+.now-shots figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.02em;
+  color: var(--dim);
+  margin-top: var(--space-1);
+}
+
+@media (max-width: 40rem) {
+  .now-shots {
+    grid-template-columns: 1fr;
+  }
+
+  .now-shots img {
+    aspect-ratio: auto;
+    object-fit: contain;
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Detail page
    --------------------------------------------------------------------------- */
