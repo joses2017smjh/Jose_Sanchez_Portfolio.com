@@ -1,107 +1,78 @@
 ---
-title: "Humanoid Robustness Ladder"
-summary: "How much disturbance an 11.3 kg 3D-printed humanoid can take before it stops learning."
+title: Humanoid Robustness Ladder
+summary: >-
+  Train a 3D-printed humanoid in Isaac Lab. Score it in MuJoCo across 156 policies and 6,348 episodes.
 problem: >-
-  An 11.3 kg 3D-printed humanoid with 6 Nm joints has very little authority to
-  arrest a disturbance, so asking how much it can take is not rhetorical.
-  Upstream ships flat-ground locomotion with no curriculum and no way to score
-  a policy at all — its sim2sim script needs a gamepad and a GUI, and emits no
-  metric of any kind.
+  A policy that only works where it trained has learned PhysX, not locomotion. Upstream
+  ships flat-ground control with no curriculum and no way to score a policy. High
+  training reward can still hide transfer failure, which is why retractions stay in
+  this record.
 approach: >-
-  Train in Isaac Lab on PhysX, score in MuJoCo — a different simulator on
-  purpose, because a policy that only works where it trained has learned PhysX,
-  not locomotion. Every randomization range upstream ships as three named
-  presets was rewritten as one continuous scale, turning the presets into an
-  axis you can sweep. The scoring harness drives policies through upstream's
-  own controller, so observation construction is bit-identical to the sim2real
-  deployment path rather than a reimplementation. Six commanded velocities,
-  five seeds, 10 s episodes, one fixed terrain seed, identical for every policy.
+  Trained PPO policies in Isaac Lab (PhysX, 4,096 envs), exported ONNX, and scored them
+  with upstream's own RlController in headless MuJoCo so observations match the
+  sim-to-real path. Swept randomization, push and terrain curricula, ray-cast depth,
+  then cloth-sort and cooperative lift. Gates refuse a verdict without a control. Four
+  earlier claims in this same repository were retracted and left public.
 result: >-
-  89 policies trained, 6,348 scored sim2sim episodes, 288 rendered rollouts.
-  Transfer inverts the training ranking: the highest-reward policy falls 23% of
-  the time in MuJoCo, the shipped default 0%. Terrain training gives 11x fewer
-  falls at d=1.0, and arms drop falls from 37.8% to 11.7%.
+  Transfer inverts the training-reward ranking: unrandomized policies fall 23% of the
+  time in MuJoCo versus 0% for the repo default. The free-standing robot sorts 22 of 24
+  rigid proxies with no falls. The best cooperative cube rollout lifts 7.8 cm, then the
+  pair drops 41 cm before contact. Sim-to-sim only; hardware locomotion is not claimed.
 tags:
-  [
-    "Python",
-    "Isaac Lab",
-    "MuJoCo",
-    "PPO",
-    "Reinforcement Learning",
-    "Sim-to-Sim",
-    "Robotics",
-    "ONNX",
-  ]
-repo: "https://github.com/joses2017smjh/bhl-robustness-ladder"
+  - Python
+  - Isaac Lab
+  - Isaac Sim
+  - MuJoCo
+  - PPO
+  - Reinforcement Learning
+  - Sim-to-Sim
+  - Robotics
+  - ONNX
+repo: https://github.com/joses2017smjh/bhl-robustness-ladder
 links:
-  - label: "Full technical report"
-    href: "https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/REPORT.md"
-video: "/media/bhl/multi_race.mp4"
-poster: "/media/bhl/multi_race_poster.jpg"
-image: "/media/bhl/multi_race_poster.jpg"
-alt: "Four humanoid policies in one MuJoCo world taking identical shoves; three stay upright and the un-randomized robot is on the ground."
-figcaption: "Four policies, one world, identical 0.45 m/s shoves — they share a solver and a clock."
+  - label: Full technical report
+    href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/REPORT.md
+  - label: Findings ledger
+    href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FINDINGS.md
+image: /media/bhl/cloth_sort_free_base_shirt.jpg
+pair:
+  - image: /media/bhl/cloth_sort_free_base_shirt.webp
+    alt: Free-standing Berkeley Humanoid Lite sweeping a rigid shirt proxy into a basket.
+  - image: /media/bhl/carry_cube_pov.mp4
+    alt: Best cooperative cube rollout, a short lift followed by a drop before contact.
+alt: >-
+  A free-standing shirt-proxy sort beside the best cooperative cube rollout, which lifts
+  then drops.
+figcaption: "Free-standing shirt-proxy sort (left) versus the best cooperative cube rollout (right)."
 sections:
-  - heading: "The fidelity ladder"
+  - heading: Transfer inverts the training-reward ranking
     body: >-
-      Every randomization range upstream ships as three named presets becomes
-      one continuous scale. Sweeping it separates the training column from the
-      transfer column, and they disagree: s=0 wins training by 49% and loses
-      transfer outright. Reward declines smoothly; fall rate is the quantity
-      with a knee, and the shipped default sits on the last rung before it.
+      The flat-ground comparison covers five settings and three trained policies per
+      setting. The default randomization transfers better than the unrandomized
+      configuration even though training reward suggests a different ordering.
     figures:
-      - image: "/media/bhl/dr_pair.mp4"
-        alt: "Left, a randomized policy strafing successfully; right, an un-randomized policy falling on identical ground."
-        caption: "Identical strafe command. Left s=1.0, right s=0 — neither ever saw MuJoCo in training."
-  - heading: "How hard a shove is learnable"
+      - image: /media/bhl/multi_lab.mp4
+        alt: Four colour-coded policies share one shove, with egocentric depth along the bottom.
+        caption: Four policies, one world, one command. The unrandomized robot is on the ground.
+      - image: /media/bhl/dr_pair.mp4
+        alt: Two policies follow a strafe command; one stays upright and one falls.
+        caption: Selected strafe rollouts; the 6,348-episode ledger supplies the evidence.
+  - heading: Stereo pose fix, and a retracted ice claim
     body: >-
-      0.2 m/s of shove rejection is free. 1.5 m/s destroys the gait — reward
-      climbs to 24.7, then collapses to 3.0 as the ramp passes 0.7 m/s. A
-      competence-gated curriculum does far better, but lifting its safety cap
-      showed the reported 0.87 m/s ceiling was an artifact of that cap:
-      uncapped, it oscillates between 0 and 1.8 m/s and never converges.
+      Isaac Lab 3.0 read camera quaternions as (x, y, z, w) after they were written
+      (w, x, y, z). Stereo pointed down after the fix. An earlier ice-hazard result is
+      retracted: patches spawned a median 72 m away.
     figures:
-      - image: "/media/bhl/push_pair.mp4"
-        alt: "Left, a push-trained humanoid staggering and recovering; right, the baseline knocked flat by the same shove."
-        caption: "Identical 0.5 m/s shoves, push curriculum against none — 0/6 falls against 3/6."
-  - heading: "The plateau is torque, not sensing"
-    body: >-
-      Randomization alone, with zero terrain exposure, carries the robot to
-      d≈0.4; terrain training holds past it, with 11x fewer falls at d=1.0.
-      The stall was blamed on weak joints and no height sensing — two
-      hypotheses in one sentence. A perfect height map of the ground underfoot
-      lands exactly on the blind curve, leaving torque. Looking ahead does move
-      it, and ray-cast depth costs 1.6% of throughput.
-    figures:
-      - image: "/media/bhl/terrain_pair.mp4"
-        alt: "Left, a terrain-trained humanoid crossing rough ground; right, a flat-trained policy falling on the same ground."
-        caption: "Identical rough ground at d=0.80 — evaluation terrain is generated by different code than training terrain."
-      - image: "/media/bhl/depth_pair.mp4"
-        alt: "Left, the scored episode on rough ground; right, the robot's own 64 by 64 egocentric depth image, near in blue and far in red."
-        caption: "The robot's own depth image — MuJoCo's buffer, not the Isaac ray-caster. Two renderers agreeing."
-  - heading: "Arms, and the lab floor"
-    body: >-
-      On a composed lab floor — tile, carpet strip, cable, door threshold, ramp
-      — no 12-DoF policy finishes upright and two of four 22-DoF policies cross.
-      Three of the four biped runs end at a 2.5 cm cable, 9% of leg length.
-      Arms buy recoverable perturbation, not a higher step. Two robots can learn
-      a pinch on a cube, but height never leaves 4 cm — and giving them depth
-      cameras made it strictly worse.
-    figures:
-      - image: "/media/bhl/multi_lab.mp4"
-        alt: "Four 22-DoF humanoid policies crossing a composed lab floor, with the hero policy's egocentric depth running along the bottom."
-        caption: "Four 22-DoF policies on the lab floor; a fallen robot darkens and takes a red outline."
-      - image: "/media/bhl/carry_3.mp4"
-        alt: "Three pairs of humanoids running the learned cooperative lift policy on a cube."
-        caption: "The learned lift: the pinch forms, the lift does not — height stays pinned at 4 cm."
-date: 2026-08-24
-order: 2
+      - image: /media/bhl/maze_stereo_fixed.webp
+        alt: Corrected downward stereo pose versus the earlier upside-down camera on terrain.
+        caption: After the quaternion fix, 16×16 stereo reaches terrain level 0.88.
+date: 2026-09-14T00:00:00.000Z
+order: 3
+featured: true
+focus: Policy evaluation / Sim-to-sim
+evidence: 156 policies, 6,348 sim-to-sim episodes; 13 findings, 4 retractions. Unrandomized 23% falls vs 0% default.
+contribution: >-
+  Built the measurement stack: headless MuJoCo scoring, curricula upstream lacks, rollout
+  visualization, and a ledger that keeps retractions public. Used upstream's observation
+  path so evaluation stays close to the deployment controller.
 ---
-
-## Where it goes next
-
-Colour needs the RTX renderer, which segfaults on this cluster inside the Hydra
-engine, so everything here is depth-only. A newer Isaac Sim already survives the
-call that kills 5.1 — it builds as a second environment beside the locked stack
-rather than replacing it, because every number above came from 5.1 and none of
-them should move to find out whether a renderer works.

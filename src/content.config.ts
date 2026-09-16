@@ -15,6 +15,10 @@ const projects = defineCollection({
     title: z.string().max(60),
     // What it does, not how. One line.
     summary: z.string().max(120),
+    featured: z.boolean().default(false),
+    focus: z.string().max(60),
+    contribution: z.string().max(400),
+    evidence: z.string().max(180),
     // 2-3 sentences.
     problem: z.string().max(400),
     // 3-5 sentences, hiring-manager altitude.
@@ -65,7 +69,7 @@ const projects = defineCollection({
     // at once (a good/bad pair reads better together than in sequence).
     // `image` stays the single-frame fallback for list thumbnails.
     pair: z
-      .array(z.object({ image: z.string(), alt: z.string().max(160) }))
+      .array(z.object({ image: z.string(), alt: z.string().max(160), poster: z.string().optional() }))
       .length(2)
       .optional(),
     alt: z.string().max(160),
@@ -85,6 +89,7 @@ const projects = defineCollection({
                 image: z.string(),
                 alt: z.string().max(160),
                 caption: z.string().max(120),
+                poster: z.string().optional(),
               }),
             )
             .max(4)
@@ -133,6 +138,8 @@ const now = defineCollection({
           alt: z.string().max(160),
           caption: z.string().max(180),
           when: z.string().max(24).optional(),
+          // Poster frame for .mp4 shots (reduced-motion fallback).
+          poster: z.string().optional(),
         }),
       )
       .max(10)

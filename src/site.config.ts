@@ -5,21 +5,20 @@
 export const site = {
   name: "Jose Sanchez Gonzalez",
   positioning:
-    "AI/ML engineer — MS in Artificial Intelligence, Oregon State '26. Computer vision, 3D perception, and LLM systems.",
+    "AI/ML engineer building perception, retrieval, and learned control systems.",
+  seeking: "Seeking AI/ML engineering roles in robotics, 3D perception, and simulation.",
   bio: [
-    "I work across computer vision, 3D perception, and NLP — from quantified depth-estimation research for robotic pruning to from-scratch transformers and production-style RAG systems.",
-    "I hold a BS in Computer Science (2025) and an MS in Artificial Intelligence (2026) from Oregon State University, where I've also taught as a graduate TA for Operating Systems and Computational Methods.",
-    "Right now I'm building the open-source Berkeley Humanoid Lite — mechanical assembly, CAD, and ROS2 + Isaac Sim for motion control and reinforcement learning.",
-    "I care about systems that hold up outside the lab: measured, reproducible, and shipped.",
+    "I turn research questions into working software: vision-guided pruning in Isaac Sim, depth models for orchard robots, cross-simulator policy evaluations, and retrieval tools that trace answers to source files.",
+    "M.S. in Artificial Intelligence and B.S. in Computer Science, Oregon State University. My project pages show what I built, how I tested it, and what still needs work.",
   ].join(" "),
-  email: "sanchej7@oregonstate.edu",
+  email: "joseszgz2021@gmail.com",
   links: [
     { label: "GitHub", href: "https://github.com/joses2017smjh" },
     {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/jose-j-sanchez-gonzalez/",
+      href: "https://linkedin.com/in/jose-j-sanchez-gonzalez-84a800257/",
     },
-    { label: "Email", href: "mailto:sanchej7@oregonstate.edu" },
+    { label: "Email", href: "mailto:joseszgz2021@gmail.com" },
     // Drop your resume at public/resume.pdf
     { label: "Resume", href: "/resume.pdf" },
   ],

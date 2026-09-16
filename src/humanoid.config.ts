@@ -13,7 +13,7 @@ export const humanoid = {
     "The original goal was a fully tele-operated robot driven by an Oculus headset before the convention. Midterms, 2,000+ M3 inserts to count, and a few DIY 3D-printer repairs meant the project needed an extension.",
   ],
   status:
-    "Upper stack off the frame as of 5 Sep for the hip stopper and IMU mount. Compute is still Beelink → Nano → BNO085; an IM10A IMU is due 25 Sep. Waiting on RPLIDAR C1, a 7\" screen, and synchronized global-shutter stereo.",
+    "Fully assembled as of 12 Sep. First sign of life on 13 Sep — LiDAR and stereo are on the robot; working on movement.",
   // The upstream project this build follows — design files, docs and paper.
   credit:
     "This is my build of Berkeley Humanoid Lite, the open-source 3D-printed humanoid from the Hybrid Robotics Lab at UC Berkeley. The design files, assembly documentation and the RSS 2025 paper behind it all live upstream:",
@@ -148,6 +148,59 @@ export const humanoid = {
       src: "/media/humanoid/18-stopper-imu-cad.jpg",
       alt: "Upper-body parts back on the bench — arms, extrusions, and actuators while the frame is apart.",
       caption: "5 Sep — Dismantling the upper stack. Stopper and IMU mount are CAD-only; waiting on bolts.",
+    },
+    {
+      kind: "image" as const,
+      src: "/media/humanoid/20-getting-cables-nice.jpg",
+      alt: "Humanoid arm on the bench with white and green wiring being dressed, tools around it.",
+      caption: "6 Sep — Getting cables nice.",
+    },
+    {
+      kind: "video" as const,
+      src: "/media/humanoid/21-setting-up-computer.mp4",
+      poster: "/media/humanoid/21-setting-up-computer-poster.jpg",
+      alt: "Setting up the onboard computer — close-up of the power-supply warning label in the chassis.",
+      caption: "7 Sep — Setting up the computer.",
+    },
+    {
+      kind: "video" as const,
+      src: "/media/humanoid/22-configuring-lidar-stereo.mp4",
+      poster: "/media/humanoid/22-configuring-lidar-stereo-poster.jpg",
+      alt: "Jose at the bench in gloves, configuring LiDAR and stereo with a point-cloud view on the monitor.",
+      caption: "8 Sep — Configuring the LiDAR and stereo to the robot.",
+    },
+    {
+      kind: "video" as const,
+      src: "/media/humanoid/23-lidar-another-view.mp4",
+      poster: "/media/humanoid/23-lidar-another-view-poster.jpg",
+      alt: "Monitor showing a stereo camera feed and a LiDAR point cloud, with orange arm assemblies on the bench.",
+      caption: "8 Sep — Another view of the LiDAR.",
+    },
+    {
+      kind: "image" as const,
+      src: "/media/humanoid/24-resoldering-motors.jpg",
+      alt: "Jose kneeling beside the hanging orange humanoid, resoldering a disconnected motor.",
+      caption: "9 Sep — Resoldering some disconnected motors.",
+    },
+    {
+      kind: "video" as const,
+      src: "/media/humanoid/25-motor-diagnostics.mp4",
+      poster: "/media/humanoid/25-motor-diagnostics-poster.jpg",
+      alt: "Terminal on the robot screen walking through motor diagnostics before commanding motion.",
+      caption: "10 Sep — Running diagnostic on onboard computer to configure motors.",
+    },
+    {
+      kind: "image" as const,
+      src: "/media/humanoid/26-fully-built-movement.jpg",
+      alt: "Fully assembled orange humanoid hanging from a rack, chest screen on, wiring still external.",
+      caption: "12 Sep — Fully built. Working on getting movement.",
+    },
+    {
+      kind: "video" as const,
+      src: "/media/humanoid/27-first-sign-of-life.mp4",
+      poster: "/media/humanoid/27-first-sign-of-life-poster.jpg",
+      alt: "Assembled orange humanoid hanging from a chain, LEDs on, as the motors first come up.",
+      caption: "13 Sep — First sign of life.",
     },
   ],
 } as const;

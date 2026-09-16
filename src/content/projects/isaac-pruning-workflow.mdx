@@ -1,0 +1,75 @@
+---
+title: "Vision-Guided Pruning in Isaac Sim"
+summary: "UR5e live RGB-D approach, gated spur release, and home return in a two-tree Blender orchard."
+problem: >-
+  A pruning arm has to approach a thin branch from wrist RGB-D and dual ToF, then
+  release only when tracking and geometry still agree. Jaw occlusion can wipe out
+  image features at the worst moment. A finished recording is not a finished cut,
+  so failed tracking and failed closure stay in the public record.
+approach: >-
+  The original UR5e and mock pruner run in Isaac Sim 6.0 / Isaac Lab 3 among both
+  source Blender trees, exported to USD with bark maps and collisions. Seeded
+  pyramidal Lucas–Kanade tracking back-projects RTX optical-Z depth into bounded
+  Cartesian commands. Dual 8×8 ray-cast ToF, contact, and geometry gates must pass
+  before a visual-jaw surrogate releases one rigid spur. An independent grader
+  checks the saved capture rather than the renderer’s success label. Branch
+  identity, axis, and radius come from mesh metadata, not a learned detector.
+contribution: >-
+  I built the Isaac capture loop, live RGB-D controller, release gates, independent
+  sequence grader, and the published success and failure recordings. The robot,
+  orchard meshes, and sensor frames come from pinned upstream sources. This
+  repository composes them, measures one known target, and keeps failed runs visible.
+result: >-
+  Job 21328323 records 200 frames / 20 s, 68 vision commands, and 17/17 sequence
+  checks. One selected spur releases at 7.8 s, falls 809.49 mm, and the arm returns
+  within 0.001 mm of home. Job 21317409 stops at 7.7 s (confidence 0.14165 < 0.15).
+  Discrete rigid-piece release, not wood fracture.
+tags:
+  - Python
+  - Isaac Sim
+  - Isaac Lab
+  - OpenCV
+  - RGB-D
+  - Time of Flight
+  - USD
+  - Slurm
+repo: https://github.com/joses2017smjh/isaac-sim-pruning-workflow
+demo: https://github.com/joses2017smjh/isaac-sim-pruning-workflow/releases/download/isaac-vision-2026-09-13/isaac_two_trees_vision_sequence.mp4
+links:
+  - label: Wrist-camera video
+    href: https://github.com/joses2017smjh/isaac-sim-pruning-workflow/releases/download/isaac-vision-2026-09-13/isaac_two_trees_vision_sequence_wrist.mp4
+  - label: Closure failure
+    href: https://github.com/joses2017smjh/isaac-sim-pruning-workflow/releases/download/isaac-vision-2026-09-13/isaac_two_trees_closure_failure.mp4
+  - label: Measured results
+    href: https://github.com/joses2017smjh/isaac-sim-pruning-workflow/blob/develop/docs/evidence/two_tree_summary_2026-09-14.json
+video: /media/pruning/isaac_two_trees_vision_sequence.mp4
+poster: /media/pruning/isaac_two_trees_vision_sequence.jpg
+image: /media/pruning/isaac_two_trees_vision_sequence.jpg
+pair:
+  - image: /media/pruning/isaac_two_trees_vision_sequence.mp4
+    alt: Isaac Sim dashboard of a UR5e approaching a textured apple tree, releasing a spur, and returning home.
+  - image: /media/pruning/cpu-pruning-demo.mp4
+    alt: "CPU demo of the same pruning loop: approach, sensor blackout, then a nearby-wood reject."
+alt: "Isaac Sim UR5e two-tree release beside the CPU demo of approach, blackout, and blocked cut."
+figcaption: "Isaac 20 s success (left) and the laptop CPU demo (right). Failed closure stays on the case study."
+focus: Robotics / Simulation / Perception
+evidence: "Job 21328323: 17/17 sequence checks, 809.49 mm drop, <0.001 mm home error."
+date: 2026-09-14
+order: 1
+featured: true
+sections:
+  - heading: Keep the failure next to the success
+    body: >-
+      Tracking confidence fell below 0.15 at 7.7 s on job 21317409. Closure stopped
+      at 2/3; no release. The public recording is the failed episode, not a cleaned
+      retake.
+    figures:
+      - image: /media/pruning/isaac_two_trees_closure_failure.mp4
+        alt: Dashboard frozen during a closure attempt after tracking confidence dropped.
+        caption: Closure failure at 7.7 s; motion stops without release.
+  - heading: What drives the arm
+    body: >-
+      Live control uses seeded LK features and RTX depth. Farneback flow is an
+      offline diagnostic. Depth is simulator ground truth. The jaw is a visual
+      proxy; there is no blade CAD or wood fracture model.
+---

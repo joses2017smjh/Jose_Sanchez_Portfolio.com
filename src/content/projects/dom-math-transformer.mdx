@@ -1,75 +1,57 @@
 ---
-title: "DoM: Decoder-Only Transformer for Math Word Problems"
-summary: "A from-scratch transformer that turns math word problems into executable computation graphs."
+title: "DoM: Math Problems to Computation Graphs"
+summary: >-
+  A PyTorch transformer that generates structured math programs, with correct and incorrect
+  decodes to inspect.
 problem: >-
-  Math word problems require mapping free-form language onto a precise
-  sequence of operations. Generic seq2seq models routinely emit malformed
-  programs that can't be executed at all, so accuracy collapses exactly where
-  correctness matters most.
+  Math word problems require translating language into operations. A model can produce
+  either a malformed program or a valid program that solves the wrong problem; those
+  failures need separate evaluation.
 approach: >-
-  Co-developed a decoder-only seq2seq transformer built from scratch in
-  PyTorch — custom vocabularies, dataloader, and training loop — trained on
-  the MathQA dataset (~30k problems). Designed smart_sample, a constrained
-  decoding method that restricts each generation step to tokens that keep the
-  program a valid, executable DAG, so structural failure is ruled out by
-  construction rather than filtered afterwards.
+  Trained a decoder-only sequence-to-sequence transformer on MathQA and restricted decoding
+  choices to valid graph structure. Compared generated computation graphs with reference
+  programs.
 result: >-
-  77.45% exact-match accuracy, 84.78% BLEU, and 2.72 average graph edit
-  distance on the MathQA test set, with constrained decoding guaranteeing
-  valid graph construction on every sample.
-tags: ["Python", "PyTorch", "NLP", "Transformers"]
-repo: "https://github.com/joses2017smjh/OMR_LLM"
-image: "/media/dom/decoder_transformer_architecture.jpeg"
-alt: "Architecture diagram of the decoder-only transformer that maps math word problems to computation-graph tokens."
-figcaption: "Decoder-only transformer mapping word problems to computation-graph tokens."
+  The coauthored course report records 77.45% exact graph match, 84.78% 2-gram BLEU, and
+  2.72 average graph edit distance. Structural constraints do not guarantee the mathematical
+  answer is correct.
+tags:
+  - Python
+  - PyTorch
+  - NLP
+  - Transformers
+repo: https://github.com/joses2017smjh/OMR_LLM
+image: /media/dom/decoder_transformer_architecture.jpeg
+alt: A held-out payroll problem is decoded into an 18-operation computation graph.
+figcaption: >-
+  Selected correct decode: an 18-operation payroll program. Aggregate scores come from the
+  course report.
 paperStrip:
-  pdf: "/media/papers/dom-paper.pdf"
-  pages: "/media/papers/dom-page-{n}.jpg"
+  pdf: /media/papers/dom-paper.pdf
+  pages: /media/papers/dom-page-{n}.jpg
   count: 5
 sections:
-  - heading: "Where it succeeds"
+  - heading: Inspect the remaining errors
     body: >-
-      Real decodes on held-out MathQA problems, one operation at a time. The
-      easy case is a unit conversion the model gets exactly right; the hard
-      one is an 18-operation payroll problem with tiered overtime rates,
-      reproduced token for token. Every step is restricted to tokens that keep
-      the program executable.
+      The constrained decoder can produce a valid graph with extra operations or omit steps
+      the problem requires. Showing an incorrect decode beside a success separates
+      structural validity from semantic accuracy.
     figures:
-      - image: "/media/dom/success_easy.mp4"
-        alt: "DoM decoding a train-speed problem into three operations, matching the gold program exactly."
-        caption: "Easy — km/h to m/s conversion, exact match in three operations."
-      - image: "/media/dom/success_hard.mp4"
-        alt: "DoM decoding an 18-operation payroll problem, matching the gold program exactly."
-        caption: "Hard — 18-operation tiered-overtime payroll problem, exact match."
-  - heading: "Where it fails"
-    body: >-
-      Two failure modes from the same run. On the short problem the model
-      over-generates, wrapping a correct division in operations the gold
-      program never asks for. On the long one it under-generates, collapsing
-      an 18-operation partnership problem into four. Both are still valid
-      executable graphs — constrained decoding guarantees structure, not
-      semantics.
-    figures:
-      - image: "/media/dom/failure_easy.mp4"
-        alt: "DoM over-generating on a sphere ratio problem, adding operations the gold program does not have."
-        caption: "Over-generation — a one-operation answer padded to three."
-      - image: "/media/dom/failure_hard.mp4"
-        alt: "DoM under-generating on a partnership problem, collapsing eighteen operations into four."
-        caption: "Under-generation — an 18-operation problem cut to four."
-  - heading: "How it trained"
-    body: >-
-      Validation curves on MathQA. Loss falls smoothly and accuracy plateaus
-      well before the epoch budget runs out, which is what put the effort into
-      decoding rather than into a longer schedule — the remaining errors are
-      semantic, and no amount of extra training fixes a model that builds a
-      well-formed graph of the wrong operations.
-    figures:
-      - image: "/media/dom/loss_val.jpg"
-        alt: "Validation loss curve on MathQA, falling smoothly and flattening."
-        caption: "Validation loss on MathQA."
-      - image: "/media/dom/acc_val.jpg"
-        alt: "Validation accuracy curve on MathQA, rising then plateauing."
-        caption: "Validation accuracy — plateaus before the epoch budget."
-date: 2026-03-01
-order: 6
+      - image: /media/dom/failure_hard.mp4
+        alt: An 18-operation reference program is under-generated as a shorter incorrect graph.
+        caption: "Selected failure: a valid structure with missing operations."
+      - image: /media/dom/decoder_transformer_architecture.jpeg
+        alt: Decoder-only transformer used to generate computation-graph tokens.
+        caption: Tokenizer, decoder, and structured output pipeline.
+date: 2026-03-01T00:00:00.000Z
+order: 7
+featured: false
+focus: NLP / Constrained decoding
+evidence: 77.45% exact graph match and 84.78% 2-gram BLEU on the MathQA test set.
+contribution: >-
+  Co-developed the tokenizer, data loader, model, training loop, and constrained decoding in
+  PyTorch. Analyzed successful decodes alongside over-generation and missing-operation
+  errors.
+video: /media/dom/success_hard.mp4
+poster: /media/dom/success_hard_poster.jpg
 ---

@@ -13,6 +13,8 @@ const { project, number } = Astro.props;
 const {
   title,
   summary,
+  evidence,
+  focus,
   tags,
   repo,
   date,
@@ -45,11 +47,13 @@ const href = `/projects/${project.id}`;
       <span class="leader" aria-hidden="true"></span>
       <span class="meta">{date.getUTCFullYear()}</span>
     </div>
+    <p class="project-focus">{focus}</p>
     <p class="project-summary">{summary}</p>
+    <p class="project-evidence">{evidence}</p>
     <TagList tags={tags} />
     <div class="project-links">
-      {repo && <a href={repo}>GitHub</a>}
-      <a href={href}>Details</a>
+      <a href={href}>View case study <span aria-hidden="true">&rarr;</span></a>
+      {repo && <a href={`${repo}#readme`}>Technical README</a>}
     </div>
   </article>
 </li>

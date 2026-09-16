@@ -8,6 +8,7 @@ interface Photo {
   alt: string;
   caption: string;
   when?: string | undefined;
+  poster?: string | undefined;
 }
 
 interface Props {
@@ -22,6 +23,10 @@ function whenLabel(photo: Photo) {
   if (photo.when) return photo.when;
   const dash = photo.caption.split(" — ")[0];
   return dash || photo.caption.slice(0, 12);
+}
+
+function isVideo(src: string) {
+  return /\.(mp4|webm)$/i.test(src);
 }
 ---
 
@@ -53,14 +58,30 @@ function whenLabel(photo: Photo) {
     {
       photos.map((photo, i) => (
         <figure class={`now-timeline-shot shot-${i}`}>
-          <img
-            src={photo.image}
-            alt={photo.alt}
-            width="768"
-            height="1024"
-            loading={i === 0 ? "eager" : "lazy"}
-            decoding="async"
-          />
+          {isVideo(photo.image) ? (
+            <video
+              data-loop
+              playsinline
+              muted
+              preload={i === 0 ? "metadata" : "none"}
+              poster={photo.poster}
+              aria-label={photo.alt}
+            >
+              <source
+                src={photo.image}
+                type={photo.image.endsWith(".webm") ? "video/webm" : "video/mp4"}
+              />
+            </video>
+          ) : (
+            <img
+              src={photo.image}
+              alt={photo.alt}
+              width="768"
+              height="1024"
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
+            />
+          )}
           <figcaption>{photo.caption}</figcaption>
         </figure>
       ))
