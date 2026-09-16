@@ -45,13 +45,8 @@ links:
 video: /media/pruning/isaac_two_trees_vision_sequence.mp4
 poster: /media/pruning/isaac_two_trees_vision_sequence.jpg
 image: /media/pruning/isaac_two_trees_vision_sequence.jpg
-pair:
-  - image: /media/pruning/isaac_two_trees_vision_sequence.mp4
-    alt: Isaac Sim dashboard of a UR5e approaching a textured apple tree, releasing a spur, and returning home.
-  - image: /media/depth/orchard_rig.mp4
-    alt: UR robot arm with a 3D-printed camera end-effector sweeping along a dormant apple orchard row.
-alt: "Isaac Sim two-tree release beside the orchard rig scanning dormant apple trees in the field."
-figcaption: "Isaac Sim gated release (left) and the orchard rig in the field (right)."
+alt: "Isaac Sim dashboard of a UR5e approaching a textured apple tree, releasing a spur, and returning home."
+figcaption: "20 s Isaac dashboard: approach, gated release at 7.8 s, measured fall, home return."
 focus: Robotics / Simulation / Perception
 evidence: "Job 21328323: 17/17 sequence checks, 809.49 mm drop, <0.001 mm home error."
 date: 2026-09-14
@@ -72,13 +67,4 @@ sections:
       Live control uses seeded LK features and RTX depth. Farneback flow is an
       offline diagnostic. Depth is simulator ground truth. The jaw is a visual
       proxy; there is no blade CAD or wood fracture model.
-  - heading: The orchard recording this is built toward
-    body: >-
-      The right-hand clip is the field rig, not a success claim for this
-      controller. A UR arm with a 3D-printed camera end-effector scans a dormant
-      row. Learned depth and this Isaac loop are still separate systems.
-    figures:
-      - image: /media/pruning/cpu-pruning-demo.mp4
-        alt: CPU demo of approach, sensor blackout, then a nearby-wood reject.
-        caption: "Laptop path: approach, blackout, blocked cut. No GPU, no Isaac."
 ---
