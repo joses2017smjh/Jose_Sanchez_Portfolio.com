@@ -514,11 +514,16 @@ main:not(.full) .figure-pair:has(video) {
   background: var(--surface);
 }
 
+/* height:100% matches what these elements had before they were wrapped:
+   the two halves of a pair are stretched to a common row height, and each
+   clip is contained inside its half. Letting them size to their own
+   aspect instead leaves a gap under the shorter one, which is visible on
+   any pair mixing a portrait still with a wide clip. */
 .pair-item > video,
 .pair-item > img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
 }
 
