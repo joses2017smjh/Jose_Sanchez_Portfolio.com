@@ -37,7 +37,10 @@ const href = `/projects/${project.id}`;
       video={cardVideo ?? video}
       poster={poster}
       image={image}
-      pair={pair}
+      {/* A pair normally wins over a single clip, but an explicit
+          `cardVideo` is a deliberate choice about what the card shows —
+          so it overrides the pair here while the detail page keeps it. */}
+      pair={cardVideo ? undefined : pair}
       alt={alt}
       caption={figcaption}
       href={href}
