@@ -1,0 +1,65 @@
+---
+title: Bimanual Garment Folding in Isaac Sim
+summary: >-
+  Port a flow-matching VLA into Isaac Sim and score it with the challenge's own fold checker.
+problem: >-
+  A folding policy is easy to fool: replaying a demonstration looks like success, and a
+  renderer that crashes looks like a modelling failure. The task needs a scorer nobody
+  tuned, held-out garment poses, and a clear line between the policy acting and a
+  demonstration being played back.
+approach: >-
+  Rebuilt the observation path so the policy reads three rasterised camera views and emits
+  joint targets directly, with no demonstration actions in the loop. Training runs on
+  18,200 rasterised frames after a measured domain-gap diagnosis traced the initial
+  0-for-16 to the observation encoder, not the controller. Rollouts are graded by the
+  challenge's own success_checker_garment_fold, so the pass criteria are not mine to
+  adjust. The pinned Isaac Sim renderer segfaults on this cluster, so the capture path
+  avoids it entirely.
+contribution: >-
+  I built the Isaac Sim port, the rasterised observation path, the domain-gap diagnosis,
+  and the scored rollouts kept here. The "Learning to Fold" work being reproduced placed
+  1st of 62 in the LeHome Challenge 2026 — that placement belongs to its authors, not to
+  me. This repository reproduces their method and reports what it scores in my setup.
+result: >-
+  The trained policy folds 2 of 8 held-out short-pants poses, up from 0 of 16 before the
+  domain-gap fix, with the checker firing at step 119 of 400 on the headline run. It scores
+  0 of 4 on the other three garment classes, each of which has its own fold criteria.
+  Closed-loop and reproducible, but not a solved task.
+tags:
+  - Python
+  - Isaac Sim
+  - Flow Matching
+  - VLA
+  - Imitation Learning
+  - Slurm
+repo: https://github.com/joses2017smjh/IsaacSimFolding
+links:
+  - label: Long-form method notes
+    href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/docs/README_long.md
+  - label: Outcome sweep
+    href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/results/outcome_sweep.tsv
+image: /media/folding/policy-fold-success.jpg
+pair:
+  - image: /media/folding/policy-fold-success.mp4
+    alt: Trained policy folding short pants closed-loop; the challenge checker returns success.
+    poster: /media/folding/policy-fold-success.jpg
+  - image: /media/folding/policy-fold-failure.mp4
+    alt: The same policy on a held-out pose, failing to close the fold.
+    poster: /media/folding/policy-fold-failure.jpg
+alt: >-
+  A scored successful fold beside a failed one, both from the same trained policy on
+  different held-out poses.
+figcaption: "Same policy, two held-out poses: one scored fold, one failure. 2 of 8 pass."
+date: 2026-09-08T00:00:00.000Z
+order: 6
+featured: true
+focus: VLA / Imitation learning
+evidence: "2 of 8 held-out short-pants poses folded, up from 0 of 16; 0 of 4 on the other three garment classes."
+sections:
+  - heading: The replay is not the policy
+    body: >-
+      A demonstration replay folds the garment without the policy doing anything, so it
+      proves only that the scene is solvable. Every number here comes from closed-loop
+      policy rollouts, graded by the challenge's checker rather than by the renderer's own
+      label. The failure clips stay published beside the successes.
+---

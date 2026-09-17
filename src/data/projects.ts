@@ -642,8 +642,8 @@ export const PROJECTS: Project[] = [
     lane: ["robotics-rl", "perception"],
     period: "Aug 2026 – present",
     status: "active",
-    heroAsset: "/media/folding/demonstration-replay.mp4",
-    heroPoster: "/media/folding/demonstration-replay.jpg",
+    heroAsset: "/media/folding/policy-fold-success.mp4",
+    heroPoster: "/media/folding/policy-fold-success.jpg",
     metrics: [
       {
         label: "Short-pants fold success — held-out poses",
