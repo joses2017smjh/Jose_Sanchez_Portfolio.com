@@ -11,15 +11,16 @@ approach: >-
   predictions. Inspected confusion matrices and point-budget experiments to understand what
   each architecture retained.
 result: >-
-  The report and demos show ModelNet10 evaluation, including correct monitor classification
-  and desk/table confusion. This is graduate coursework; source code is not publicly
-  released and no deployment claim is made.
+  The Point Transformer reaches 86.79% accuracy on 2,468 held-out ModelNet10 clouds, with
+  desk/table confusion the dominant error. Graduate coursework: the figure comes from the
+  training notebook's own saved output, and no deployment claim is made.
 tags:
   - Python
   - PyTorch
   - Point Clouds
   - Attention
   - 3D Perception
+repo: https://github.com/joses2017smjh/PointCloudclassification
 image: /media/pointcloud/pointtransformer_architecture.svg
 pair:
   - image: /media/pointcloud/pointtransformer_good_monitor.mp4
@@ -51,7 +52,7 @@ date: 2025-12-01T00:00:00.000Z
 order: 8
 featured: false
 focus: 3D perception / Deep learning
-evidence: Graduate coursework with ModelNet10 demo predictions and a linked evaluation report.
+evidence: 86.79% on 2,468 ModelNet10 test clouds, from the train_pointtransformer.ipynb output cell.
 contribution: >-
   Built and compared point-based neural models in PyTorch, prepared sampled point clouds,
   and visualized correct predictions and furniture-class confusions.

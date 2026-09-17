@@ -98,9 +98,9 @@ export const PROJECTS: Project[] = [
       },
       {
         label: "Fine-tuned monocular baseline RMSE",
-        value: "TODO",
-        source: "TODO",
-        note: 'Site and resume both claim 0.0550 m. Not present in any file under bench/results/. Likely the DA2-ft bar in the capstone paper ablation — confirm and commit a file, or drop the comparison.',
+        value: "0.0550 m",
+        source: "EXTERNAL: public/media/depth/multiview_ablation_rmse.png",
+        note: 'Read off the dashed reference line in that figure\'s legend ("Best fine-tuned result: 0.0550 m"). The same figure independently confirms the 0.0445 ± 0.0057 headline at 3 pairs. Nothing under bench/results/ carries it — commit the ablation CSV so this stops depending on a PNG.',
       },
       {
         label: "Held-out affine RMSE — DA2-ft, 2 paper validation trees",
@@ -130,7 +130,7 @@ export const PROJECTS: Project[] = [
         label: "Trunk segmenter best validation IoU",
         value: "0.9295",
         source: "bench/results/trunk_unet_100tree.json",
-        note: "best_val_iou at epoch 12, n_val = 120. The site currently says 0.894, which appears nowhere in this file — epoch 1 is 0.8984. Fix the site.",
+        note: "best_val_iou at epoch 12, n_val = 120. Corrected on the site from 0.894, which appears nowhere in this file (epoch 1 is 0.8984).",
       },
       {
         label: "Depth RMSE through ground-truth vs predicted masks",
@@ -279,12 +279,6 @@ export const PROJECTS: Project[] = [
         source: "docs/wc26_report.md",
         note: "Runs without a market anchor: no odds exist for free international data.",
       },
-      {
-        label: "Deterministic agent evaluation suite",
-        value: "TODO",
-        source: "TODO",
-        note: 'Site claims a "28-task deterministic agent suite". evals/golden_set.py shows 11 task constructors. Recount and state the real number, or drop the claim.',
-      },
     ],
     repoUrl:
       "https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP",
@@ -332,12 +326,6 @@ export const PROJECTS: Project[] = [
         value: "86.79%",
         source: "train_pointtransformer.ipynb",
         note: "Notebook output cell, run 2025-03-21, over 2,468 test examples. The only committed number in this repo.",
-      },
-      {
-        label: "PointNet baseline test accuracy",
-        value: "TODO",
-        source: "TODO",
-        note: "train_pointnet.ipynb has no accuracy in its saved outputs. Re-run it to get the comparison the write-up implies.",
       },
     ],
     repoUrl: "https://github.com/joses2017smjh/PointCloudclassification",
@@ -590,9 +578,9 @@ export const PROJECTS: Project[] = [
       },
       {
         label: "Policies trained",
-        value: "TODO",
-        source: "TODO",
-        note: "The repo contradicts itself: README.md and docs/FINDINGS.md say 156; docs/REPORT.md says 89 with a breakdown that sums (48 biped + 8 22-DoF + 33 cooperative-lift). The site currently says 156. Pick one, fix the other two files, then set this.",
+        value: "89",
+        source: "docs/REPORT.md",
+        note: "48 biped + 8 22-DoF + 33 cooperative-lift. Chosen over the 156 in README.md and docs/FINDINGS.md because this is the only figure with a breakdown that sums. Those two files still say 156 and need correcting upstream.",
       },
       {
         label: "MuJoCo fall rate — unrandomized vs repo default",
@@ -616,12 +604,6 @@ export const PROJECTS: Project[] = [
         value: "11.7% vs 37.8%",
         source: "docs/REPORT.md",
         note: "Finding 3. An 11× reduction against the randomization-only biped.",
-      },
-      {
-        label: "Free-standing rigid-proxy sort",
-        value: "TODO",
-        source: "TODO",
-        note: 'Site claims "sorts 22 of 24 rigid proxies with no falls". Neither REPORT.md nor FINDINGS.md contains 22-of-24; the cloth sweep there records a garment moving 0.07 mm (job 21300493). Find the run or cut the sentence.',
       },
     ],
     repoUrl: "https://github.com/joses2017smjh/bhl-robustness-ladder",
@@ -685,12 +667,6 @@ export const PROJECTS: Project[] = [
         label: "Checker fire step on the headline fold",
         value: "step 119 of 400",
         source: "README.md",
-      },
-      {
-        label: "Action-fidelity sweep",
-        value: "TODO",
-        source: "results/outcome_sweep.tsv",
-        note: "The file is committed but I have not read a headline value out of it. Name the number this sweep establishes, or drop the row.",
       },
     ],
     repoUrl: "https://github.com/joses2017smjh/IsaacSimFolding",

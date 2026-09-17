@@ -1,7 +1,7 @@
 ---
 title: Humanoid Robustness Ladder
 summary: >-
-  Train a 3D-printed humanoid in Isaac Lab. Score it in MuJoCo across 156 policies and 6,348 episodes.
+  Train a 3D-printed humanoid in Isaac Lab. Score it in MuJoCo across 89 policies and 6,348 episodes.
 problem: >-
   A policy that only works where it trained has learned PhysX, not locomotion. Upstream
   ships flat-ground control with no curriculum and no way to score a policy. High
@@ -15,8 +15,8 @@ approach: >-
   earlier claims in this same repository were retracted and left public.
 result: >-
   Transfer inverts the training-reward ranking: unrandomized policies fall 23% of the
-  time in MuJoCo versus 0% for the repo default. The free-standing robot sorts 22 of 24
-  rigid proxies with no falls. The best cooperative cube rollout lifts 7.8 cm, then the
+  time in MuJoCo versus 0% for the repo default. With arms, falls drop to 11.7% at d=1.0
+  where the biped falls 37.8%. The best cooperative cube rollout lifts 7.8 cm, then the
   pair drops 41 cm before contact. Sim-to-sim only; hardware locomotion is not claimed.
 tags:
   - Python
@@ -70,7 +70,7 @@ date: 2026-09-14T00:00:00.000Z
 order: 3
 featured: true
 focus: Policy evaluation / Sim-to-sim
-evidence: 156 policies, 6,348 sim-to-sim episodes; 13 findings, 4 retractions. Unrandomized 23% falls vs 0% default.
+evidence: 89 policies, 6,348 sim-to-sim episodes; 13 findings, 4 retractions. Unrandomized 23% falls vs 0% default.
 contribution: >-
   Built the measurement stack: headless MuJoCo scoring, curricula upstream lacks, rollout
   visualization, and a ledger that keeps retractions public. Used upstream's observation

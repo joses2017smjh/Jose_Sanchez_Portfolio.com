@@ -127,9 +127,9 @@ contribution: >-
 
 Everything above is synthetic — the model has never seen a real orchard. A
 hold-out affine fit on the two paper validation trees puts DA2-ft at 0.0344 m
-against Blender ground truth, and a TinyUNet trunk segmenter reaches 0.894 IoU.
+against Blender ground truth, and a TinyUNet trunk segmenter reaches 0.9295 IoU.
 But running the same depth through *predicted* masks instead of ground-truth
-ones moves error from 0.031 m to 0.110 m. That gap, not the headline, is the
+ones moves error from 0.031 m to 0.112 m. That gap, not the headline, is the
 number to beat.
 
 Stereo fusion is not shipped: naive flow with guessed variance made things
