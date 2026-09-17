@@ -9,7 +9,15 @@ interface Props {
   poster?: string | undefined;
   image?: string | undefined;
   /** Two clips side by side in one frame; wins over `image` when set. */
-  pair?: readonly { image: string; alt: string }[] | undefined;
+  pair?:
+    | readonly {
+        image: string;
+        alt: string;
+        poster?: string | undefined;
+        outcome?: "pass" | "fail" | undefined;
+        tag?: string | undefined;
+      }[]
+    | undefined;
   alt: string;
   caption: string;
   /** Eager-load only the hero figure on a detail page. */
@@ -42,22 +50,45 @@ const Media = href ? "a" : "div";
       pair ? (
         /* demo clips ship as mp4 — hardware decoded, and paused when
            off-screen, which an animated GIF can never be */
-        pair.map((item) =>
-          item.image.endsWith(".mp4") ? (
-            <video data-loop playsinline muted preload="none" aria-label={item.alt}>
-              <source src={item.image} type="video/mp4" />
-            </video>
-          ) : (
-            <img
-              src={item.image}
-              alt={item.alt}
-              loading={eager ? "eager" : "lazy"}
-              decoding="async"
-              width="480"
-              height="520"
-            />
-          ),
-        )
+        pair.map((item) => {
+          /* The tag is not decoration: colour alone would leave the
+             outcome invisible to anyone who cannot see the red frame. */
+          const tag =
+            item.tag ??
+            (item.outcome === "fail"
+              ? "Failure"
+              : item.outcome === "pass"
+                ? "Scored fold"
+                : undefined);
+          return (
+            <div
+              class:list={["pair-item", item.outcome && `pair-${item.outcome}`]}
+            >
+              {item.image.endsWith(".mp4") ? (
+                <video
+                  data-loop
+                  playsinline
+                  muted
+                  preload="none"
+                  poster={item.poster}
+                  aria-label={item.alt}
+                >
+                  <source src={item.image} type="video/mp4" />
+                </video>
+              ) : (
+                <img
+                  src={item.image}
+                  alt={item.alt}
+                  loading={eager ? "eager" : "lazy"}
+                  decoding="async"
+                  width="480"
+                  height="520"
+                />
+              )}
+              {tag && <span class="pair-tag">{tag}</span>}
+            </div>
+          );
+        })
       ) : video ? (
         <video
           data-loop

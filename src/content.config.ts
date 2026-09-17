@@ -69,7 +69,19 @@ const projects = defineCollection({
     // at once (a good/bad pair reads better together than in sequence).
     // `image` stays the single-frame fallback for list thumbnails.
     pair: z
-      .array(z.object({ image: z.string(), alt: z.string().max(160), poster: z.string().optional() }))
+      .array(
+        z.object({
+          image: z.string(),
+          alt: z.string().max(160),
+          poster: z.string().optional(),
+          // Marks one half of a good/bad pair. "fail" draws the red frame
+          // and the label, so the reader is told which is which rather
+          // than having to infer it from the shared caption.
+          outcome: z.enum(["pass", "fail"]).optional(),
+          // Short label shown in the frame corner (defaults per outcome).
+          tag: z.string().max(24).optional(),
+        }),
+      )
       .length(2)
       .optional(),
     alt: z.string().max(160),

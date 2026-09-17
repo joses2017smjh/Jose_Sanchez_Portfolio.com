@@ -5,7 +5,12 @@
  */
 interface Props {
   number: number;
-  items: readonly { image: string; alt: string; caption: string }[];
+  items: readonly {
+    image: string;
+    alt: string;
+    caption: string;
+    poster?: string | undefined;
+  }[];
   /** Start lettering at A + offset, so multiple strips on one page keep
       a single FIG. NNA…NNZ sequence. */
   letterOffset?: number;
@@ -26,7 +31,14 @@ const pad = String(number).padStart(2, "0");
           </div>
           <div class="figure-media">
             {item.image.endsWith(".mp4") ? (
-              <video data-loop playsinline muted preload="none" aria-label={item.alt}>
+              <video
+                data-loop
+                playsinline
+                muted
+                preload="none"
+                poster={item.poster}
+                aria-label={item.alt}
+              >
                 <source src={item.image} type="video/mp4" />
               </video>
             ) : (

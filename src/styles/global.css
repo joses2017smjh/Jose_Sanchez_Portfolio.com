@@ -504,6 +504,50 @@ main:not(.full) .figure-pair:has(video) {
   padding: 0;
 }
 
+/* Each half of a pair is its own frame so an outcome can be marked on it.
+   The clips keep their native proportions; the wrapper only positions the
+   label and carries the border. */
+.pair-item {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  background: var(--surface);
+}
+
+.pair-item > video,
+.pair-item > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* A failed run is framed in red. The frame is inset, so it never shifts
+   the grid, and it sits alongside the text label below rather than
+   carrying the meaning by itself. */
+.pair-fail {
+  box-shadow: inset 0 0 0 2px var(--red);
+}
+
+.pair-tag {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.02em;
+  color: var(--dim);
+  background: var(--bg);
+  padding: 0.2em 0.55em;
+  border-top: 1px solid var(--hairline);
+  border-right: 1px solid var(--hairline);
+}
+
+.pair-fail .pair-tag {
+  color: var(--red);
+  border-color: var(--red);
+}
+
 .figure figcaption {
   font-family: var(--font-mono);
   font-size: var(--text-xs);

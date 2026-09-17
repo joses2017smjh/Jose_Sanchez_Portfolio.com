@@ -43,19 +43,34 @@ pair:
   - image: /media/folding/policy-fold-success.mp4
     alt: Trained policy folding short pants closed-loop; the challenge checker returns success.
     poster: /media/folding/policy-fold-success.jpg
+    outcome: pass
+    tag: "Checker: success"
   - image: /media/folding/policy-fold-failure.mp4
     alt: The same policy on a held-out pose, failing to close the fold.
     poster: /media/folding/policy-fold-failure.jpg
+    outcome: fail
+    tag: "Checker: no fold"
 alt: >-
   A scored successful fold beside a failed one, both from the same trained policy on
   different held-out poses.
 figcaption: "Same policy, two held-out poses: one scored fold, one failure. 2 of 8 pass."
 date: 2026-09-08T00:00:00.000Z
-order: 6
+order: 3
 featured: true
 focus: VLA / Imitation learning
 evidence: "2 of 8 held-out short-pants poses folded, up from 0 of 16; 0 of 4 on the other three garment classes."
 sections:
+  - heading: What both arms see
+    body: >-
+      The policy has no privileged state: it reads rasterised camera views and emits joint
+      targets. Both wrist cameras are shown together because the fold is bimanual — the
+      jaws have to arrive on the cloth at the same time, and a single view hides whether
+      the other arm agreed.
+    figures:
+      - image: /media/folding/wrist-cameras.mp4
+        alt: Left and right wrist cameras side by side, both jaws closing on red cloth.
+        caption: Left and right wrist cameras during the scored fold.
+        poster: /media/folding/wrist-cameras.jpg
   - heading: The replay is not the policy
     body: >-
       A demonstration replay folds the garment without the policy doing anything, so it
