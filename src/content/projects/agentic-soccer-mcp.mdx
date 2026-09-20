@@ -1,75 +1,63 @@
 ---
 title: Agentic Match Forecasting
-summary: >-
-  A forecasting prototype connecting probability models, MCP tools, and a reviewable agent
-  workflow.
-problem: >-
-  A forecast interface needs consistent probabilities, visible uncertainty, and traceable
-  inputs. An agent also needs clear boundaries between generating an analysis and acting on
-  a recommendation.
-approach: >-
-  Combined XGBoost, calibration, and prediction sets with a Dixon-Coles score grid. A
-  FastAPI gateway connects a LangGraph orchestrator to three MCP servers; a separate
-  simulator evaluates staking policies and reward behavior.
-result: >-
-  The historical World Cup report records 0.9013 log loss and 62.7% accuracy on 102 matches
-  with pre-tournament training. The served artifact and upstream tool backends are demos.
-  Historical calibration splits still need stronger isolation.
+summary: A forecasting prototype connecting probability models, MCP tools, and a reviewable agent workflow.
+problem: A forecast interface needs consistent probabilities, visible uncertainty, and traceable inputs.
+  An agent also needs clear boundaries between generating an analysis and acting on a recommendation.
+approach: Combined XGBoost, calibration, and prediction sets with a Dixon-Coles score grid. A FastAPI
+  gateway connects a LangGraph orchestrator to three MCP servers; a separate simulator evaluates staking
+  policies and reward behavior.
+result: The historical World Cup report records 0.9013 log loss and 62.7% accuracy on 102 matches with
+  pre-tournament training. The served artifact and upstream tool backends are demos. Historical calibration
+  splits still need stronger isolation.
 tags:
-  - Python
-  - LangGraph
-  - MCP
-  - XGBoost
-  - GRPO
-  - Conformal Prediction
-  - FastAPI
-  - Next.js
-  - Docker
+- Python
+- LangGraph
+- MCP
+- XGBoost
+- GRPO
+- Conformal Prediction
+- FastAPI
+- Next.js
+- Docker
 repo: https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP
 demo: https://agentic-soccer-match-prediction-mcp.vercel.app
 links:
-  - label: Technical report
-    href: >-
-      https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP/blob/main/docs/REPORT_DRAFT.md
+- label: Technical report
+  href: https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP/blob/main/docs/REPORT_DRAFT.md
 image: /media/soccer/ui-league-hub.jpg
 alt: Demo agent console showing a match analysis and the supporting tool-call trace.
-figcaption: >-
-  Demo-data agent walkthrough. Displayed timings are not an independently measured
-  live-service benchmark.
+figcaption: Demo-data agent walkthrough. Displayed timings are not an independently measured live-service
+  benchmark.
 sections:
-  - heading: One probability grid, traceable tool calls
-    body: >-
-      Derived match markets share a score-grid representation. The agent response exposes
-      its supporting calls so a reviewer can follow where an output came from. The
-      repository documents the artifact bundle and orchestration boundaries.
-    figures:
-      - image: /media/soccer/grid_morph.mp4
-        alt: Score-grid probabilities and derived markets change together as parameters vary.
-        caption: Visualization of the shared score-grid representation.
-      - image: /media/soccer/architecture.png
-        alt: FastAPI gateway, LangGraph orchestrator, MCP tools, and offline artifact pipeline.
-        caption: Training artifacts and request orchestration meet at the inference service.
-  - heading: Evaluate failure before claiming an edge
-    body: >-
-      The project includes a deterministic agent suite and policy stress tests.
-      Closing-market baselines remain stronger in the reported Premier League aggregate.
-      These experiments do not establish live profitability or general prompt-injection
-      resistance.
-    figures:
-      - image: /media/soccer/martingale_blowup.mp4
-        alt: A simulated martingale policy reaches the experiment risk controls.
-        caption: Simulated policy stress test; not a live betting result.
-date: 2026-08-24T00:00:00.000Z
+- heading: One probability grid, traceable tool calls
+  body: Derived match markets share a score-grid representation. The agent response exposes its supporting
+    calls so a reviewer can follow where an output came from. The repository documents the artifact bundle
+    and orchestration boundaries.
+  figures:
+  - image: /media/soccer/grid_morph.mp4
+    alt: Score-grid probabilities and derived markets change together as parameters vary.
+    caption: Visualization of the shared score-grid representation.
+    poster: /media/soccer/grid_morph.jpg
+  - image: /media/soccer/architecture.png
+    alt: FastAPI gateway, LangGraph orchestrator, MCP tools, and offline artifact pipeline.
+    caption: Training artifacts and request orchestration meet at the inference service.
+- heading: Evaluate failure before claiming an edge
+  body: The project includes a deterministic agent suite and policy stress tests. Closing-market baselines
+    remain stronger in the reported Premier League aggregate. These experiments do not establish live
+    profitability or general prompt-injection resistance.
+  figures:
+  - image: /media/soccer/martingale_blowup.mp4
+    alt: A simulated martingale policy reaches the experiment risk controls.
+    caption: Simulated policy stress test; not a live betting result.
+    poster: /media/soccer/martingale_blowup.jpg
+date: 2026-08-24 00:00:00+00:00
 order: 6
 featured: false
 focus: Agent systems / Applied ML
-evidence: >-
-  Historical World Cup report: 62.7% accuracy across 102 matches; served application uses
-  demo data.
-contribution: >-
-  Built the modeling pipeline, MCP orchestration, approval flow, deterministic agent
-  evaluations, and NumPy GRPO experiments. Separated application demo artifacts from
-  historical forecast reports.
+evidence: 'Historical World Cup report: 62.7% accuracy across 102 matches; served application uses demo
+  data.'
+contribution: Built the modeling pipeline, MCP orchestration, approval flow, deterministic agent evaluations,
+  and NumPy GRPO experiments. Separated application demo artifacts from historical forecast reports.
 video: /media/soccer/agent_console.mp4
 poster: /media/soccer/agent_console_poster.jpg
 ---

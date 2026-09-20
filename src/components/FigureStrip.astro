@@ -32,6 +32,7 @@ const pad = String(number).padStart(2, "0");
           <div class="figure-media">
             {item.image.endsWith(".mp4") ? (
               <video
+                controls
                 data-loop
                 playsinline
                 muted

@@ -61,6 +61,12 @@ for (const s of sections) {
   <p class="meta"><a href="/#projects">&larr; Index</a></p>
   <h1>{title}</h1>
   <p class="detail-summary">{summary}</p>
+  <nav class="project-links" aria-label="Project resources">
+    {repo && <a href={`${repo}#readme`}>Technical README</a>}
+    {repo && <a href={repo}>Source code</a>}
+    {demo && <a href={demo}>Watch demo</a>}
+    {paper && <a href={paper}>Read paper</a>}
+  </nav>
 
   <Figure
     number={number}

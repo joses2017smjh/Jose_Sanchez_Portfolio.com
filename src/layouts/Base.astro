@@ -81,6 +81,9 @@ const person = {
         <a href="/now" aria-current={current("/now")}>Now</a>
       </nav>
     </header>
+    <div class="media-controls">
+      <button id="demo-playback" type="button" hidden>Pause demos</button>
+    </div>
     <main id="main" class:list={{ full }}>
       <slot />
     </main>
@@ -97,13 +100,35 @@ const person = {
     <script>
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
       const videos = document.querySelectorAll<HTMLVideoElement>("video[data-loop]");
-      if (!reduced.matches && videos.length > 0) {
+      const toggle = document.querySelector<HTMLButtonElement>("#demo-playback");
+      let autoplayEnabled = !reduced.matches;
+      const visible = new Set<HTMLVideoElement>();
+      const refresh = () => {
+        for (const v of videos) {
+          if (autoplayEnabled && visible.has(v)) v.play().catch(() => {});
+          else v.pause();
+        }
+        if (toggle) toggle.textContent = autoplayEnabled ? "Pause demos" : "Play demos";
+      };
+      if (videos.length > 0) {
+        if (toggle) {
+          toggle.hidden = false;
+          toggle.addEventListener("click", () => {
+            autoplayEnabled = !autoplayEnabled;
+            refresh();
+          });
+        }
+        reduced.addEventListener("change", () => {
+          autoplayEnabled = !reduced.matches;
+          refresh();
+        });
         const io = new IntersectionObserver(
           (entries) => {
             for (const { target, isIntersecting } of entries) {
               const v = target as HTMLVideoElement;
-              if (isIntersecting) v.play().catch(() => {});
-              else v.pause();
+              if (isIntersecting) visible.add(v);
+              else visible.delete(v);
+              refresh();
             }
           },
           { rootMargin: "100px" },
@@ -113,9 +138,7 @@ const person = {
           v.loop = true;
           io.observe(v);
         }
-      } else {
-        // Reduced motion: leave the poster frame and offer manual controls.
-        for (const v of videos) v.controls = true;
+        refresh();
       }
     </script>
   </body>

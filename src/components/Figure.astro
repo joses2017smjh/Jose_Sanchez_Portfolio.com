@@ -38,14 +38,16 @@ const {
   href,
 } = Astro.props;
 const label = `FIG. ${String(number).padStart(2, "0")}`;
-const Media = href ? "a" : "div";
+// Keep native video controls outside links; the case-study link remains below.
+const mediaHref = video || pair ? undefined : href;
+const Media = mediaHref ? "a" : "div";
 ---
 
 <figure class="figure">
   <div class="figure-rule" aria-hidden="true">
     <span class="figure-number">{label}</span>
   </div>
-  <Media class:list={["figure-media", pair && "figure-pair"]} href={href}>
+  <Media class:list={["figure-media", pair && "figure-pair"]} href={mediaHref}>
     {
       pair ? (
         /* demo clips ship as mp4 — hardware decoded, and paused when
@@ -66,6 +68,7 @@ const Media = href ? "a" : "div";
             >
               {item.image.endsWith(".mp4") ? (
                 <video
+                  controls
                   data-loop
                   playsinline
                   muted
@@ -91,6 +94,7 @@ const Media = href ? "a" : "div";
         })
       ) : video ? (
         <video
+          controls
           data-loop
           playsinline
           muted

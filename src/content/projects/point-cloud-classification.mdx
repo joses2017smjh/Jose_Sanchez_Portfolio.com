@@ -1,59 +1,52 @@
 ---
 title: Point Cloud Classification
-summary: >-
-  Compare point-based classifiers through predicted labels, local attention, and concrete
-  failure cases.
-problem: >-
-  Point clouds are unordered. Classification needs to preserve useful local geometry while
-  remaining insensitive to the order in which points enter the model.
-approach: >-
-  Implemented PointNet-style and attention-based classifiers and evaluated point-cloud
-  predictions. Inspected confusion matrices and point-budget experiments to understand what
-  each architecture retained.
-result: >-
-  The Point Transformer reaches 86.79% accuracy on 2,468 held-out ModelNet10 clouds, with
-  desk/table confusion the dominant error. Graduate coursework: the figure comes from the
-  training notebook's own saved output, and no deployment claim is made.
+summary: Compare point-based classifiers through predicted labels, local attention, and concrete failure
+  cases.
+problem: Point clouds are unordered. Classification needs to preserve useful local geometry while remaining
+  insensitive to the order in which points enter the model.
+approach: Implemented PointNet-style and attention-based classifiers and evaluated point-cloud predictions.
+  Inspected confusion matrices and point-budget experiments to understand what each architecture retained.
+result: 'The Point Transformer reaches 86.79% accuracy on 2,468 held-out ModelNet10 clouds, with desk/table
+  confusion the dominant error. Graduate coursework: the figure comes from the training notebook''s own
+  saved output, and no deployment claim is made.'
 tags:
-  - Python
-  - PyTorch
-  - Point Clouds
-  - Attention
-  - 3D Perception
+- Python
+- PyTorch
+- Point Clouds
+- Attention
+- 3D Perception
 repo: https://github.com/joses2017smjh/PointCloudclassification
 image: /media/pointcloud/pointtransformer_architecture.svg
 pair:
-  - image: /media/pointcloud/pointtransformer_good_monitor.mp4
-    alt: Rotating point cloud of a monitor, correctly classified by the Point Transformer.
-  - image: /media/pointcloud/pointtransformer_bad_desk.mp4
-    alt: Rotating point cloud of a desk, misclassified as a table by the Point Transformer.
-alt: >-
-  A correctly classified monitor and a desk misclassified as a table, shown as rotating
-  point clouds.
-figcaption: "Selected ModelNet10 predictions: one correct classification and one class confusion."
+- image: /media/pointcloud/pointtransformer_good_monitor.mp4
+  alt: Rotating point cloud of a monitor, correctly classified by the Point Transformer.
+  poster: /media/pointcloud/pointtransformer_good_monitor.jpg
+- image: /media/pointcloud/pointtransformer_bad_desk.mp4
+  alt: Rotating point cloud of a desk, misclassified as a table by the Point Transformer.
+  poster: /media/pointcloud/pointtransformer_bad_desk.jpg
+alt: A correctly classified monitor and a desk misclassified as a table, shown as rotating point clouds.
+figcaption: 'Selected ModelNet10 predictions: one correct classification and one class confusion.'
 paperStrip:
   pdf: /media/papers/point-transformer-paper.pdf
   pages: /media/papers/ptr-page-{n}.jpg
   count: 6
 sections:
-  - heading: Compare the failure patterns
-    body: >-
-      A max-pooled point encoder and a local-attention model make different errors. The
-      confusion matrix makes those errors inspectable; the point-count experiment explores
-      the tradeoff between input budget and classification accuracy.
-    figures:
-      - image: /media/pointcloud/pointtransformer_modelnet10_confusion_matrix.svg
-        alt: ModelNet10 confusion matrix for the attention-based classifier.
-        caption: Per-class outcomes from the evaluation report.
-      - image: /media/pointcloud/modelnet10_num_points.svg
-        alt: Classification accuracy at different point-count budgets.
-        caption: Accuracy versus point count under the recorded experiment setup.
-date: 2025-12-01T00:00:00.000Z
+- heading: Compare the failure patterns
+  body: A max-pooled point encoder and a local-attention model make different errors. The confusion matrix
+    makes those errors inspectable; the point-count experiment explores the tradeoff between input budget
+    and classification accuracy.
+  figures:
+  - image: /media/pointcloud/pointtransformer_modelnet10_confusion_matrix.svg
+    alt: ModelNet10 confusion matrix for the attention-based classifier.
+    caption: Per-class outcomes from the evaluation report.
+  - image: /media/pointcloud/modelnet10_num_points.svg
+    alt: Classification accuracy at different point-count budgets.
+    caption: Accuracy versus point count under the recorded experiment setup.
+date: 2025-12-01 00:00:00+00:00
 order: 8
 featured: false
 focus: 3D perception / Deep learning
 evidence: 86.79% on 2,468 ModelNet10 test clouds, from the train_pointtransformer.ipynb output cell.
-contribution: >-
-  Built and compared point-based neural models in PyTorch, prepared sampled point clouds,
+contribution: Built and compared point-based neural models in PyTorch, prepared sampled point clouds,
   and visualized correct predictions and furniture-class confusions.
 ---

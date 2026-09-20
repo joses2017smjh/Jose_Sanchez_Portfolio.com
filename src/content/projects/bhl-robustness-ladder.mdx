@@ -1,78 +1,69 @@
 ---
 title: Humanoid Robustness Ladder
-summary: >-
-  Train a 3D-printed humanoid in Isaac Lab. Score it in MuJoCo across 89 policies and 6,348 episodes.
-problem: >-
-  A policy that only works where it trained has learned PhysX, not locomotion. Upstream
-  ships flat-ground control with no curriculum and no way to score a policy. High
-  training reward can still hide transfer failure, which is why retractions stay in
-  this record.
-approach: >-
-  Trained PPO policies in Isaac Lab (PhysX, 4,096 envs), exported ONNX, and scored them
-  with upstream's own RlController in headless MuJoCo so observations match the
-  sim-to-real path. Swept randomization, push and terrain curricula, ray-cast depth,
-  then cloth-sort and cooperative lift. Gates refuse a verdict without a control. Four
-  earlier claims in this same repository were retracted and left public.
-result: >-
-  Transfer inverts the training-reward ranking: unrandomized policies fall 23% of the
-  time in MuJoCo versus 0% for the repo default. With arms, falls drop to 11.7% at d=1.0
-  where the biped falls 37.8%. The best cooperative cube rollout lifts 7.8 cm, then the
-  pair drops 41 cm before contact. Sim-to-sim only; hardware locomotion is not claimed.
+summary: Train humanoid policies in Isaac Lab and check their transfer in MuJoCo, with failures kept in
+  the record.
+problem: Training reward alone cannot establish that a walking policy transfers to another simulator.
+  The project needs repeatable evaluation across disturbances and terrain. High training reward can still
+  hide transfer failure, which is why retractions stay in this record.
+approach: Trained PPO policies in Isaac Lab (PhysX, 4,096 envs), exported ONNX, and scored them with upstream's
+  own RlController in headless MuJoCo so observations match the sim-to-real path. Swept randomization,
+  push and terrain curricula, ray-cast depth, then cloth-sort and cooperative lift. Gates refuse a verdict
+  without a control. Four earlier claims in this same repository were retracted and left public.
+result: 'Transfer inverts the training-reward ranking: unrandomized policies fall 23% of the time in MuJoCo
+  versus 0% for the repo default. With arms, falls drop to 11.7% at d=1.0 where the biped falls 37.8%.
+  The best cooperative cube rollout lifts 7.8 cm, then the pair drops 41 cm before contact. Sim-to-sim
+  only; hardware locomotion is not claimed.'
 tags:
-  - Python
-  - Isaac Lab
-  - Isaac Sim
-  - MuJoCo
-  - PPO
-  - Reinforcement Learning
-  - Sim-to-Sim
-  - Robotics
-  - ONNX
+- Python
+- Isaac Lab
+- Isaac Sim
+- MuJoCo
+- PPO
+- Reinforcement Learning
+- Sim-to-Sim
+- Robotics
+- ONNX
 repo: https://github.com/joses2017smjh/bhl-robustness-ladder
 links:
-  - label: Full technical report
-    href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/REPORT.md
-  - label: Findings ledger
-    href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FINDINGS.md
-image: /media/bhl/cloth_sort_free_base_shirt.jpg
-pair:
-  - image: /media/bhl/cloth_sort_free_base_shirt.webp
-    alt: Free-standing Berkeley Humanoid Lite sweeping a rigid shirt proxy into a basket.
-  - image: /media/bhl/carry_cube_pov.mp4
-    alt: Best cooperative cube rollout, a short lift followed by a drop before contact.
-alt: >-
-  A free-standing shirt-proxy sort beside the best cooperative cube rollout, which lifts
-  then drops.
-figcaption: "Free-standing shirt-proxy sort (left) versus the best cooperative cube rollout (right)."
+- label: Full technical report
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/REPORT.md
+- label: Findings ledger
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FINDINGS.md
+video: /media/bhl/multi_lab.mp4
+poster: /media/bhl/multi_lab.jpg
+image: /media/bhl/multi_lab.jpg
+alt: Four humanoid policies run the same MuJoCo obstacle course; one falls while the others continue.
+figcaption: Four policies in one MuJoCo world. A selected rollout illustrates the transfer evaluation.
 sections:
-  - heading: Transfer inverts the training-reward ranking
-    body: >-
-      The flat-ground comparison covers five settings and three trained policies per
-      setting. The default randomization transfers better than the unrandomized
-      configuration even though training reward suggests a different ordering.
-    figures:
-      - image: /media/bhl/multi_lab.mp4
-        alt: Four colour-coded policies share one shove, with egocentric depth along the bottom.
-        caption: Four policies, one world, one command. The unrandomized robot is on the ground.
-      - image: /media/bhl/dr_pair.mp4
-        alt: Two policies follow a strafe command; one stays upright and one falls.
-        caption: Selected strafe rollouts; the 6,348-episode ledger supplies the evidence.
-  - heading: Stereo pose fix, and a retracted ice claim
-    body: >-
-      Isaac Lab 3.0 read camera quaternions as (x, y, z, w) after they were written
-      (w, x, y, z). Stereo pointed down after the fix. An earlier ice-hazard result is
-      retracted: patches spawned a median 72 m away.
-    figures:
-      - image: /media/bhl/maze_stereo_fixed.webp
-        alt: Corrected downward stereo pose versus the earlier upside-down camera on terrain.
-        caption: After the quaternion fix, 16×16 stereo reaches terrain level 0.88.
-date: 2026-09-14T00:00:00.000Z
-order: 4
+- heading: Transfer inverts the training-reward ranking
+  body: The flat-ground comparison covers five settings and three trained policies per setting. The default
+    randomization transfers better than the unrandomized configuration even though training reward suggests
+    a different ordering.
+  figures:
+  - image: /media/bhl/multi_lab.mp4
+    alt: Four colour-coded policies share one shove, with egocentric depth along the bottom.
+    caption: Four policies, one world, one command. The unrandomized robot is on the ground.
+    poster: /media/bhl/multi_lab.jpg
+  - image: /media/bhl/dr_pair.mp4
+    alt: Two policies follow a strafe command; one stays upright and one falls.
+    caption: Selected strafe rollouts. Aggregate findings and their limits are in the linked technical
+      report.
+    poster: /media/bhl/dr_pair.jpg
+- heading: Stereo pose fix, and a retracted ice claim
+  body: 'Isaac Lab 3.0 read camera quaternions as (x, y, z, w) after they were written (w, x, y, z). Stereo
+    pointed down after the fix. An earlier ice-hazard result is retracted: patches spawned a median 72
+    m away.'
+  figures:
+  - image: /media/bhl/maze_stereo_fixed.webp
+    alt: Corrected downward stereo pose versus the earlier upside-down camera on terrain.
+    caption: After the quaternion fix, 16×16 stereo reaches terrain level 0.88.
+date: 2026-09-14 00:00:00+00:00
+order: 3
 featured: true
 focus: Policy evaluation / Sim-to-sim
-evidence: 89 policies, 6,348 sim-to-sim episodes; 13 findings, 4 retractions. Unrandomized 23% falls vs 0% default.
-contribution: >-
-  Built the measurement stack: headless MuJoCo scoring, curricula upstream lacks, rollout
-  visualization, and a ledger that keeps retractions public. Used upstream's observation
-  path so evaluation stays close to the deployment controller.
+evidence: 'Historical sim-to-sim evaluation: 23% falls without randomization versus 0% with the default
+  setting.'
+contribution: 'Built the measurement stack: headless MuJoCo scoring, curricula upstream lacks, rollout
+  visualization, and a ledger that keeps retractions public. Used upstream''s observation path so evaluation
+  stays close to the deployment controller.'
 ---

@@ -1,68 +1,54 @@
 ---
-title: "MetaNaviT: Retrieval over Research Files"
-summary: >-
-  Find the current configuration, trace the supporting files, and review proposed changes
-  before applying them.
-problem: >-
-  Research folders contain active configs, archived drafts, logs, and checkpoints. Finding a
-  plausible answer is easier than identifying the current file and returning traceable
-  evidence.
-approach: >-
-  Combined BM25 and dense retrieval with reciprocal rank fusion, query routing, staleness
-  filtering, and typed graph traversal. Exposed search and proposed filesystem changes
-  through an MCP interface.
-result: >-
-  The committed 136-query fixture benchmark reports Recall@50 0.938 and nDCG@10 0.493 using
-  hash embeddings and overlap reranking. On eight exact-path queries, adding routing after
-  reranking increased nDCG@10 from 0.875 to 0.938.
+title: 'MetaNaviT: Retrieval over Research Files'
+summary: Find the current configuration, trace the supporting files, and review proposed changes before
+  applying them.
+problem: Research folders contain active configs, archived drafts, logs, and checkpoints. Finding a plausible
+  answer is easier than identifying the current file and returning traceable evidence.
+approach: Combined BM25 and dense retrieval with reciprocal rank fusion, query routing, staleness filtering,
+  and typed graph traversal. Exposed search and proposed filesystem changes through an MCP interface.
+result: The committed 136-query fixture benchmark reports Recall@50 0.938 and nDCG@10 0.493 using hash
+  embeddings and overlap reranking. On eight exact-path queries, adding routing after reranking increased
+  nDCG@10 from 0.875 to 0.938.
 tags:
-  - Python
-  - FastAPI
-  - PostgreSQL
-  - pgvector
-  - RAG
-  - BM25
-  - GraphRAG
-  - MCP
-  - Docker
+- Python
+- FastAPI
+- PostgreSQL
+- pgvector
+- RAG
+- BM25
+- GraphRAG
+- MCP
+- Docker
 repo: https://github.com/joses2017smjh/MetaNavT
 video: /media/metanavit/ask.mp4
 poster: /media/metanavit/ask_poster.jpg
 image: /media/metanavit/workflow.png
-alt: >-
-  Illustrated retrieval trace selecting the current learning-rate configuration and citing
-  its source.
-figcaption: >-
-  Illustrated retrieval workflow on demo files. This is not a large-corpus or live-model
-  benchmark.
+alt: Illustrated retrieval trace selecting the current learning-rate configuration and citing its source.
+figcaption: Illustrated retrieval workflow on demo files. This is not a large-corpus or live-model benchmark.
 sections:
-  - heading: Follow the answer back to a file
-    body: >-
-      The walkthrough starts with conflicting copies of a configuration. Retrieval surfaces
-      the current source and its location; the user can inspect that evidence instead of
-      relying on an unsupported answer.
-    figures:
-      - image: /media/metanavit/hybrid.mp4
-        alt: BM25 and dense result lists combined by reciprocal rank fusion.
-        caption: "Illustrated ranking pipeline: lexical and dense candidates merge through RRF."
-  - heading: Make proposed changes reviewable
-    body: >-
-      Mutation tools return a plan before application. The MCP walkthrough shows a blocked
-      change and an approved change. The next benchmark step is a real corpus with actual
-      embedding and cross-encoder backends, evaluated separately from these fixtures.
-    figures:
-      - image: /media/metanavit/mcp_hitl.mp4
-        alt: >-
-          A file move is proposed, blocked without approval, and then applied after
-          approval.
-        caption: "Demo workflow: propose, review, approve, apply."
-date: 2026-08-23T00:00:00.000Z
-order: 5
+- heading: Follow the answer back to a file
+  body: The walkthrough starts with conflicting copies of a configuration. Retrieval surfaces the current
+    source and its location; the user can inspect that evidence instead of relying on an unsupported answer.
+  figures:
+  - image: /media/metanavit/hybrid.mp4
+    alt: BM25 and dense result lists combined by reciprocal rank fusion.
+    caption: 'Illustrated ranking pipeline: lexical and dense candidates merge through RRF.'
+    poster: /media/metanavit/hybrid.jpg
+- heading: Make proposed changes reviewable
+  body: Mutation tools return a plan before application. The MCP walkthrough shows a blocked change and
+    an approved change. The next benchmark step is a real corpus with actual embedding and cross-encoder
+    backends, evaluated separately from these fixtures.
+  figures:
+  - image: /media/metanavit/mcp_hitl.mp4
+    alt: A file move is proposed, blocked without approval, and then applied after approval.
+    caption: 'Demo workflow: propose, review, approve, apply.'
+    poster: /media/metanavit/mcp_hitl.jpg
+date: 2026-08-23 00:00:00+00:00
+order: 4
 featured: true
 focus: RAG / Retrieval engineering
 evidence: Recall@50 0.938 on 136 labeled queries over a frozen 61-file fixture corpus.
-contribution: >-
-  Implemented retrieval stages, query routing, evaluation fixtures, and approval-gated file
-  operations. Kept backend choices explicit so the lightweight benchmark can run
-  independently of downloaded embedding models.
+contribution: Implemented retrieval stages, query routing, evaluation fixtures, and approval-gated file
+  operations. Kept backend choices explicit so the lightweight benchmark can run independently of downloaded
+  embedding models.
 ---

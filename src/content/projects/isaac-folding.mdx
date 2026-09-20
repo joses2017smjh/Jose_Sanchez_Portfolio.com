@@ -21,8 +21,7 @@ contribution: >-
   1st of 62 in the LeHome Challenge 2026 — that placement belongs to its authors, not to
   me. This repository reproduces their method and reports what it scores in my setup.
 result: >-
-  The trained policy folds 2 of 8 held-out short-pants poses, up from 0 of 16 before the
-  domain-gap fix, with the checker firing at step 119 of 400 on the headline run. It scores
+  The trained policy folds 2 of 8 tested short-pants poses,  with the checker firing at step 119 of 400 on the headline run. It scores
   0 of 4 on the other three garment classes, each of which has its own fold criteria.
   Closed-loop and reproducible, but not a solved task.
 tags:
@@ -38,6 +37,8 @@ links:
     href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/docs/README_long.md
   - label: Outcome sweep
     href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/results/outcome_sweep.tsv
+  - label: New adapted-policy media gate
+    href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/docs/MEDIA_GATE_2026-09-20.md
 image: /media/folding/policy-fold-success.jpg
 # The card runs the one scored policy fold, on its own. It is the widest
 # view of a policy success that exists in the repo — every other success
@@ -51,19 +52,19 @@ pair:
     outcome: pass
     tag: "Checker: success"
   - image: /media/folding/policy-fold-failure.mp4
-    alt: The same policy on a held-out pose, failing to close the fold.
+    alt: The same policy on a tested pose, failing to close the fold.
     poster: /media/folding/policy-fold-failure.jpg
     outcome: fail
     tag: "Checker: no fold"
 alt: >-
   Both arms folding short pants in Isaac Sim, the run the challenge checker scored as a
   success.
-figcaption: "Same policy, two held-out poses: one scored fold, one failure. 2 of 8 pass."
+figcaption: "Same policy, two tested poses: one scored fold, one failure. 2 of 8 pass."
 date: 2026-09-08T00:00:00.000Z
-order: 3
-featured: true
+order: 5
+featured: false
 focus: VLA / Imitation learning
-evidence: "2 of 8 held-out short-pants poses folded, up from 0 of 16; 0 of 4 on the other three garment classes."
+evidence: "Historical checkpoint: 2/8 short-pants poses; 0/4 in each other class. New adapted seed-0 short-top episode fails."
 sections:
   - heading: What both arms see
     body: >-
@@ -82,4 +83,15 @@ sections:
       proves only that the scene is solvable. Every number here comes from closed-loop
       policy rollouts, graded by the challenge's checker rather than by the renderer's own
       label. The failure clips stay published beside the successes.
+  - heading: New adaptation, recorded failure
+    body: >-
+      Gate 21367715 completed 600 actions and 601 validated render calls after an asset-root
+      repair. The adapted seed-0 policy did not fold this short top. This is a development
+      pose and a different checkpoint from the historical success above, not a matched
+      success-rate comparison.
+    figures:
+      - image: /media/folding/adapt-s0-failure.mp4
+        poster: /media/folding/adapt-s0-failure.jpg
+        alt: Adapted policy moves its arms over a short top but leaves the garment unfolded.
+        caption: "20 September: new policy failure, with both wrist views and the overhead camera."
 ---

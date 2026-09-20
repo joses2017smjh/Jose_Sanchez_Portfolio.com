@@ -1,57 +1,47 @@
 ---
-title: "DoM: Math Problems to Computation Graphs"
-summary: >-
-  A PyTorch transformer that generates structured math programs, with correct and incorrect
-  decodes to inspect.
-problem: >-
-  Math word problems require translating language into operations. A model can produce
-  either a malformed program or a valid program that solves the wrong problem; those
-  failures need separate evaluation.
-approach: >-
-  Trained a decoder-only sequence-to-sequence transformer on MathQA and restricted decoding
-  choices to valid graph structure. Compared generated computation graphs with reference
-  programs.
-result: >-
-  The coauthored course report records 77.45% exact graph match, 84.78% 2-gram BLEU, and
-  2.72 average graph edit distance. Structural constraints do not guarantee the mathematical
-  answer is correct.
+title: 'DoM: Math Problems to Computation Graphs'
+summary: A PyTorch transformer that generates structured math programs, with correct and incorrect decodes
+  to inspect.
+problem: Math word problems require translating language into operations. A model can produce either a
+  malformed program or a valid program that solves the wrong problem; those failures need separate evaluation.
+approach: Trained a decoder-only sequence-to-sequence transformer on MathQA and restricted decoding choices
+  to valid graph structure. Compared generated computation graphs with reference programs.
+result: The coauthored course report records 77.45% exact graph match, 84.78% 2-gram BLEU, and 2.72 average
+  graph edit distance. Structural constraints do not guarantee the mathematical answer is correct.
 tags:
-  - Python
-  - PyTorch
-  - NLP
-  - Transformers
+- Python
+- PyTorch
+- NLP
+- Transformers
 repo: https://github.com/joses2017smjh/OMR_LLM
 image: /media/dom/decoder_transformer_architecture.jpeg
 alt: A held-out payroll problem is decoded into an 18-operation computation graph.
-figcaption: >-
-  Selected correct decode: an 18-operation payroll program. Aggregate scores come from the
-  course report.
+figcaption: 'Selected correct decode: an 18-operation payroll program. Aggregate scores come from the
+  course report.'
 paperStrip:
   pdf: /media/papers/dom-paper.pdf
   pages: /media/papers/dom-page-{n}.jpg
   count: 5
 sections:
-  - heading: Inspect the remaining errors
-    body: >-
-      The constrained decoder can produce a valid graph with extra operations or omit steps
-      the problem requires. Showing an incorrect decode beside a success separates
-      structural validity from semantic accuracy.
-    figures:
-      - image: /media/dom/failure_hard.mp4
-        alt: An 18-operation reference program is under-generated as a shorter incorrect graph.
-        caption: "Selected failure: a valid structure with missing operations."
-      - image: /media/dom/decoder_transformer_architecture.jpeg
-        alt: Decoder-only transformer used to generate computation-graph tokens.
-        caption: Tokenizer, decoder, and structured output pipeline.
-date: 2026-03-01T00:00:00.000Z
+- heading: Inspect the remaining errors
+  body: The constrained decoder can produce a valid graph with extra operations or omit steps the problem
+    requires. Showing an incorrect decode beside a success separates structural validity from semantic
+    accuracy.
+  figures:
+  - image: /media/dom/failure_hard.mp4
+    alt: An 18-operation reference program is under-generated as a shorter incorrect graph.
+    caption: 'Selected failure: a valid structure with missing operations.'
+    poster: /media/dom/failure_hard.jpg
+  - image: /media/dom/decoder_transformer_architecture.jpeg
+    alt: Decoder-only transformer used to generate computation-graph tokens.
+    caption: Tokenizer, decoder, and structured output pipeline.
+date: 2026-03-01 00:00:00+00:00
 order: 7
 featured: false
 focus: NLP / Constrained decoding
 evidence: 77.45% exact graph match and 84.78% 2-gram BLEU on the MathQA test set.
-contribution: >-
-  Co-developed the tokenizer, data loader, model, training loop, and constrained decoding in
-  PyTorch. Analyzed successful decodes alongside over-generation and missing-operation
-  errors.
+contribution: Co-developed the tokenizer, data loader, model, training loop, and constrained decoding
+  in PyTorch. Analyzed successful decodes alongside over-generation and missing-operation errors.
 video: /media/dom/success_hard.mp4
 poster: /media/dom/success_hard_poster.jpg
 ---
