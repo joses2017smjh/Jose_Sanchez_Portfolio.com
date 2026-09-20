@@ -54,8 +54,14 @@ featured projects, folding, depth research and the portfolio repository.
 
 The large training benchmarks were **not rerun** for a presentation change.
 Existing results were checked against committed README/source/benchmark records;
-the new folding gate was actually executed. The website's existing deployment
-integration is checked separately after pushing this commit.
+the new folding gate was actually executed.
+
+**Production verified:** portfolio commit `bbca472` received a successful Vercel
+status. The public homepage returned 200 with the revised hero; the folding
+case study returned 200 with gate 21367715; the new MP4 returned 200 and matched
+the published 222,518-byte asset. [Deployment record](https://vercel.com/joses2017smjhs-projects/jose-sanchez-portfolio-com/G7Fj8rzhvxowE8iLABV8TSqv6MTt).
+All 123 files in the original 19 September folding snapshot were hash-checked
+after the repair and remained unchanged.
 
 ## Remaining items
 
