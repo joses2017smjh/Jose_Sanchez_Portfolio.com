@@ -159,6 +159,7 @@ a:focus-visible {
   width: 100%;
   padding: var(--space-3) var(--space-2) 0;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
   gap: var(--space-2);
@@ -168,7 +169,10 @@ a:focus-visible {
   flex-wrap: wrap;
   min-width: 0;
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
+  row-gap: var(--space-1);
+  min-width: 0;
 }
 
 .site-header a {
@@ -759,6 +763,7 @@ a.figure-media:hover {
 
 .project-links {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
   margin-top: var(--space-2);
 }

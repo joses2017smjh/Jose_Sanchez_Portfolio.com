@@ -1,97 +1,82 @@
 ---
-title: Bimanual Garment Folding in Isaac Sim
-summary: >-
-  Port a flow-matching VLA into Isaac Sim and score it with the challenge's own fold checker.
+title: "Bimanual Garment Folding: Research in Progress"
+summary: "A folding-policy port and camera-health investigation. Strict evaluation has not shown an adaptation gain."
 problem: >-
-  A folding policy is easy to fool: replaying a demonstration looks like success, and a
-  renderer that crashes looks like a modelling failure. The task needs a scorer nobody
-  tuned, held-out garment poses, and a clear line between the policy acting and a
-  demonstration being played back.
+  A folding rollout can look plausible while its policy receives stale camera frames.
+  The experiment needs fresh observations, held-out garments, and an external fold
+  checker. A demonstration replay or a saved success label alone is not enough evidence.
 approach: >-
-  Rebuilt the observation path so the policy reads three rasterised camera views and emits
-  joint targets directly, with no demonstration actions in the loop. Training runs on
-  18,200 rasterised frames after a measured domain-gap diagnosis traced the initial
-  0-for-16 to the observation encoder, not the controller. Rollouts are graded by the
-  challenge's own success_checker_garment_fold, so the pass criteria are not mine to
-  adjust. The pinned Isaac Sim renderer segfaults on this cluster, so the capture path
-  avoids it entirely.
+  Port the policy and observation path into Isaac Sim, then grade closed-loop rollouts
+  with the challenge's garment-fold checker. The latest evaluation checks camera
+  freshness and treats rendering failures as experiment failures. Compare the baseline
+  and adapted checkpoints on matching short-pants poses; retain incomplete runs instead
+  of converting them into successful results. This is a research implementation of an
+  external method, not a verified reproduction of the original challenge performance.
 contribution: >-
-  I built the Isaac Sim port, the rasterised observation path, the domain-gap diagnosis,
-  and the scored rollouts kept here. The "Learning to Fold" work being reproduced placed
-  1st of 62 in the LeHome Challenge 2026 — that placement belongs to its authors, not to
-  me. This repository reproduces their method and reports what it scores in my setup.
+  Built the Isaac Sim integration, observation-path diagnostics, evaluation adapters,
+  and Slurm experiment workflow. Investigated stale-image failures and preserved both
+  task failures and infrastructure failures in the results. The original policy method
+  and challenge checker belong to their authors.
 result: >-
-  The trained policy folds 2 of 8 tested short-pants poses,  with the checker firing at step 119 of 400 on the headline run. It scores
-  0 of 4 on the other three garment classes, each of which has its own fold criteria.
-  Closed-loop and reproducible, but not a solved task.
-tags:
-  - Python
-  - Isaac Sim
-  - Flow Matching
-  - VLA
-  - Imitation Learning
-  - Slurm
+  Strict short-pants evaluation: baseline 8/24, adapted seed 1 3/24; no improvement.
+  Both score 0/4 on unseen garments. Only 5/12 full class/checkpoint evaluation cells
+  completed; the remainder failed or timed out. A separate new seed-0 top rollout failed after 600 actions with 601 validated renders.
+tags: [Python, Isaac Sim, Flow Matching, VLA, Imitation Learning, Slurm]
 repo: https://github.com/joses2017smjh/IsaacSimFolding
 links:
-  - label: Long-form method notes
+  - label: Strict evaluation and failure analysis
+    href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/CLOTH_FOLDING_WEEKEND.md
+  - label: Download GIFs and inspect provenance
+    href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FOLDING_MEDIA.md
+  - label: Original integration notes
     href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/docs/README_long.md
-  - label: Outcome sweep
-    href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/results/outcome_sweep.tsv
-  - label: New adapted-policy media gate
-    href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/docs/MEDIA_GATE_2026-09-20.md
-image: /media/folding/policy-fold-success.jpg
-# The card runs the one scored policy fold, on its own. It is the widest
-# view of a policy success that exists in the repo — every other success
-# there is a demonstration replay, not the policy.
-cardVideo: /media/folding/policy-fold-success.mp4
-poster: /media/folding/policy-fold-success.jpg
+image: /media/folding/folding-policy-success.png
 pair:
-  - image: /media/folding/policy-fold-success.mp4
-    alt: Trained policy folding short pants closed-loop; the challenge checker returns success.
-    poster: /media/folding/policy-fold-success.jpg
-    outcome: pass
-    tag: "Checker: success"
-  - image: /media/folding/policy-fold-failure.mp4
-    alt: The same policy on a tested pose, failing to close the fold.
-    poster: /media/folding/policy-fold-failure.jpg
-    outcome: fail
-    tag: "Checker: no fold"
-alt: >-
-  Both arms folding short pants in Isaac Sim, the run the challenge checker scored as a
-  success.
-figcaption: "Same policy, two tested poses: one scored fold, one failure. 2 of 8 pass."
-date: 2026-09-08T00:00:00.000Z
-order: 5
+  - image: /media/folding/folding-policy-success.mp4
+    alt: Earlier learned policy triggers the fold checker on short pants; this is a different checkpoint from the new adaptation.
+    poster: /media/folding/folding-policy-success.png
+    tag: "Earlier policy / pass"
+  - image: /media/folding/folding-policy-failure.mp4
+    alt: Historical recording of the folding policy failing to close a short-pants fold.
+    poster: /media/folding/folding-policy-failure.png
+    tag: "Historical failure"
+alt: Earlier learned-policy success and failure on short pants; neither is a new adaptation result.
+figcaption: "Historical recordings: earlier checkpoint, checker first-hit labels, adjusted playback. Not the new adaptation."
+date: 2026-09-20
+order: 4
 featured: false
-focus: VLA / Imitation learning
-evidence: "Historical checkpoint: 2/8 short-pants poses; 0/4 in each other class. New adapted seed-0 short-top episode fails."
+focus: Manipulation / Research in progress
+evidence: "Strict short-pants scores: baseline 8/24 vs adapted 3/24. No measured gain; 5/12 full evaluation cells complete."
 sections:
-  - heading: What both arms see
+  - heading: What changed the interpretation
     body: >-
-      The policy has no privileged state: it reads rasterised camera views and emits joint
-      targets. Both wrist cameras are shown together because the fold is bimanual — the
-      jaws have to arrive on the cloth at the same time, and a single view hides whether
-      the other arm agreed.
+      An earlier evaluator continued after camera-update errors, so its counts cannot
+      establish visual closed-loop control. New runs check frame freshness; historical
+      clips remain separate. Scores are official checker first-hit successes, not
+      independently verified stable terminal folds.
+  - heading: New failure, with both arm cameras
+    body: >-
+      The adapted seed-0 policy ran 600 actions on a short-sleeve top. All 601
+      camera renders passed validation and the cloth moved, but the fold checker
+      never passed. These top and wrist views show that one episode
+      at half simulation speed, with a one-second end hold.
     figures:
-      - image: /media/folding/wrist-cameras.mp4
-        alt: Left and right wrist cameras side by side, both jaws closing on red cloth.
-        caption: Left and right wrist cameras during the scored fold.
-        poster: /media/folding/wrist-cameras.jpg
-  - heading: The replay is not the policy
+      - image: /media/folding/folding-adapted-failure.mp4
+        poster: /media/folding/folding-adapted-failure.png
+        alt: Adapted policy fails to fold a short-sleeve top, seen from the overhead camera.
+        caption: "New adapted policy, overhead: checker never passes. One development episode, not a success rate."
+      - image: /media/folding/folding-adapted-left-wrist.mp4
+        poster: /media/folding/folding-adapted-left-wrist.png
+        alt: Actual left wrist camera during the same failed top-folding rollout.
+        caption: "Left arm camera from the same failed rollout; native camera frame preserved."
+      - image: /media/folding/folding-adapted-right-wrist.mp4
+        poster: /media/folding/folding-adapted-right-wrist.png
+        alt: Actual right wrist camera during the same failed top-folding rollout.
+        caption: "Right arm camera from the same failed rollout; native camera frame preserved."
+  - heading: Next evaluation gates
     body: >-
-      A demonstration replay folds the garment without the policy doing anything, so it
-      proves only that the scene is solvable. Every number here comes from closed-loop
-      policy rollouts, graded by the challenge's checker rather than by the renderer's own
-      label. The failure clips stay published beside the successes.
-  - heading: New adaptation, recorded failure
-    body: >-
-      Gate 21367715 completed 600 actions and 601 validated render calls after an asset-root
-      repair. The adapted seed-0 policy did not fold this short top. This is a development
-      pose and a different checkpoint from the historical success above, not a matched
-      success-rate comparison.
-    figures:
-      - image: /media/folding/adapt-s0-failure.mp4
-        poster: /media/folding/adapt-s0-failure.jpg
-        alt: Adapted policy moves its arms over a short top but leaves the garment unfolded.
-        caption: "20 September: new policy failure, with both wrist views and the overhead camera."
+      Complete the remaining class/checkpoint cells with verified live camera updates,
+      compare matching poses and seeds, and preserve per-episode checker results.
+      Demonstration replay establishes only scene solvability; it is not policy success.
+      No general garment-folding or challenge-winning result is claimed.
 ---

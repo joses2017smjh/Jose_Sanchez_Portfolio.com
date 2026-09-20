@@ -48,7 +48,13 @@ order: 4
 featured: true
 focus: RAG / Retrieval engineering
 evidence: Recall@50 0.938 on 136 labeled queries over a frozen 61-file fixture corpus.
-contribution: Implemented retrieval stages, query routing, evaluation fixtures, and approval-gated file
-  operations. Kept backend choices explicit so the lightweight benchmark can run independently of downloaded
-  embedding models.
+contribution: In a six-person team, I worked on retrieval, the data layer, and APIs. The repository combines
+  hybrid retrieval, evaluation fixtures, and approval-gated file operations. The lightweight benchmark uses
+  explicit hash embeddings and overlap reranking rather than downloaded embedding models.
 ---
+
+## What the benchmark supports
+
+The frozen CPU fixture contains 136 queries over 61 files. BM25 scores 0.505
+nDCG@10 versus 0.493 for the hybrid configuration; the benchmark does not
+establish an overall ranking improvement or production-scale retrieval quality.

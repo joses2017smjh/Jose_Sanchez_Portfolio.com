@@ -1,11 +1,9 @@
 /**
- * The project registry — one source of truth.
+ * Supporting project registry — explicit metric provenance.
  *
- * Every project page, card, README header, OG tag, and repo description is
- * generated from this file. Nothing here is prose: the narrative lives in
- * src/content/projects/*.mdx, the method lives in each repo. This file holds
- * only the facts that have to agree across the site, the repos, and the
- * resume.
+ * The current Astro pages and cards read src/content/projects/*.mdx, not
+ * this registry. Keep overlapping facts aligned when updating either file;
+ * this registry is not an automatic publisher for GitHub or resume content.
  *
  * THE RULE ON NUMBERS
  * Every metric carries a `source` — a path, inside the repo named by
@@ -14,7 +12,7 @@
  * `note` records provenance trouble: a figure two files in the same repo
  * disagree about, or one whose only witness is outside the repo.
  *
- * `npm run check:links` enforces all of it.
+ * npm run build validates content schemas; external evidence needs review.
  */
 
 /** Which hiring lane a project is evidence for. */
@@ -81,9 +79,9 @@ export const PROJECTS: Project[] = [
   {
     slug: "metric-depth-pruning",
     contentId: "depth-estimation-robotic-pruning",
-    title: "Vision-Based Metric Depth Estimation for Robotic Pruning",
+    title: "SPUR: Metric Depth Inference Service",
     oneLineResult:
-      "DINOv2 RGB+D refinement over 3 stereo pairs reaches 0.0445 ± 0.0057 m validation RMSE on synthetic dormant apple trees, served at 156 ms p50 on a V100.",
+      "Synthetic orchard depth served with split ONNX graphs: recorded encoder max absolute difference 1.53e-5 versus Torch; V100 fp16 refiner-only p50 156 ms per six-view group. No real-orchard accuracy claim.",
     lane: ["perception", "ml-engineering"],
     period: "Jan 2026 – Aug 2026",
     status: "shipped",
@@ -141,7 +139,7 @@ export const PROJECTS: Project[] = [
     ],
     repoUrl: "https://github.com/joses2017smjh/spur-depth-service",
     repoBranch: "master",
-    siteUrl: `${SITE}/projects/metric-depth-pruning`,
+    siteUrl: `${SITE}/projects/depth-estimation-robotic-pruning`,
     deepLinks: [
       {
         label: "Seed RMSE (the headline number)",
@@ -563,41 +561,42 @@ export const PROJECTS: Project[] = [
     slug: "bhl-robustness-ladder",
     title: "Humanoid Robustness Ladder",
     oneLineResult:
-      "Scoring PPO policies in MuJoCo across 6,348 sim-to-sim episodes inverts the training-reward ranking: the unrandomized policy falls 23% of the time where the default falls 0%.",
+      "Isaac Full policies pass 379/384 first episodes; separate older frozen-gait MuJoCo tests pass inspection 3/3 and each team size 5/5. Fixed-task simulation evidence, not hardware validation.",
     lane: ["robotics-rl"],
     period: "Jun 2026 – Sep 2026",
     status: "active",
-    heroAsset: "/media/bhl/multi_race.mp4",
-    heroPoster: "/media/bhl/multi_race_poster.jpg",
+    heroAsset: "/media/bhl-weekend/inspection-maze.mp4",
+    heroPoster: "/media/bhl-weekend/inspection-maze-frame.png",
     metrics: [
       {
-        label: "Scored sim-to-sim episodes",
-        value: "6,348",
-        source: "docs/FINDINGS.md",
-        note: "288 rendered rollouts alongside. REPORT.md agrees on this number.",
+        label: "New Isaac Full first-episode completions",
+        value: "379/384",
+        source: "docs/WEEKEND_RESULTS_2026-09-20.md",
+        note: "Four sensor arms, three training seeds, 32 first episodes each. Fixed route/layout, noise off; not MuJoCo transfer.",
       },
       {
-        label: "Policies trained",
-        value: "89",
-        source: "docs/REPORT.md",
-        note: "48 biped + 8 22-DoF + 33 cooperative-lift. Chosen over the 156 in README.md and docs/FINDINGS.md because this is the only figure with a breakdown that sums. Those two files still say 156 and need correcting upstream.",
+        label: "MuJoCo ordered inspection completions",
+        value: "3/3",
+        source: "results/weekend-20260919/inspection-maze-gate.json",
+        note: "Older frozen gait, oracle route/localization, simulated sensors. Wrong branch and sensor-outage controls each complete 0/3.",
       },
       {
         label: "MuJoCo fall rate — unrandomized vs repo default",
         value: "23% vs 0%",
-        source: "docs/REPORT.md",
-        note: "Finding 1. The highest-training-reward policy is the one that falls.",
+        source: "results/flat_summary.csv",
+        note: "Historical flat-ground transfer comparison, 90 episodes per condition. Separate from new Isaac training.",
       },
       {
-        label: "Findings, of which retractions",
-        value: "13 findings, 4 retractions",
-        source: "docs/FINDINGS.md",
-        note: "Retracted: 7, 9, 13, and the wedge argument in section 5. Left public.",
+        label: "Two- and three-robot airlock completions",
+        value: "5/5 each",
+        source: "results/weekend-20260919/SUMMARY.md",
+        note: "Older frozen gait and scripted team supervisor in shared MuJoCo physics. Navigation, not carrying; both controls 0/5 for each team size.",
       },
       {
-        label: "Best cooperative lift, then collapse",
-        value: "7.8 cm, then a 41 cm drop before contact",
+        label: "Historical cooperative-carry failure",
+        value: "About 41 cm humanoid collapse before cube contact",
         source: "docs/FINDINGS.md",
+        note: "A reward exploit, not a stable cooperative lift.",
       },
       {
         label: "Rough terrain fall rate — 22-DoF vs biped at d = 1.0",
@@ -610,6 +609,10 @@ export const PROJECTS: Project[] = [
     repoBranch: "main",
     siteUrl: `${SITE}/projects/bhl-robustness-ladder`,
     deepLinks: [
+      {
+        label: "Weekend campaign results and limits",
+        url: "https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WEEKEND_RESULTS_2026-09-20.md",
+      },
       {
         label: "Findings ledger, retractions included",
         url: "https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FINDINGS.md",
@@ -636,48 +639,43 @@ export const PROJECTS: Project[] = [
 
   {
     slug: "isaac-folding",
-    title: "Bimanual Garment Folding in Isaac Sim",
+    title: "Bimanual Garment Folding: Research in Progress",
     oneLineResult:
-      "A flow-matching VLA policy folds short pants in 2 of 8 held-out poses, scored success by the LeHome challenge's own checker, up from 0 of 16 before the domain-gap fix.",
+      "Strict short-pants evaluation scores baseline 8/24 versus adapted seed 1 3/24, with no improvement. Only 5/12 full class/checkpoint cells completed.",
     lane: ["robotics-rl", "perception"],
     period: "Aug 2026 – present",
     status: "active",
-    heroAsset: "/media/folding/policy-fold-success.mp4",
-    heroPoster: "/media/folding/policy-fold-success.jpg",
+    heroAsset: "/media/folding/folding-policy-success.mp4",
+    heroPoster: "/media/folding/folding-policy-success.png",
     metrics: [
       {
-        label: "Short-pants fold success — held-out poses",
-        value: "2 of 8 (25%)",
-        source: "README.md",
-        note: "Closed-loop policy, no demonstration actions. Scored by the challenge's own success_checker_garment_fold.",
+        label: "Strict short-pants baseline vs adapted seed 1",
+        value: "8/24 vs 3/24",
+        source: "EXTERNAL: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/CLOTH_FOLDING_WEEKEND.md",
+        note: "Fresh-camera evaluation, matching pose set; no measured adaptation improvement. Historical video is not evidence for these scores.",
       },
       {
-        label: "Other three garment classes",
+        label: "Unseen short-pants garments, both checkpoints",
         value: "0 of 4",
-        source: "README.md",
-        note: "Each class has its own fold criteria; passing one says nothing about the others. Not a solved task.",
+        source: "EXTERNAL: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/CLOTH_FOLDING_WEEKEND.md",
+        note: "Do not generalize this class-specific comparison to other garments.",
       },
       {
-        label: "Rasterised training frames",
-        value: "18,200",
-        source: "README.md",
-        note: "Reaching 2-of-8 from 0-of-16 took the domain-gap diagnosis plus unfreezing the action decoder.",
-      },
-      {
-        label: "Checker fire step on the headline fold",
-        value: "step 119 of 400",
-        source: "README.md",
+        label: "Completed full class/checkpoint evaluation cells",
+        value: "5/12",
+        source: "EXTERNAL: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WEEKEND_CAMPAIGN.md",
+        note: "Remaining cells failed or timed out; incomplete evidence is not a successful sweep.",
       },
     ],
     repoUrl: "https://github.com/joses2017smjh/IsaacSimFolding",
     repoBranch: "main",
     siteUrl: `${SITE}/projects/isaac-folding`,
     collaboration:
-      "A reproduction. The 'Learning to Fold' work being reproduced placed 1st of 62 in the LeHome Challenge 2026 — that placement is the original authors', not mine. What is mine is the Isaac Sim port, the domain-gap diagnosis, and the scored rollouts.",
+      "Research implementation of an external method. Contribution: Isaac Sim integration, observation diagnostics, and evaluation workflow. No verified reproduction of the original challenge performance or challenge placement is claimed.",
     deepLinks: [
       {
-        label: "Outcome sweep",
-        url: "https://github.com/joses2017smjh/IsaacSimFolding/blob/main/results/outcome_sweep.tsv",
+        label: "Strict evaluation and camera failure analysis",
+        url: "https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/CLOTH_FOLDING_WEEKEND.md",
       },
       {
         label: "Action fidelity at 30k steps",

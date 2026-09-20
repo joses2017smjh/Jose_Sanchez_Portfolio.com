@@ -10,13 +10,13 @@ const featured = projects.filter((p) => p.data.featured);
 const other = projects.filter((p) => !p.data.featured);
 ---
 
-<Base title={`${site.name} — Robotics & Perception Engineer`} description={`${site.positioning} ${site.seeking}`} full>
+<Base title={`${site.name} — ML / AI & Robotics Engineer`} description={`${site.positioning} ${site.seeking}`} full>
   <div class="portfolio-home">
     <section class="portfolio-hero" id="about" aria-labelledby="hero-title">
       <p class="eyebrow">Jose Sanchez Gonzalez · M.S. Artificial Intelligence</p>
       <h1 id="hero-title">{site.positioning}</h1>
       <p class="hero-role">{site.seeking}</p>
-      <p class="hero-intro">Watch a pruning arm approach a branch, check its sensors, and return home. Explore the depth models, humanoid evaluations, and retrieval software in four visual case studies.</p>
+      <p class="hero-intro">Explore depth inference, learned robot control, vision-guided pruning, and retrieval software. Four case studies connect working demos to source code and measured results.</p>
       <ul class="link-row hero-actions">
         <li><a class="button-link" href="#projects">Explore selected work</a></li>
         <li><a href={resume.links.pdf}>Download résumé <span class="file-type">PDF</span></a></li>
@@ -28,7 +28,7 @@ const other = projects.filter((p) => !p.data.featured);
       <div class="section-heading">
         <div>
           <p class="eyebrow">Selected work</p>
-          <h2 id="work-title">Robotics first. Evidence throughout.</h2>
+          <h2 id="work-title">ML systems and robots, with evidence.</h2>
         </div>
         <p>Start with a demo. Follow the case study to the code, evaluation, and tradeoffs.</p>
       </div>
@@ -85,7 +85,7 @@ const other = projects.filter((p) => !p.data.featured);
 
     <section class="contact-block" id="contact" aria-labelledby="contact-title">
       <p class="eyebrow">Let's talk</p>
-      <h2 id="contact-title">Hiring for robotics or perception?</h2>
+      <h2 id="contact-title">Hiring for ML, AI, or robotics?</h2>
       <p>I’m looking for a team building robot perception, simulation, or ML systems. My work pairs working demos with reproducible evaluations.</p>
       <a class="contact-address" href={`mailto:${site.email}`}>{site.email}</a>
     </section>

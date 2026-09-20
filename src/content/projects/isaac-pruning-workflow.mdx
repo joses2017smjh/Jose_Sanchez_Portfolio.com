@@ -15,8 +15,8 @@ contribution: I built the Isaac capture loop, live RGB-D controller, release gat
   grader, and the published success and failure recordings. The robot, orchard meshes, and sensor frames
   come from pinned upstream sources. This repository composes them, measures one known target, and keeps
   failed runs visible.
-result: Job 21328323 records 200 frames / 20 s, 68 vision commands, and 17/17 sequence checks. One selected
-  spur releases at 7.8 s, falls 809.49 mm, and the arm returns within 0.001 mm of home. Job 21317409 stops
+result: The selected success records 200 frames / 20 s, 68 vision commands, and 17/17 sequence checks. One selected
+  spur releases at 7.8 s, falls 809.49 mm, and the arm returns within 0.001 mm of home. A separate failed episode stops
   at 7.7 s (confidence 0.14165 < 0.15). Discrete rigid-piece release, not wood fracture.
 tags:
 - Python
@@ -43,13 +43,13 @@ alt: Isaac Sim dashboard of a UR5e approaching a textured apple tree, releasing 
   home.
 figcaption: '20 s Isaac dashboard: approach, gated release at 7.8 s, measured fall, home return.'
 focus: Robotics / Simulation / Perception
-evidence: 'Job 21328323: 17/17 sequence checks, 809.49 mm drop, <0.001 mm home error.'
+evidence: "One known target, 68 vision commands, 17/17 sequence checks. Rigid-piece release, not wood fracture."
 date: 2026-09-14
 order: 1
 featured: true
 sections:
 - heading: Keep the failure next to the success
-  body: Tracking confidence fell below 0.15 at 7.7 s on job 21317409. Closure stopped at 2/3; no release.
+  body: Tracking confidence fell below 0.15 at 7.7 s in the failed episode. Closure stopped at 2/3; no release.
     The public recording is the failed episode, not a cleaned retake.
   figures:
   - image: /media/pruning/isaac_two_trees_closure_failure.mp4

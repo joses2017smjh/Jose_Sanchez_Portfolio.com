@@ -140,6 +140,8 @@ everywhere at once.
 
 ```sh
 npm run dev        # live preview at localhost:4321 — updates as you save
+npm run build      # validate schemas and build all pages
+npm run check:portfolio # after build: check featured projects, evidence labels, local media
 git add -A && git commit -m "update content" && git push
 ```
 

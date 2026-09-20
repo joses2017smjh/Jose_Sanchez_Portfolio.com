@@ -5,8 +5,8 @@
 export const site = {
   name: "Jose Sanchez Gonzalez",
   positioning:
-    "I build perception and simulation for robots.",
-  seeking: "Seeking robotics software and perception / ML engineering roles.",
+    "I build ML systems and perception for robots.",
+  seeking: "Seeking machine learning / AI and robotics engineering roles.",
   bio: [
     "I turn research questions into working software: vision-guided pruning in Isaac Sim, depth models for orchard robots, cross-simulator policy evaluations, and retrieval tools that trace answers to source files.",
     "M.S. in Artificial Intelligence and B.S. in Computer Science, Oregon State University. My project pages show what I built, how I tested it, and what still needs work.",
