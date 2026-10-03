@@ -3,7 +3,13 @@
 Personal portfolio site. Astro + TypeScript, MDX content collections, real CSS
 with custom properties, no client framework. Deployed on Vercel.
 
-[Live portfolio](https://jose-sanchez-portfolio-com.vercel.app) · [Presentation audit](docs/PORTFOLIO_AUDIT_2026-09-20.md) · [Project README template](docs/PROJECT_README_TEMPLATE.md) · [Demo shot lists](docs/DEMO_SHOT_LISTS.md)
+[Live portfolio](https://jose-sanchez-portfolio-com.vercel.app) · [Project README template](docs/PROJECT_README_TEMPLATE.md) · [Demo shot lists](docs/DEMO_SHOT_LISTS_2026-10-02.md)
+
+The October 2 refresh features Berkeley Humanoid VR arm teleoperation, robotic
+pruning, depth refinement, humanoid simulation, and deformable-object folding.
+Each case study links to the code and evidence behind its results. Hardware
+integration, simulation evaluations, and stored validation scores are identified
+in the project copy. The résumé downloads use the same verified project claims.
 
 ## Reproduce on any machine
 
@@ -31,8 +37,8 @@ Media rules:
 
 - Motion assets are **mp4/webm loops, never gifs**. Put them in
   `public/media/`, set `video:` and a `poster:` frame (required — it's the
-  `prefers-reduced-motion` fallback, where videos don't autoplay and get
-  manual controls instead).
+  `prefers-reduced-motion` fallback, where videos don't autoplay). Every video
+  also has manual controls and a descriptive label.
 - No motion asset? Set `image:` instead.
 - `order:` controls list position and the site-wide figure number.
 - `draft: true` hides an entry from the build.

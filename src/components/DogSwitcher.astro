@@ -36,6 +36,7 @@ import { dogs } from "../beyond.config";
         dogs.map((dog) =>
           dog.kind === "video" ? (
             <video
+              controls
               class="dogs-shot"
               data-dog={dog.id}
               data-loop

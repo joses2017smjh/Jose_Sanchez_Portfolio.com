@@ -60,6 +60,7 @@ function isVideo(src: string) {
         <figure class={`now-timeline-shot shot-${i}`}>
           {isVideo(photo.image) ? (
             <video
+              controls
               data-loop
               playsinline
               muted

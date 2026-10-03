@@ -54,7 +54,7 @@ const rest = body.slice(1);
           <figure class="section-shot">
             <div class="section-shot-media">
               {m.kind === "video" ? (
-                <video data-loop playsinline muted preload="none" poster={m.poster} aria-label={m.alt}>
+                <video controls data-loop playsinline muted preload="none" poster={m.poster} aria-label={m.alt}>
                   <source src={m.src} type="video/mp4" />
                 </video>
               ) : (

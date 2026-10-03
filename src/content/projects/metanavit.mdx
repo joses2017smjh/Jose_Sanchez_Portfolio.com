@@ -6,9 +6,9 @@ problem: Research folders contain active configs, archived drafts, logs, and che
   answer is easier than identifying the current file and returning traceable evidence.
 approach: Combined BM25 and dense retrieval with reciprocal rank fusion, query routing, staleness filtering,
   and typed graph traversal. Exposed search and proposed filesystem changes through an MCP interface.
-result: The committed 136-query fixture benchmark reports Recall@50 0.938 and nDCG@10 0.493 using hash
-  embeddings and overlap reranking. On eight exact-path queries, adding routing after reranking increased
-  nDCG@10 from 0.875 to 0.938.
+result: 'SciFact, 300 queries: hybrid retrieval plus reranking improves paired nDCG@10 by 0.075
+  (95% bootstrap CI 0.053–0.101) over the recorded baseline. The fp16/cap-512 GPU configuration
+  cuts in-memory benchmark query p50 from 923 to 191 ms with a quality tie.'
 tags:
 - Python
 - FastAPI
@@ -36,25 +36,19 @@ sections:
     poster: /media/metanavit/hybrid.jpg
 - heading: Make proposed changes reviewable
   body: Mutation tools return a plan before application. The MCP walkthrough shows a blocked change and
-    an approved change. The next benchmark step is a real corpus with actual embedding and cross-encoder
-    backends, evaluated separately from these fixtures.
+    an approved change. SciFact experiments use actual embedding and reranking backends,
+    evaluated separately from these illustrated fixture traces.
   figures:
   - image: /media/metanavit/mcp_hitl.mp4
     alt: A file move is proposed, blocked without approval, and then applied after approval.
     caption: 'Demo workflow: propose, review, approve, apply.'
     poster: /media/metanavit/mcp_hitl.jpg
-date: 2026-08-23 00:00:00+00:00
-order: 4
-featured: true
+date: 2026-10-02
+order: 6
+featured: false
 focus: RAG / Retrieval engineering
-evidence: Recall@50 0.938 on 136 labeled queries over a frozen 61-file fixture corpus.
-contribution: In a six-person team, I worked on retrieval, the data layer, and APIs. The repository combines
-  hybrid retrieval, evaluation fixtures, and approval-gated file operations. The lightweight benchmark uses
-  explicit hash embeddings and overlap reranking rather than downloaded embedding models.
+evidence: 'SciFact, 300 queries: paired nDCG@10 gain +0.075, 95% CI [0.053, 0.101].'
+contribution: Implemented retrieval stages, query routing, evaluation fixtures, and approval-gated file
+  operations. Kept backend choices explicit so the lightweight benchmark can run independently of downloaded
+  embedding models.
 ---
-
-## What the benchmark supports
-
-The frozen CPU fixture contains 136 queries over 61 files. BM25 scores 0.505
-nDCG@10 versus 0.493 for the hybrid configuration; the benchmark does not
-establish an overall ranking improvement or production-scale retrieval quality.

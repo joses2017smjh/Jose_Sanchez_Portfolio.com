@@ -22,9 +22,10 @@ and identify upstream models, assets, tools, and collaborators separately.
 
 ## Result and limits
 
-| Evaluation | Measured result | Evidence | Scope |
-|---|---|---|---|
-| Protocol / baseline | Metric with units and denominator | Saved artifact | Split, seed, environment |
+- **Protocol:** task, dataset/split, baseline, and date.
+- **Result:** metric with units, denominator, seed count, and uncertainty when available.
+- **Evidence:** saved artifact, producing commit, and scoring command.
+- **Scope:** simulator/hardware, measured stages, reused data, and current limitations.
 
 Explain the main failure and what this result does not establish. Distinguish
 one selected demo from aggregate evaluation, and startup errors from task failures.

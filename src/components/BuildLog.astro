@@ -15,7 +15,7 @@ const { steps } = humanoid;
         <figure>
           <div class="buildlog-media">
             {step.kind === "video" ? (
-              <video data-loop playsinline muted preload="none" poster={step.poster} aria-label={step.alt}>
+              <video controls data-loop playsinline muted preload="none" poster={step.poster} aria-label={step.alt}>
                 <source src={step.src} type="video/mp4" />
               </video>
             ) : (

@@ -22,7 +22,7 @@ export const resume = {
     ],
   },
   summary:
-    "AI/ML engineer with hands-on experience across computer vision, 3D perception, and NLP — from quantified depth-estimation research for robotic pruning to from-scratch transformers and production-style RAG systems, plus an in-progress humanoid robotics build (ROS2, Isaac Sim, reinforcement learning).",
+    "Robotics and AI/ML engineer building perception, control, and evaluation software. Projects include synthetic metric-depth models and an inference API, vision-guided pruning in Isaac Sim, cross-simulator humanoid studies, Quest VR arm teleoperation, and evaluated retrieval systems.",
   education: [
     {
       degree: "MS, Artificial Intelligence",

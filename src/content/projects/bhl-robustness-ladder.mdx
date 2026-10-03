@@ -1,99 +1,80 @@
 ---
 title: Humanoid Robustness Ladder
-summary: "Humanoid learning and evaluation across Isaac Lab and MuJoCo, with sensor ablations and shared-world team tasks."
-problem: >-
-  Training reward and a good-looking rollout do not establish reliable robot behavior.
-  I needed repeatable tests that distinguish locomotion, sensor use, task completion,
-  simulator transfer, and failure—and refuse success when a camera or control is broken.
-approach: >-
-  Train PPO in Isaac Lab, export ONNX, and evaluate compatible frozen policies in MuJoCo.
-  Run seeded curricula and sensor ablations through Slurm, with per-episode contact,
-  fall, camera-health, and mission checks. Separate new Isaac training from older
-  frozen-gait MuJoCo experiments: the inspection mission uses ordered stations and
-  sensor-reactive braking; two- and three-robot teams share a physical airlock.
-  Controls test sensor outage, a wrong branch, skipped coordination, and missing
-  teammates. Oracle routing and localization remain explicit.
-contribution: >-
-  Built the cross-simulator scoring pipeline, task supervisors, simulated sensor
-  adapters, seeded failure controls, Slurm experiment runners, and evidence ledger.
-  Kept upstream robot assets and policy interfaces, while separating learned control
-  from scripted supervision and retaining failed experiments.
-result: >-
-  New Isaac biped Full checkpoints: 379/384 first episodes pass across four sensor arms,
-  three training seeds, 32 envs each; fixed route/layout, noise off. Separately, older
-  frozen-gait MuJoCo runs pass inspection 3/3 and each team size 5/5. These are small,
-  bounded simulation tests, not transfer of the new checkpoints or hardware validation.
-tags: [Python, Isaac Lab, MuJoCo, PPO, ONNX, Simulated Sensors, Robotics, Slurm]
+summary: Train humanoid policies in Isaac Lab and check their transfer in MuJoCo, with failures kept in
+  the record.
+problem: Training reward alone cannot establish that a walking policy transfers to another simulator.
+  The project needs repeatable evaluation across disturbances and terrain. High training reward can still
+  hide transfer failure, which is why retractions stay in this record.
+approach: Trained PPO policies in Isaac Lab, exported ONNX, and scored checkpoints with upstream's
+  deployment controller in headless MuJoCo. Built randomization and sensor ablations, lidar mapping,
+  scripted A* navigation, and task-specific qualification gates. Navigation uses oracle pose and goal.
+  October gait-clock studies compare actor-visible and critic-only inputs across three training seeds;
+  turning and straight walking must both qualify. Failed experiments and retractions stay in the ledger.
+result: 'Biped transfer: 21/90 falls without randomization vs 0/90 with the default. Lidar mapping plus
+  scripted A* reaches 24/24 unseen biped mazes; a qualified humanoid reaches 12/12 fresh layouts.
+  October 2 actor-clock recipe fails: only 1/3 seeds also passes straight walking. Simulation only.'
+tags:
+- Python
+- Isaac Lab
+- Isaac Sim
+- MuJoCo
+- PPO
+- Reinforcement Learning
+- Sim-to-Sim
+- Robotics
+- ONNX
 repo: https://github.com/joses2017smjh/bhl-robustness-ladder
 links:
-  - label: Dated results and limitations
-    href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WEEKEND_RESULTS_2026-09-20.md
-  - label: Public run summaries
-    href: https://github.com/joses2017smjh/bhl-robustness-ladder/tree/main/results/weekend-20260919
-  - label: Inspection task and controls
-    href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/INSPECTION_MAZE.md
-  - label: Findings and retractions
-    href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FINDINGS.md
-video: /media/bhl-weekend/inspection-maze.mp4
-poster: /media/bhl-weekend/inspection-maze-frame.png
-alt: A simulated full-body humanoid visits two inspection pads, changes travel direction twice, and reaches the exit.
-figcaption: "MuJoCo inspection: a frozen gait with oracle routing and sensor-reactive braking, not the new Isaac policy."
+- label: Full technical report
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/REPORT.md
+- label: Findings ledger
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FINDINGS.md
+- label: Lidar-mapped navigation
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/RANDOM_MAZE.md
+- label: Latest actor-clock verdict
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/repo-gpu-20260923/turngait-r12-20261001/verdict/R1.json
+video: /media/bhl/multi_lab.mp4
+poster: /media/bhl/multi_lab.jpg
+image: /media/bhl/multi_lab.jpg
+alt: Four humanoid policies run the same MuJoCo obstacle course; one falls while the others continue.
+figcaption: Four policies in one MuJoCo world. A selected rollout illustrates the transfer evaluation.
 sections:
-  - heading: Complete a mission, then challenge its assumptions
-    body: >-
-      Two ordered dwell stations, two travel turns, a dead end, and an exit test a
-      22-DoF frozen gait. The torso stays east-facing; the northbound leg is a sidestep.
-      Simulated IMU, lidar, and idealized paired depth feed braking—not stereo matching
-      or SSD. The baseline passes 3/3; outage and wrong-branch controls each pass 0/3.
-      Map, pose, and waypoints are privileged.
-    figures:
-      - image: /media/bhl-weekend/inspection-maze-failure.mp4
-        poster: /media/bhl-weekend/inspection-maze-failure-frame.png
-        alt: Deliberately wrong waypoint routing sends the humanoid into a dead end, where the mission checker rejects the run.
-        caption: "Wrong-route control: dead-end rejection at 7 s. Deliberate negative control, not a spontaneous policy failure."
-  - heading: Shared physics, explicit team coordination
-    body: >-
-      All robots must occupy assigned inspection pads before a physical airlock opens,
-      then cross one at a time. Two- and three-robot teams each pass 5/5 seeds.
-      Both the no-wait and withheld-teammate controls pass 0/5 for each size.
-      This demonstrates coordinated navigation, not cooperative grasping or carrying.
-    figures:
-      - image: /media/bhl-weekend/team3-airlock.mp4
-        poster: /media/bhl-weekend/team3-airlock-frame.png
-        alt: Three differently colored humanoids wait at pads, unlock an airlock, and cross it serially in one MuJoCo world.
-        caption: "Three-robot success rollout; the five-seed experiment and controls supply the score."
-  - heading: Keep the evaluation engines separate
-    body: >-
-      The new 12-DoF Isaac biped result is 379/384 first episodes, not MuJoCo transfer.
-      An older flat-ground transfer study scored 90 episodes per condition:
-      unrandomized policies fell 23% of the time versus 0% for default randomization.
-      Neither result establishes unseen-maze generalization or physical locomotion.
-    figures:
-      - image: /media/bhl/multi_lab.mp4
-        alt: Four color-coded humanoid policies cross a composed MuJoCo lab floor, with one robot’s egocentric depth below.
-        caption: "Historical terrain-transfer diagnostic on a composed lab floor; separate from the new Isaac runs."
-  - heading: Failure analysis is part of the deliverable
-    body: >-
-      A historical cooperative-carry policy exploited collapse rather than learning
-      a stable lift: the humanoids dropped about 41 cm before cube contact.
-      Cloth folding remains research, with no improvement in the latest strict
-      short-pants comparison. Retractions, renderer failures, and incomplete cells
-      remain in the evidence ledger.
-date: 2026-09-20
-order: 2
+- heading: Transfer inverts the training-reward ranking
+  body: The flat-ground comparison covers five settings and three trained policies per setting. The default
+    randomization transfers better than the unrandomized configuration even though training reward suggests
+    a different ordering.
+  figures:
+  - image: /media/bhl/multi_lab.mp4
+    alt: Four colour-coded policies share one shove, with egocentric depth along the bottom.
+    caption: Four policies, one world, one command. The unrandomized robot is on the ground.
+    poster: /media/bhl/multi_lab.jpg
+  - image: /media/bhl/dr_pair.mp4
+    alt: Two policies follow a strafe command; one stays upright and one falls.
+    caption: Selected strafe rollouts. Aggregate findings and their limits are in the linked technical
+      report.
+    poster: /media/bhl/dr_pair.jpg
+- heading: Stereo pose fix, and a retracted ice claim
+  body: 'Isaac Lab 3.0 read camera quaternions as (x, y, z, w) after they were written (w, x, y, z). Stereo
+    pointed down after the fix. An earlier ice-hazard result is retracted: patches spawned a median 72
+    m away.'
+  figures:
+  - image: /media/bhl/maze_stereo_fixed.webp
+    alt: Corrected downward stereo pose versus the earlier upside-down camera on terrain.
+    caption: After the quaternion fix, 16×16 stereo reaches terrain level 0.88.
+- heading: Mapping and planning, with oracle state
+  body: 'The biped reaches 24/24 unseen 5×5 and 6×6 mazes without falls or wall contacts. A qualified
+    22-DoF humanoid reaches 12/12 fresh 6×6 layouts. Learned gait drives the robot; scripted A* uses
+    a lidar-built map and oracle pose/goal. These results do not establish learned navigation or hardware transfer.'
+- heading: Turning improves; the combined recipe still fails
+  body: 'Actor-visible gait-clock input enables turns across three training seeds. Only one also passes
+    straight-walk and push qualification; the recipe requires two. Critic-only input qualifies zero.
+    The October 2 verdict preserves that failure instead of promoting on turning alone.'
+date: 2026-10-02
+order: 4
 featured: true
-focus: Robot learning / Simulation evaluation
-evidence: "Isaac: 379/384 first episodes. Separate frozen-gait MuJoCo: inspection 3/3; two- and three-robot teams 5/5 each."
+focus: Policy evaluation / Sim-to-sim
+evidence: 'Lidar mapping + scripted A*: 24/24 unseen biped mazes, 12/12 fresh humanoid layouts; oracle pose/goal.'
+contribution: 'Built the measurement stack: headless MuJoCo scoring, curricula upstream lacks, rollout
+  visualization, and a ledger that keeps retractions public. Used upstream''s observation path so evaluation
+  stays close to the deployment controller.'
 ---
-
-## Where the next experiment starts
-
-The inspection route is known, sensor noise is not calibrated to hardware, and paired
-depth is idealized ray casting. An SSD detection interface is not a trained detector.
-The next evidence needed is unseen layouts, calibrated sensor noise, and export and
-evaluation of the new Isaac checkpoints in MuJoCo—not a claim that these are already solved.
-
-The [team benchmark specification](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/TEAM_AIRLOCK.md)
-defines contact and completion gates. The
-[folding investigation](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/CLOTH_FOLDING_WEEKEND.md)
-separates strict fresh-camera evaluation from historical stale-image results.

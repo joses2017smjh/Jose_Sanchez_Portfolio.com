@@ -13,7 +13,7 @@ export const humanoid = {
     "The original goal was a fully tele-operated robot driven by an Oculus headset before the convention. Midterms, 2,000+ M3 inserts to count, and a few DIY 3D-printer repairs meant the project needed an extension.",
   ],
   status:
-    "Fully assembled as of 12 Sep. First sign of life on 13 Sep — LiDAR and stereo are on the robot; working on movement.",
+    "Assembled in September; now developing Quest 2 VR arm teleoperation with simulation and hardware backends, joint calibration, and headset sensor views.",
   // The upstream project this build follows — design files, docs and paper.
   credit:
     "This is my build of Berkeley Humanoid Lite, the open-source 3D-printed humanoid from the Hybrid Robotics Lab at UC Berkeley. The design files, assembly documentation and the RSS 2025 paper behind it all live upstream:",
@@ -30,6 +30,10 @@ export const humanoid = {
     {
       label: "GitHub",
       href: "https://github.com/HybridRobotics/Berkeley-Humanoid-Lite",
+    },
+    {
+      label: "My Quest VR fork",
+      href: "https://github.com/joses2017smjh/quest-vr-teleop",
     },
   ],
   steps: [
@@ -201,6 +205,13 @@ export const humanoid = {
       poster: "/media/humanoid/27-first-sign-of-life-poster.jpg",
       alt: "Assembled orange humanoid hanging from a chain, LEDs on, as the motors first come up.",
       caption: "13 Sep — First sign of life.",
+    },
+    {
+      kind: "video" as const,
+      src: "/media/humanoid-vr/quest-vr-teleop.mp4",
+      poster: "/media/humanoid-vr/quest-vr-teleop.jpg",
+      alt: "Jose wearing a Quest headset and moving controllers beside the physical humanoid arms.",
+      caption: "1 Oct — Quest headset feedback and physical arm control; selected montage excerpt.",
     },
   ],
 } as const;

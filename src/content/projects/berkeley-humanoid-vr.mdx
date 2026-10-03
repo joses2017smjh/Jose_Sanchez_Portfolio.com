@@ -1,0 +1,56 @@
+---
+title: "Berkeley Humanoid Lite: Quest VR Teleoperation"
+summary: "Quest 2 controller poses drive simulated and physical humanoid arms, with feedback inside the headset."
+problem: >-
+  A headset demo needs a complete path to the robot: tracked poses, inverse kinematics,
+  calibrated joint commands, motion gating, and feedback. My self-built Berkeley Humanoid
+  Lite also needed an interface that matched its actual arm wiring and torque limits.
+approach: >-
+  Replaced the upstream Vive input with Quest 2 WebXR. A Python bridge sends controller
+  poses to Pink/Pinocchio IK and SocketCAN arm drivers. The same interface runs with an
+  offline joint model or physical arms. Added joint-specific gravity feedforward, held-grip
+  motion gating, calibration panels, and camera/lidar/IMU feedback. Per-eye monocular
+  relative depth and optical flow are operator overlays, not metric stereo or control inputs.
+contribution: >-
+  Built my physical Berkeley Humanoid Lite and calibrated its ten arm joints, then
+  implemented the Quest interface, bridge, arm supervisor, tuning, diagnostics, and sensor panels. The robot
+  design and underlying low-level platform are Berkeley's open-source work.
+result: >-
+  Physical arm teleoperation is visible in the supplied October 1 montage. The September
+  24 report marks all ten arm joints OK; one wrist reaches 90% of ±10° step commands
+  in 0.23–0.25 s. This demonstrates simulation-to-hardware integration, not learned
+  locomotion-policy transfer or a general manipulation success rate.
+tags: ["Python", "WebXR", "Quest 2", "Inverse Kinematics", "SocketCAN", "Pinocchio", "OpenCV", "Robotics"]
+repo: https://github.com/joses2017smjh/quest-vr-teleop
+demo: https://jose-sanchez-portfolio-com.vercel.app/media/humanoid-vr/quest-vr-teleop.mp4
+links:
+  - label: Operator and setup guide
+    href: https://github.com/joses2017smjh/quest-vr-teleop/blob/main/docs/VR_TELEOP.md
+  - label: Ten-joint calibration
+    href: https://github.com/joses2017smjh/quest-vr-teleop/blob/main/arm_validation/calibration_20260924_1111.md
+  - label: Single-wrist step test
+    href: https://github.com/joses2017smjh/quest-vr-teleop/blob/main/arm_validation/closed_loop/20260924_110748_can0_id9/report.txt
+video: /media/humanoid-vr/quest-vr-teleop.mp4
+poster: /media/humanoid-vr/quest-vr-teleop.jpg
+image: /media/humanoid-vr/quest-vr-teleop.jpg
+alt: "Operator wearing a Quest headset moves controllers beside a physical orange Berkeley Humanoid Lite."
+figcaption: "23 s excerpt: headset feedback and physical arm control. Supplied montage timing preserved."
+date: 2026-10-02
+order: 1
+featured: true
+focus: "Robot control / Hardware integration / VR"
+evidence: "Physical arm demonstration; ten calibrated joints. One wrist's ±10° step test reaches 90% in 0.23–0.25 s."
+sections:
+  - heading: One interface, two backends
+    body: >-
+      The offline arm model includes joint PD control, gravity, friction, torque limits,
+      and end stops. Hardware uses the as-built CAN map and per-joint calibration.
+      This makes rehearsal and software checks possible before commanding the arms.
+      Simulation measurements are separate from the physical step-test report.
+  - heading: Feedback for the operator
+    body: >-
+      The headset shows stereo camera views, lidar and IMU status, and per-eye relative-depth
+      and RAFT flow overlays. Relative depth is rescaled per image. CPU vision updates
+      slowly and stays outside the arm-control loop. Grip gating and damping are software
+      controls; they do not establish physical emergency-stop performance.
+---

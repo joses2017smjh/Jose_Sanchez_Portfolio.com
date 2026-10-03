@@ -1,9 +1,9 @@
 /**
- * Supporting project registry — explicit metric provenance.
+ * Supporting project evidence registry, maintained manually.
  *
- * The current Astro pages and cards read src/content/projects/*.mdx, not
- * this registry. Keep overlapping facts aligned when updating either file;
- * this registry is not an automatic publisher for GitHub or resume content.
+ * Astro renders pages and cards from src/content/projects/*.mdx via
+ * src/lib/projects.ts. This file is not currently imported by those pages;
+ * it does not generate READMEs, metadata, or repository descriptions.
  *
  * THE RULE ON NUMBERS
  * Every metric carries a `source` — a path, inside the repo named by
@@ -12,14 +12,14 @@
  * `note` records provenance trouble: a figure two files in the same repo
  * disagree about, or one whose only witness is outside the repo.
  *
- * npm run build validates content schemas; external evidence needs review.
+ * There is no automated cross-document or check:links enforcement.
  */
 
 /** Which hiring lane a project is evidence for. */
 export type Lane = "perception" | "robotics-rl" | "ml-engineering";
 
 export type Status =
-  /** Runs, measured, not being changed. */
+  /** Completed software artifact; does not imply a production deployment. */
   | "shipped"
   /** Being worked on now; numbers still move. */
   | "active"
@@ -38,12 +38,12 @@ export interface Metric {
 
 export interface DeepLink {
   label: string;
-  /** Full URL to a specific file, notebook, or figure — never a repo root. */
+  /** Full URL to evidence, implementation, or an attributed upstream project. */
   url: string;
 }
 
 export interface Project {
-  /** Canonical slug. Also the site URL segment. */
+  /** Registry key; siteUrl and contentId identify the published page. */
   slug: string;
   /**
    * Filename in src/content/projects/ when it differs from `slug`.
@@ -51,7 +51,7 @@ export interface Project {
    */
   contentId?: string;
   title: string;
-  /** One sentence, contains a number. The same string everywhere it appears. */
+  /** Concise scoped result; keep aligned with manually authored MDX. */
   oneLineResult: string;
   lane: Lane[];
   period: string;
@@ -66,7 +66,7 @@ export interface Project {
   repoBranch: string;
   siteUrl: string;
   paperUrl?: string;
-  /** 2–3 exact files a reader should open. */
+  /** Direct evidence and method links a reader should open. */
   deepLinks: DeepLink[];
   stack: string[];
   /** Set when the repo is not solely the author's work. Scopes the claim. */
@@ -77,46 +77,86 @@ const SITE = "https://jose-sanchez-portfolio-com.vercel.app";
 
 export const PROJECTS: Project[] = [
   {
+    slug: "berkeley-humanoid-vr",
+    title: "Berkeley Humanoid Lite: Quest VR Teleoperation",
+    oneLineResult:
+      "Quest 2 poses drive an offline joint model and physical humanoid arms; ten joints are calibrated, and one wrist reaches 90% of ±10° steps in 0.23–0.25 s.",
+    lane: ["robotics-rl", "perception"],
+    period: "2026 – present",
+    status: "active",
+    heroAsset: "/media/humanoid-vr/quest-vr-teleop.mp4",
+    heroPoster: "/media/humanoid-vr/quest-vr-teleop.jpg",
+    metrics: [
+      {
+        label: "Physical arm calibration — September 24",
+        value: "10 / 10 joints marked OK",
+        source: "arm_validation/calibration_20260924_1111.md",
+        note: "Per-joint calibration and torque ceilings on the as-built robot; not a manipulation success rate.",
+      },
+      {
+        label: "One left wrist — 90% rise time for ±10° steps",
+        value: "0.23–0.25 s",
+        source: "arm_validation/closed_loop/20260924_110748_can0_id9/report.txt",
+        note: "One joint and one test condition, including step and return phases. October 1 montage is qualitative arm-control evidence, not a tracking benchmark.",
+      },
+    ],
+    repoUrl: "https://github.com/joses2017smjh/quest-vr-teleop",
+    repoBranch: "main",
+    siteUrl: `${SITE}/projects/berkeley-humanoid-vr/`,
+    collaboration:
+      "I built and calibrated this physical robot and implemented Quest input, the bridge, arm supervisor, tuning, diagnostics, and feedback panels. Berkeley supplies the robot design and low-level platform. Simulation-to-hardware integration does not establish learned locomotion-policy transfer.",
+    deepLinks: [
+      {
+        label: "Operator and setup guide",
+        url: "https://github.com/joses2017smjh/quest-vr-teleop/blob/main/docs/VR_TELEOP.md",
+      },
+      {
+        label: "Ten-joint calibration report",
+        url: "https://github.com/joses2017smjh/quest-vr-teleop/blob/main/arm_validation/calibration_20260924_1111.md",
+      },
+      {
+        label: "Single-wrist closed-loop step report",
+        url: "https://github.com/joses2017smjh/quest-vr-teleop/blob/main/arm_validation/closed_loop/20260924_110748_can0_id9/report.txt",
+      },
+    ],
+    stack: ["Python", "WebXR", "Quest 2", "Pink", "Pinocchio", "SocketCAN", "OpenCV"],
+  },
+
+  {
     slug: "metric-depth-pruning",
     contentId: "depth-estimation-robotic-pruning",
-    title: "SPUR: Metric Depth Inference Service",
+    title: "Vision-Based Metric Depth Estimation for Robotic Pruning",
     oneLineResult:
-      "Synthetic orchard depth served with split ONNX graphs: recorded encoder max absolute difference 1.53e-5 versus Torch; V100 fp16 refiner-only p50 156 ms per six-view group. No real-orchard accuracy claim.",
+      "Five stored best-validation scores average 0.0445 ± 0.0057 m trunk RMSE on synthetic trees; V100 fp16 refiner-only p50 is 156 ms, excluding DA2 and HTTP.",
     lane: ["perception", "ml-engineering"],
     period: "Jan 2026 – Aug 2026",
     status: "shipped",
     heroAsset: "/media/depth/service_reconstruct.mp4",
-    heroPoster: "/media/depth/gt_depth_example.png",
+    heroPoster: "/media/depth/service_reconstruct.jpg",
     metrics: [
       {
-        label: "Validation RMSE — DINOv2 RGB+D, 3 stereo pairs, 5 seeds",
+        label: "Stored best-validation RMSE — 3 stereo pairs, 5 seeds",
         value: "0.0445 ± 0.0057 m",
         source: "bench/results/seed_rmse.json",
         note: "Mean and sample std over the 5 listed best_rmse_m values. The file notes these are read from checkpoints, not re-scored on disk.",
       },
       {
-        label: "Fine-tuned monocular baseline RMSE",
-        value: "0.0550 m",
-        source: "EXTERNAL: public/media/depth/multiview_ablation_rmse.png",
-        note: 'Read off the dashed reference line in that figure\'s legend ("Best fine-tuned result: 0.0550 m"). The same figure independently confirms the 0.0445 ± 0.0057 headline at 3 pairs. Nothing under bench/results/ carries it — commit the ablation CSV so this stops depending on a PNG.',
+        label: "Seed-1 re-render RMSE — 60 six-view groups",
+        value: "0.0467 m",
+        source: "bench/results/tesla-v100-sxm3-32gb_2026-08-22_eval.json",
+        note: "Changed renders make this a separate evaluation, not a repeat of the stored best-validation scores. Real-orchard accuracy is unverified.",
       },
       {
-        label: "Held-out affine RMSE — DA2-ft, 2 paper validation trees",
-        value: "0.0344 m",
-        source: "bench/results/holdout_affine_2026-08-22.json",
-        note: "holdout_rmse.da2_holdout_affine_m.rmse_m, n = 78 frames. Affine fit on 7 non-paper trees.",
-      },
-      {
-        label: "Refiner p50 latency — V100 fp16, 6 views",
+        label: "Refiner-only p50 latency — V100 fp16, 6 views",
         value: "156 ms",
         source: "bench/results/tesla-v100-sxm3-32gb_2026-08-22.json",
-        note: "Fourth entry (p50 156.05, mean 156.06). The file holds two runs per precision; the first fp32/fp16 pair is contended (p99 3247 ms) and must not be quoted.",
+        note: "Six 280×512 views, batch 1, 20 warmups and 200 timed calls; excludes DA2 and HTTP. Final fp16 entry p50 156.05 ms; earlier contended runs remain in the artifact.",
       },
       {
-        label: "Refiner p50 latency — V100 fp32, 6 views",
+        label: "Refiner-only p50 latency — V100 fp32, 6 views",
         value: "393 ms",
         source: "bench/results/tesla-v100-sxm3-32gb_2026-08-22.json",
-        note: "Third entry (p50 393.47, mean 393.53).",
+        note: "Final fp32 entry p50 393.47 ms; same timing scope, excluding DA2 and HTTP.",
       },
       {
         label: "Torch vs ONNX agreement — encoder, max abs",
@@ -128,18 +168,18 @@ export const PROJECTS: Project[] = [
         label: "Trunk segmenter best validation IoU",
         value: "0.9295",
         source: "bench/results/trunk_unet_100tree.json",
-        note: "best_val_iou at epoch 12, n_val = 120. Corrected on the site from 0.894, which appears nowhere in this file (epoch 1 is 0.8984).",
+        note: "best_val_iou at epoch 12, n_val = 120 synthetic images. Real-orchard accuracy is unverified.",
       },
       {
         label: "Depth RMSE through ground-truth vs predicted masks",
         value: "0.031 m → 0.112 m",
         source: "bench/results/trunk_unet_100tree.json",
-        note: "field_rmse.da2_on_gt_mask_m 0.03069 vs da2_on_pred_mask_m 0.11197, n = 24. The site rounds the second to 0.110; it is 0.112.",
+        note: "field_rmse.da2_on_gt_mask_m 0.03069 vs da2_on_pred_mask_m 0.11197, n = 24. Predicted segmentation remains a deployment constraint.",
       },
     ],
     repoUrl: "https://github.com/joses2017smjh/spur-depth-service",
     repoBranch: "master",
-    siteUrl: `${SITE}/projects/depth-estimation-robotic-pruning`,
+    siteUrl: `${SITE}/projects/depth-estimation-robotic-pruning/`,
     deepLinks: [
       {
         label: "Seed RMSE (the headline number)",
@@ -150,7 +190,7 @@ export const PROJECTS: Project[] = [
         url: "https://github.com/joses2017smjh/spur-depth-service/blob/master/bench/results/onnx_parity_2026-08-22.json",
       },
       {
-        label: "Latency by GPU and precision",
+        label: "Refiner-only latency by GPU and precision",
         url: "https://github.com/joses2017smjh/spur-depth-service/blob/master/bench/results/tesla-v100-sxm3-32gb_2026-08-22.json",
       },
       {
@@ -312,7 +352,7 @@ export const PROJECTS: Project[] = [
     slug: "point-cloud-classification",
     title: "Point Cloud Classification",
     oneLineResult:
-      "A local-attention point transformer reaches 86.79% accuracy on 2,468 held-out ModelNet10 clouds, and its confusion matrix shows where the geometry stops being enough.",
+      "The saved 40-class Point Transformer notebook reports 86.79% test accuracy on 2,468 ModelNet40 clouds.",
     lane: ["perception"],
     period: "Winter 2025",
     status: "coursework",
@@ -320,10 +360,10 @@ export const PROJECTS: Project[] = [
     heroPoster: "/media/pointcloud/pointtransformer_architecture.svg",
     metrics: [
       {
-        label: "Point Transformer test accuracy — ModelNet10",
+        label: "Point Transformer test accuracy — ModelNet40",
         value: "86.79%",
         source: "train_pointtransformer.ipynb",
-        note: "Notebook output cell, run 2025-03-21, over 2,468 test examples. The only committed number in this repo.",
+        note: "Saved notebook output, run 2025-03-21: 9,843 training examples, 2,468 test examples, 40 classes. The separate 10-class architecture figure is an older experiment.",
       },
     ],
     repoUrl: "https://github.com/joses2017smjh/PointCloudclassification",
@@ -409,7 +449,7 @@ export const PROJECTS: Project[] = [
     slug: "metanavit",
     title: "MetaNaviT: Retrieval over Research Files",
     oneLineResult:
-      "Hybrid retrieval with routing and staleness filtering reaches Recall@50 0.938 and nDCG@10 0.493 over a frozen 61-file corpus scored by 136 labeled queries.",
+      "On 300 SciFact queries, hybrid retrieval plus reranking improves paired nDCG@10 by 0.075 over BM25 (95% bootstrap CI 0.053–0.101); the fp16/cap-512 GPU configuration lowers benchmark p50 from 923 to 191 ms with a quality tie.",
     lane: ["ml-engineering"],
     period: "Oct 2024 – Aug 2026",
     status: "shipped",
@@ -417,31 +457,43 @@ export const PROJECTS: Project[] = [
     heroPoster: "/media/metanavit/ask_poster.jpg",
     metrics: [
       {
-        label: "Recall@50 — 136 gold queries, 61-file corpus",
+        label: "SciFact paired nDCG@10 gain over BM25 — 300 queries",
+        value: "+0.075; 95% bootstrap CI [0.053, 0.101]",
+        source: "bench/results/beir_scifact.json",
+        note: "Hybrid RRF plus bge-reranker-v2-m3 over the recorded BM25 baseline, real embedding/reranking models. One dataset and domain; the reranker increment over hybrid alone is a statistical tie.",
+      },
+      {
+        label: "SciFact in-memory GPU benchmark query p50",
+        value: "923 → 191 ms; quality tie",
+        source: "bench/results/beir_scifact.json",
+        note: "fp32 uncapped versus fp16/cap-512 reranker, top 20. Paired nDCG@10 delta +0.002, CI [-0.008, 0.010]. Not end-to-end service latency; CPU uses a different configuration.",
+      },
+      {
+        label: "Historical fixture Recall@50 — 136 queries, 61 files",
         value: "0.938",
         source: "bench/results/latest.json",
-        note: "results[].retrieval for hybrid and every stage after it: 0.9382. Unchanged by rerank, router, or staleness.",
+        note: "Historical hash-embedding/token-overlap fixture, not a live neural-model or large-corpus benchmark. results[].retrieval is 0.9382; unchanged by rerank, router, or staleness.",
       },
       {
-        label: "nDCG@10 — full stack",
+        label: "Historical fixture nDCG@10 — full stack",
         value: "0.493",
         source: "bench/results/latest.json",
-        note: "hybrid+rerank+router+staleness = 0.4926. Requires the staleness tier; overlap rerank alone is 0.4517. The site's wording credits rerank and should name staleness.",
+        note: "Historical hash-embedding/token-overlap fixture: hybrid+rerank+router+staleness = 0.4926; overlap rerank alone is 0.4517. Separate from SciFact neural-model evaluation.",
       },
       {
-        label: "Exact-path nDCG@10 — rerank, then + router (n = 8)",
+        label: "Historical fixture exact-path nDCG@10 — router (n = 8)",
         value: "0.875 → 0.938",
         source: "bench/results/latest.json",
         note: "by_category.exact_path: 0.875 at hybrid+rerank, 0.9375 with the router. The repo README quotes 0.596 → 0.938, a different pair of configs; both are true.",
       },
       {
-        label: "Benchmark scale",
+        label: "Historical fixture scale",
         value: "136 questions over 61 files, 8 categories",
         source: "bench/gold/questions.jsonl",
         note: "File is 136 lines. n_gold and n_files in latest.json agree. No LLM judge.",
       },
       {
-        label: "Graph expansion — the committed negative control",
+        label: "Historical fixture graph expansion — negative control",
         value: "Recall@50 0.938 → 0.986, nDCG@10 0.495 → 0.446",
         source: "bench/results/sweeps.json",
         note: "One hop costs ~6× wall time and loses ranking quality; default stays graph_hops = 0.",
@@ -453,6 +505,10 @@ export const PROJECTS: Project[] = [
     collaboration:
       "MetaNaviT began as a team capstone at klaurie/MetaNaviT, where I am one of seven contributors (40 of 305 commits). This repository is my own later rebuild, and every metric above was measured here, not there.",
     deepLinks: [
+      {
+        label: "SciFact neural-model paired benchmark",
+        url: "https://github.com/joses2017smjh/MetaNavT/blob/main/bench/results/beir_scifact.json",
+      },
       {
         label: "Committed benchmark run",
         url: "https://github.com/joses2017smjh/MetaNavT/blob/main/bench/results/latest.json",
@@ -482,27 +538,52 @@ export const PROJECTS: Project[] = [
     ],
   },
 
-  // ---------------------------------------------------------------------
-  // Below this line: on the site and among the strongest work, but absent
-  // from the six repos named in the brief. Flagged for a keep/cut decision.
-  // ---------------------------------------------------------------------
-
   {
     slug: "isaac-pruning-workflow",
     title: "Vision-Guided Pruning in Isaac Sim",
     oneLineResult:
-      "A UR5e drives from live wrist RGB-D to a gated spur release in Isaac Sim, passing 17 of 17 independent sequence checks and returning home within 0.001 mm.",
+      "Depth-aware appearance checks pass 4/4 targeted low-sun trials and reject genuine occlusion controls; a separate tree1 population passes 2/7, with 199/199 ROS 2 replay decision matches.",
     lane: ["perception", "robotics-rl"],
-    period: "Aug 2026 – Sep 2026",
+    period: "Aug 2026 – present",
     status: "active",
-    heroAsset: "/media/pruning/isaac_two_trees_vision_sequence.mp4",
-    heroPoster: "/media/pruning/isaac_two_trees_vision_sequence.jpg",
+    heroAsset: "/media/pruning/isaac_tree1_v15004_evening_depth_check_pass.mp4",
+    heroPoster: "/media/pruning/isaac_tree1_v15004_evening_depth_check_pass.jpg",
     metrics: [
       {
-        label: "Independent sequence checks passed — job 21328323",
+        label: "Depth-aware appearance variant — targeted low-sun trials",
+        value: "4 / 4 pass 17 / 17 checks",
+        source: "docs/evidence/depth_loop_verdicts_2026-10-02.json",
+        note: "Target 15004, morning/evening, two repeats each. Changed gate uses noise-free, perfectly registered RTX simulator depth; genuine jaw/wire controls stop. Separate from baseline populations.",
+      },
+      {
+        label: "First registered sweep — planned trials",
+        value: "0 / 40; 20 infrastructure errors",
+        source: "docs/evidence/eval_2026-09-23.json",
+        note: "Invalid tree1 registrations account for 20 trials. This planned denominator is not a valid reliability estimate.",
+      },
+      {
+        label: "Later listed tree1 target population",
+        value: "2 / 7",
+        source: "docs/evidence/tree1_listed_2026-09-24.json",
+        note: "Separate registered-target protocol with no infrastructure errors; not the targeted depth-aware variant.",
+      },
+      {
+        label: "Seeded tree1 target population",
+        value: "1 / 30",
+        source: "docs/evidence/perception_round_2026-09-28/tree1-seeded30-20260926.json",
+        note: "Separate sampling protocol; 21 trials refuse their initial layout. Do not pool with listed targets or diagnostic variants.",
+      },
+      {
+        label: "ROS 2 Humble software-in-the-loop decision parity",
+        value: "199 / 199 states; 67 command comparisons within 2 mm",
+        source: "docs/evidence/ros2_sil_parity_2026-09-23.json",
+        note: "Replay of one simulator capture; maximum command difference 1.9954 mm. No physical sensor input or hardware actuation.",
+      },
+      {
+        label: "Selected baseline episode — job 21328323 checks",
         value: "17 / 17",
         source: "docs/evidence/two_tree_summary_2026-09-14.json",
-        note: "Graded from the saved capture, not the renderer's own success label. 11 capture checks also passed.",
+        note: "Graded from the saved capture; one selected episode, not a population success rate. 11 capture checks also passed. Only the public aggregate was rechecked here.",
       },
       {
         label: "Vision commands applied",
@@ -533,6 +614,14 @@ export const PROJECTS: Project[] = [
     siteUrl: `${SITE}/projects/isaac-pruning-workflow`,
     deepLinks: [
       {
+        label: "October 2 depth-aware appearance verdicts",
+        url: "https://github.com/joses2017smjh/isaac-sim-pruning-workflow/blob/develop/docs/evidence/depth_loop_verdicts_2026-10-02.json",
+      },
+      {
+        label: "ROS 2 replay methodology",
+        url: "https://github.com/joses2017smjh/isaac-sim-pruning-workflow/blob/develop/docs/ROS2_SIL.md",
+      },
+      {
         label: "Measured two-tree summary",
         url: "https://github.com/joses2017smjh/isaac-sim-pruning-workflow/blob/develop/docs/evidence/two_tree_summary_2026-09-14.json",
       },
@@ -552,6 +641,8 @@ export const PROJECTS: Project[] = [
       "OpenCV",
       "RGB-D",
       "Time of Flight",
+      "ROS 2",
+      "C++17",
       "USD",
       "Slurm",
     ],
@@ -561,58 +652,54 @@ export const PROJECTS: Project[] = [
     slug: "bhl-robustness-ladder",
     title: "Humanoid Robustness Ladder",
     oneLineResult:
-      "Isaac Full policies pass 379/384 first episodes; separate older frozen-gait MuJoCo tests pass inspection 3/3 and each team size 5/5. Fixed-task simulation evidence, not hardware validation.",
+      "Biped transfer falls in 21/90 unrandomized MuJoCo episodes versus 0/90 with the default; lidar mapping and scripted A* reach 24/24 unseen mazes with oracle pose and goal.",
     lane: ["robotics-rl"],
-    period: "Jun 2026 – Sep 2026",
+    period: "Jun 2026 – present",
     status: "active",
-    heroAsset: "/media/bhl-weekend/inspection-maze.mp4",
-    heroPoster: "/media/bhl-weekend/inspection-maze-frame.png",
+    heroAsset: "/media/bhl/multi_lab.mp4",
+    heroPoster: "/media/bhl/multi_lab.jpg",
     metrics: [
       {
-        label: "New Isaac Full first-episode completions",
-        value: "379/384",
-        source: "docs/WEEKEND_RESULTS_2026-09-20.md",
-        note: "Four sensor arms, three training seeds, 32 first episodes each. Fixed route/layout, noise off; not MuJoCo transfer.",
-      },
-      {
-        label: "MuJoCo ordered inspection completions",
-        value: "3/3",
-        source: "results/weekend-20260919/inspection-maze-gate.json",
-        note: "Older frozen gait, oracle route/localization, simulated sensors. Wrong branch and sensor-outage controls each complete 0/3.",
-      },
-      {
-        label: "MuJoCo fall rate — unrandomized vs repo default",
-        value: "23% vs 0%",
+        label: "Biped MuJoCo falls — no randomization vs default",
+        value: "21 / 90 vs 0 / 90",
         source: "results/flat_summary.csv",
-        note: "Historical flat-ground transfer comparison, 90 episodes per condition. Separate from new Isaac training.",
+        note: "Three trained policies, six commands, and five evaluation seeds per setting. Simulation comparison, not hardware locomotion.",
       },
       {
-        label: "Two- and three-robot airlock completions",
-        value: "5/5 each",
-        source: "results/weekend-20260919/SUMMARY.md",
-        note: "Older frozen gait and scripted team supervisor in shared MuJoCo physics. Navigation, not carrying; both controls 0/5 for each team size.",
+        label: "Biped unseen-maze completion — 5×5 and 6×6",
+        value: "24 / 24; no falls or wall contacts",
+        source: "docs/RANDOM_MAZE.md",
+        note: "Two 12-layout conditions. Learned gait, lidar-built map, scripted A*, oracle pose and goal; not learned navigation.",
       },
       {
-        label: "Historical cooperative-carry failure",
-        value: "About 41 cm humanoid collapse before cube contact",
-        source: "docs/FINDINGS.md",
-        note: "A reward exploit, not a stable cooperative lift.",
+        label: "Qualified 22-DoF humanoid — fresh 6×6 mazes",
+        value: "12 / 12",
+        source: "results/maze-humanoid-20260928/humanoid-hard-6x6/summary.json",
+        note: "One qualified checkpoint; separate from the biped populations. Scripted mapping/planning uses oracle pose and goal.",
       },
       {
-        label: "Rough terrain fall rate — 22-DoF vs biped at d = 1.0",
-        value: "11.7% vs 37.8%",
-        source: "docs/REPORT.md",
-        note: "Finding 3. An 11× reduction against the randomization-only biped.",
+        label: "Hard mazes — 35% lidar packet dropout",
+        value: "12 / 12 goals; 11 / 12 without wall contacts",
+        source: "results/maze-robust-20260926/dropout35-hard-6x6/summary.json",
+        note: "Separate sensor-dropout condition; do not pool with nominal clean navigation.",
+      },
+      {
+        label: "October 2 actor-clock recipe qualification",
+        value: "FAIL; 1 / 3 seeds qualifies",
+        source: "results/repo-gpu-20260923/turngait-r12-20261001/verdict/R1.json",
+        note: "Turning improves across three seeds, but only one also passes unchanged straight-walk and push qualification; the recipe requires two.",
+      },
+      {
+        label: "October 2 critic-only clock control",
+        value: "FAIL; 0 / 3 seeds qualifies",
+        source: "results/repo-gpu-20260923/turngait-r12-20261001/verdict/R2.json",
+        note: "Negative control; turning alone does not establish a qualified locomotion recipe.",
       },
     ],
     repoUrl: "https://github.com/joses2017smjh/bhl-robustness-ladder",
     repoBranch: "main",
     siteUrl: `${SITE}/projects/bhl-robustness-ladder`,
     deepLinks: [
-      {
-        label: "Weekend campaign results and limits",
-        url: "https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WEEKEND_RESULTS_2026-09-20.md",
-      },
       {
         label: "Findings ledger, retractions included",
         url: "https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FINDINGS.md",
@@ -622,8 +709,12 @@ export const PROJECTS: Project[] = [
         url: "https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/REPORT.md",
       },
       {
-        label: "Per-arm episode results",
-        url: "https://github.com/joses2017smjh/bhl-robustness-ladder/tree/main/results/arms",
+        label: "Lidar-mapped navigation",
+        url: "https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/RANDOM_MAZE.md",
+      },
+      {
+        label: "October 2 actor-clock verdict",
+        url: "https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/repo-gpu-20260923/turngait-r12-20261001/verdict/R1.json",
       },
     ],
     stack: [
@@ -639,47 +730,53 @@ export const PROJECTS: Project[] = [
 
   {
     slug: "isaac-folding",
-    title: "Bimanual Garment Folding: Research in Progress",
+    title: "Bimanual Garment Folding in Isaac Sim",
     oneLineResult:
-      "Strict short-pants evaluation scores baseline 8/24 versus adapted seed 1 3/24, with no improvement. Only 5/12 full class/checkpoint cells completed.",
+      "Paired v8 evaluation improves H10 settled folds to 9/16 from 2/16, but H50 drops to 6/16 from 8/16; the checkpoint promotion gate fails and the baseline is retained.",
     lane: ["robotics-rl", "perception"],
     period: "Aug 2026 – present",
     status: "active",
-    heroAsset: "/media/folding/folding-policy-success.mp4",
-    heroPoster: "/media/folding/folding-policy-success.png",
+    heroAsset: "/media/folding/policy-fold-success.mp4",
+    heroPoster: "/media/folding/policy-fold-success.jpg",
     metrics: [
       {
-        label: "Strict short-pants baseline vs adapted seed 1",
-        value: "8/24 vs 3/24",
-        source: "EXTERNAL: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/CLOTH_FOLDING_WEEKEND.md",
-        note: "Fresh-camera evaluation, matching pose set; no measured adaptation improvement. Historical video is not evidence for these scores.",
+        label: "v8 settled-fold outcome — H10 candidate vs baseline",
+        value: "9 / 16 vs 2 / 16",
+        source: "campaigns/20260926-anchor-diagnostic-v8/ledger/driver_state.json",
+        note: "600 actions plus 60-step settle; H10 replans after 10 actions of a 50-action chunk. Eight reused development poses, shared-seed repeats, anchor overlap, and GPU effects limit generalization.",
       },
       {
-        label: "Unseen short-pants garments, both checkpoints",
-        value: "0 of 4",
-        source: "EXTERNAL: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/CLOTH_FOLDING_WEEKEND.md",
-        note: "Do not generalize this class-specific comparison to other garments.",
+        label: "v8 settled-fold outcome — H50 candidate vs baseline",
+        value: "6 / 16 vs 8 / 16",
+        source: "campaigns/20260926-anchor-diagnostic-v8/ledger/driver_state.json",
+        note: "H50 executes the full 50-action chunk and is the shipped configuration. Long-horizon non-regression fails despite the H10 improvement.",
       },
       {
-        label: "Completed full class/checkpoint evaluation cells",
-        value: "5/12",
-        source: "EXTERNAL: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WEEKEND_CAMPAIGN.md",
-        note: "Remaining cells failed or timed out; incomplete evidence is not a successful sweep.",
+        label: "v8 valid scored episodes and promotion verdict",
+        value: "64 / 64 valid; FAIL; baseline retained",
+        source: "campaigns/20260926-anchor-diagnostic-v8/REPORT.md",
+        note: "Latest completed paired study, September 27; confirmatory set unspent. Episode validity is separate from fold success. Later v9 status has no completed outcome.",
+      },
+      {
+        label: "Historical short-pants checker-pass sweep",
+        value: "2 / 8 transient passes",
+        source: "results/outcome_sweep.tsv",
+        note: "Earlier checkpoint and ever-triggered/latched checker metric; not the final settled-fold endpoint. Hero media shows a historical selected transient checker pass, separate from v8.",
       },
     ],
     repoUrl: "https://github.com/joses2017smjh/IsaacSimFolding",
     repoBranch: "main",
     siteUrl: `${SITE}/projects/isaac-folding`,
     collaboration:
-      "Research implementation of an external method. Contribution: Isaac Sim integration, observation diagnostics, and evaluation workflow. No verified reproduction of the original challenge performance or challenge placement is claimed.",
+      "I built the Isaac Sim port, observation path, domain-gap diagnostics, recovery-training adaptations, and paired evaluation drivers. SmolVLA, robot and garment assets, and the challenge checker are upstream components.",
     deepLinks: [
       {
-        label: "Strict evaluation and camera failure analysis",
-        url: "https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/CLOTH_FOLDING_WEEKEND.md",
+        label: "Historical transient checker-pass sweep",
+        url: "https://github.com/joses2017smjh/IsaacSimFolding/blob/main/results/outcome_sweep.tsv",
       },
       {
-        label: "Action fidelity at 30k steps",
-        url: "https://github.com/joses2017smjh/IsaacSimFolding/blob/main/results/action_fidelity_030000.json",
+        label: "Latest completed paired study",
+        url: "https://github.com/joses2017smjh/IsaacSimFolding/blob/main/campaigns/20260926-anchor-diagnostic-v8/REPORT.md",
       },
       {
         label: "Long-form method notes",
