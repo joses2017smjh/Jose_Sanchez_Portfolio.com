@@ -211,7 +211,7 @@ export const humanoid = {
       src: "/media/humanoid-vr/quest-vr-teleop.mp4",
       poster: "/media/humanoid-vr/quest-vr-teleop.jpg",
       alt: "Quest VR developer workspace, arm calibration, stereo feedback and physical arm control.",
-      caption: "1 Oct recording — 10 s preview: developer panels, calibration and physical arm control. Panel overview combines separate recording frames.",
+      caption: "1 Oct recording — 20 s preview: developer panels, calibration and physical arm control. Panel overview combines separate recording frames.",
     },
   ],
 } as const;
