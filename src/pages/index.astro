@@ -13,15 +13,23 @@ const other = projects.filter((p) => !p.data.featured);
 <Base title={`${site.name} — Robotics & Perception Engineer`} description={`${site.positioning} ${site.seeking}`} full>
   <div class="portfolio-home">
     <section class="portfolio-hero" id="about" aria-labelledby="hero-title">
-      <p class="eyebrow">Jose Sanchez Gonzalez · M.S. Artificial Intelligence</p>
-      <h1 id="hero-title">{site.positioning}</h1>
-      <p class="hero-role">{site.seeking}</p>
-      <p class="hero-intro">See perception drive a pruning arm, VR control a physical humanoid, and measured policy evaluation across simulators. Each case study links the demo to code and results.</p>
-      <ul class="link-row hero-actions">
-        <li><a class="button-link" href="#projects">Explore selected work</a></li>
-        <li><a href={resume.links.pdf}>Download résumé <span class="file-type">PDF</span></a></li>
-        <li><a href={`mailto:${site.email}`}>Get in touch</a></li>
-      </ul>
+      <div class="hero-copy">
+        <p class="eyebrow">Jose Sanchez Gonzalez · M.S. Artificial Intelligence</p>
+        <h1 id="hero-title">{site.positioning}</h1>
+        <p class="hero-role">{site.seeking}</p>
+        <p class="hero-intro">See perception drive a pruning arm, VR control a physical humanoid, and measured policy evaluation across simulators. Each case study links the demo to code and results.</p>
+        <ul class="link-row hero-actions">
+          <li><a class="button-link" href="#projects">Explore selected work</a></li>
+          <li><a href={resume.links.pdf}>Download résumé <span class="file-type">PDF</span></a></li>
+          <li><a href={`mailto:${site.email}`}>Get in touch</a></li>
+        </ul>
+      </div>
+      <aside class="hero-details" aria-label="Education and tools">
+        <h2>Education</h2>
+        {resume.education.map((e) => <p><strong>{e.degree}</strong><br />{e.school} · {e.when}</p>)}
+        <h2>Tools I use</h2>
+        <p>Python, C++, PyTorch, FastAPI, Docker, PostgreSQL, Isaac Sim, MuJoCo, and Slurm.</p>
+      </aside>
     </section>
 
     <section class="work-section" id="projects" aria-labelledby="work-title">
@@ -64,12 +72,6 @@ const other = projects.filter((p) => !p.data.featured);
           <li><a href={resume.links.linkedin}>LinkedIn</a></li>
           <li><a href="https://github.com/joses2017smjh">GitHub profile</a></li>
         </ul>
-      </div>
-      <div class="background-details">
-        <h3>Education</h3>
-        {resume.education.map((e) => <p><strong>{e.degree}</strong><br />{e.school} · {e.when}</p>)}
-        <h3>Tools I use</h3>
-        <p>Python, C++, PyTorch, FastAPI, Docker, PostgreSQL, Isaac Sim, MuJoCo, and Slurm.</p>
       </div>
     </section>
 
