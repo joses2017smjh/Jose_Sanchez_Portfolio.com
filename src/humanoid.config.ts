@@ -210,8 +210,8 @@ export const humanoid = {
       kind: "video" as const,
       src: "/media/humanoid-vr/quest-vr-teleop.mp4",
       poster: "/media/humanoid-vr/quest-vr-teleop.jpg",
-      alt: "Jose wearing a Quest headset and moving controllers beside the physical humanoid arms.",
-      caption: "1 Oct — Quest headset feedback and physical arm control; selected montage excerpt.",
+      alt: "Quest VR developer workspace, arm calibration, stereo feedback and physical arm control.",
+      caption: "1 Oct recording — 10 s preview: developer panels, calibration and physical arm control. Panel overview combines separate recording frames.",
     },
   ],
 } as const;

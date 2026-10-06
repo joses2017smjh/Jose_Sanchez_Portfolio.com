@@ -33,11 +33,11 @@ links:
   href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/RANDOM_MAZE.md
 - label: Latest actor-clock verdict
   href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/repo-gpu-20260923/turngait-r12-20261001/verdict/R1.json
-video: /media/bhl/multi_lab.mp4
-poster: /media/bhl/multi_lab.jpg
-image: /media/bhl/multi_lab.jpg
-alt: Four humanoid policies run the same MuJoCo obstacle course; one falls while the others continue.
-figcaption: Four policies in one MuJoCo world. A selected rollout illustrates the transfer evaluation.
+video: /media/bhl/random-maze-humanoid-sensors.mp4
+poster: /media/bhl/random-maze-humanoid-sensors.jpg
+image: /media/bhl/random-maze-humanoid-sensors.jpg
+alt: A simulated humanoid navigates a maze beside lidar mapping, stereo, optical-flow and IMU panels.
+figcaption: 'MuJoCo maze: learned gait + scripted A*, oracle pose/goal, 5× playback. Selected rollout with sensor panels.'
 sections:
 - heading: Transfer inverts the training-reward ranking
   body: The flat-ground comparison covers five settings and three trained policies per setting. The default
@@ -62,14 +62,20 @@ sections:
     alt: Corrected downward stereo pose versus the earlier upside-down camera on terrain.
     caption: After the quaternion fix, 16×16 stereo reaches terrain level 0.88.
 - heading: Mapping and planning, with oracle state
-  body: 'The biped reaches 24/24 unseen 5×5 and 6×6 mazes without falls or wall contacts. A qualified
-    22-DoF humanoid reaches 12/12 fresh 6×6 layouts. Learned gait drives the robot; scripted A* uses
-    a lidar-built map and oracle pose/goal. These results do not establish learned navigation or hardware transfer.'
+  body: 'Learned gait + scripted A*: biped 24/24 unseen 5×5/6×6 mazes without falls or wall contacts;
+    humanoid 12/12 fresh 6×6 layouts. Lidar builds the map; 8×8 ray-cast depth drives the brake;
+    pose/goal are oracle. Stereo RGB/rendered depth, flow and IMU are display-only. Simulation results;
+    the hero illustrates one checkpoint.'
 - heading: Turning improves; the combined recipe still fails
   body: 'Actor-visible gait-clock input enables turns across three training seeds. Only one also passes
     straight-walk and push qualification; the recipe requires two. Critic-only input qualifies zero.
     The October 2 verdict preserves that failure instead of promoting on turning alone.'
-date: 2026-10-02
+  figures:
+  - image: /media/bhl/turngait-clock-actor-vs-critic.mp4
+    poster: /media/bhl/turngait-clock-actor-vs-critic.jpg
+    alt: Two simulated humanoids receive the same turn command; the actor-clock policy turns farther.
+    caption: 'Same turn command, selected seeds, real time. Recipe gate fails: actor clock 1/3 qualified; critic-only 0/3.'
+date: 2026-10-05
 order: 4
 featured: true
 focus: Policy evaluation / Sim-to-sim
