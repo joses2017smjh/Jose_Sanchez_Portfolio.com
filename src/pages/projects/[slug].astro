@@ -58,7 +58,7 @@ for (const s of sections) {
 
 <Base title={`${title} — Jose Sanchez Gonzalez`} description={summary}>
   <ScrollRuler />
-  <p class="meta"><a href="/#projects">&larr; Index</a></p>
+  <p class="meta"><a href={project.data.track === "ai" ? "/#ai-software" : "/#projects"}>&larr; Selected work</a></p>
   <h1>{title}</h1>
   <p class="detail-summary">{summary}</p>
   <nav class="project-links" aria-label="Project resources">
@@ -79,18 +79,25 @@ for (const s of sections) {
     eager
   />
 
+  <section class="project-outcome" aria-labelledby="result-title">
+    <h2 id="result-title">Result & current limits</h2>
+    <p>{result}</p>
+  </section>
+
   <h2>Problem</h2>
   <p>{problem}</p>
 
-  <h2>Approach</h2>
+  <h2>Solution</h2>
   <p>{approach}</p>
 
   <h2>What I built</h2>
   <p>{contribution}</p>
 
-  <h2>Result</h2>
-  <p>{result}</p>
+  <h2>Technologies</h2>
+  <TagList tags={tags} />
 
+  <details class="project-details">
+    <summary>More demos, engineering decisions, and evaluation notes</summary>
   {
     diagram && (
       <>
@@ -148,9 +155,7 @@ for (const s of sections) {
   <div class="prose">
     <Content />
   </div>
-
-  <h2>Stack</h2>
-  <TagList tags={tags} />
+  </details>
 
   {
     (repo || paper || demo || links.length > 0) && (
@@ -167,4 +172,32 @@ for (const s of sections) {
       </>
     )
   }
+
+  <script>
+    // Existing links to MDX headings must reveal their collapsed evidence.
+    function revealLinkedEvidence() {
+      let id;
+      try {
+        id = decodeURIComponent(window.location.hash.slice(1));
+      } catch {
+        return;
+      }
+      const target = id && document.getElementById(id);
+      if (!target) return;
+
+      let ancestor = target.parentElement;
+      let opened = false;
+      while (ancestor) {
+        if (ancestor instanceof HTMLDetailsElement && !ancestor.open) {
+          ancestor.open = true;
+          opened = true;
+        }
+        ancestor = ancestor.parentElement;
+      }
+      if (opened) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+    }
+
+    revealLinkedEvidence();
+    window.addEventListener("hashchange", revealLinkedEvidence);
+  </script>
 </Base>

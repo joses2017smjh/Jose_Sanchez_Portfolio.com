@@ -1,14 +1,16 @@
 ---
-title: Agentic Match Forecasting
-summary: A forecasting prototype connecting probability models, MCP tools, and a reviewable agent workflow.
+title: Agentic Soccer MCP
+summary: Inspect match forecasts, model uncertainty, and the tool calls behind an agent’s analysis.
 problem: A forecast interface needs consistent probabilities, visible uncertainty, and traceable inputs.
   An agent also needs clear boundaries between generating an analysis and acting on a recommendation.
 approach: Combined XGBoost, calibration, and prediction sets with a Dixon-Coles score grid. A FastAPI
-  gateway connects a LangGraph orchestrator to three MCP servers; a separate simulator evaluates staking
+  gateway connects a LangGraph orchestrator to MCP data and prediction tools; a separate simulator evaluates staking
   policies and reward behavior.
-result: The historical World Cup report records 0.9013 log loss and 62.7% accuracy on 102 matches with
-  pre-tournament training. The served artifact and upstream tool backends are demos. Historical calibration
-  splits still need stronger isolation.
+result: >-
+  Published EPL walk-forward report, 1,520 matches: model log loss 1.0229 versus
+  1.0652 naive and 0.9407 closing market (lower is better). Coverage is 86.9%
+  against a 90% target. The hosted app uses a synthetic model and demo backends;
+  historical results are a separate evaluation.
 tags:
 - Python
 - LangGraph
@@ -23,7 +25,7 @@ repo: https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP
 demo: https://agentic-soccer-match-prediction-mcp.vercel.app
 links:
 - label: Technical report
-  href: https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP/blob/main/docs/REPORT_DRAFT.md
+  href: https://github.com/joses2017smjh/Agentic-Soccer-Match-Prediction-MCP/blob/main/docs/backtest_epl.md
 image: /media/soccer/ui-league-hub.jpg
 alt: Demo agent console showing a match analysis and the supporting tool-call trace.
 figcaption: Demo-data agent walkthrough. Displayed timings are not an independently measured live-service
@@ -53,9 +55,9 @@ sections:
 date: 2026-08-24 00:00:00+00:00
 order: 7
 featured: false
+track: ai
 focus: Agent systems / Applied ML
-evidence: 'Historical World Cup report: 62.7% accuracy across 102 matches; served application uses demo
-  data.'
+evidence: "Reviewable MCP tool traces and probability models. The served app uses demo data; historical model results are separate."
 contribution: Built the modeling pipeline, MCP orchestration, approval flow, deterministic agent evaluations,
   and NumPy GRPO experiments. Separated application demo artifacts from historical forecast reports.
 video: /media/soccer/agent_console.mp4

@@ -56,6 +56,11 @@ last executed. State unavailable dependencies instead of promising a universal s
 Document container/service/HPC execution, configuration, inputs, output locations,
 resource bounds, and failure handling. Keep credentials out of examples.
 
+## Next steps
+
+Name one or two concrete unvalidated milestones. Keep queued jobs and dated run
+status in a separate log; do not promote plans into results.
+
 ## Stack and project layout
 
 List only technologies used by the code. Link the important directories and
@@ -66,3 +71,12 @@ Before publishing, run the displayed lightweight commands, resolve local links,
 and check that every public metric has a named source. Training reruns are not
 necessary for a documentation edit; report whether numbers were remeasured or
 read from existing artifacts.
+
+## Readability check
+
+- First screen: what it does, a working visual, and a clearly labelled result or status.
+- Keep the main README near 600–900 words when the setup allows it; use linked guides for research history.
+- Use outcome headings and short tables for comparable results, with definitions and denominators.
+- State personal contribution and upstream/team ownership.
+- Put limitations beside the affected claim.
+- Preserve repository URLs; use clearer display names before considering a rename.

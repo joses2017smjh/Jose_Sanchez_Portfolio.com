@@ -5,11 +5,11 @@
 export const site = {
   name: "Jose Sanchez Gonzalez",
   positioning:
-    "I build robot perception, control, and simulation.",
-  seeking: "Seeking robotics software, AI/ML, and computer vision engineering roles.",
+    "I build robot perception and AI software.",
+  seeking: "Seeking robotics, computer vision, and AI/software engineering roles.",
   bio: [
-    "I connect perception to robot behavior: RGB-D pruning control, metric-depth inference, humanoid policy evaluation, and Quest VR arm teleoperation on my Berkeley Humanoid Lite build. I also build retrieval tools with source tracing and measured evaluations.",
-    "M.S. in Artificial Intelligence and B.S. in Computer Science, Oregon State University. My project pages show what I built, how I tested it, and what still needs work.",
+    "My robotics work connects perception to action through RGB-D control, metric-depth inference, humanoid policy evaluation, and physical arm teleoperation. My AI software work covers agentic retrieval and MCP tools with traceable results.",
+    "I earned an M.S. in Artificial Intelligence and a B.S. in Computer Science at Oregon State University. Each case study shows my contribution, the evidence, and the remaining limitations.",
   ].join(" "),
   email: "josejsanchez20172@gmail.com",
   links: [

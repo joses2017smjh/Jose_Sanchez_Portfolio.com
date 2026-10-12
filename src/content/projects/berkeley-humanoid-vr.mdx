@@ -1,16 +1,15 @@
 ---
-title: "Berkeley Humanoid Lite: Quest VR Teleoperation"
-summary: "Quest 2 controller poses drive simulated and physical humanoid arms, with feedback inside the headset."
+title: "Berkeley Humanoid VR"
+summary: "Quest controllers drive physical humanoid arms through inverse kinematics and calibrated CAN commands."
 problem: >-
-  A headset demo needs a complete path to the robot: tracked poses, inverse kinematics,
-  calibrated joint commands, motion gating, and feedback. My self-built Berkeley Humanoid
-  Lite also needed an interface that matched its actual arm wiring and torque limits.
+  Quest controllers need a reliable path from tracked poses to calibrated robot joints.
+  My Berkeley Humanoid Lite build also needed motion gating and an interface matched
+  to its arm wiring and torque limits.
 approach: >-
-  Replaced the upstream Vive input with Quest 2 WebXR. A Python bridge sends controller
-  poses to Pink/Pinocchio IK and SocketCAN arm drivers. The same interface runs with an
-  offline joint model or physical arms. Added joint-specific gravity feedforward, held-grip
-  motion gating, calibration panels, and camera/lidar/IMU feedback. Per-eye monocular
-  relative depth and optical flow are operator overlays, not metric stereo or control inputs.
+  Connected Quest WebXR to Pink/Pinocchio inverse kinematics and SocketCAN arm drivers
+  through a Python bridge. Added per-joint gravity feedforward, held-grip motion gating,
+  and calibration tools. The same interface supports an offline arm model and physical
+  hardware; camera, lidar, IMU, and relative-depth overlays give the operator feedback.
 contribution: >-
   Built my physical Berkeley Humanoid Lite and calibrated its ten arm joints, then
   implemented the Quest interface, bridge, arm supervisor, tuning, diagnostics, and sensor panels. The robot
@@ -38,8 +37,8 @@ figcaption: "19 s: teleop → summary → developer/sensors → calibration. Ste
 date: 2026-10-05
 order: 1
 featured: true
-focus: "Robot control / Hardware integration / VR"
-evidence: "Physical arm demonstration; ten calibrated joints. One wrist's ±10° step test reaches 90% in 0.23–0.25 s."
+focus: "Robot control / Hardware integration"
+evidence: "Physical arm teleoperation; calibration recorded for all ten arm joints."
 sections:
   - heading: One interface, two backends
     body: >-

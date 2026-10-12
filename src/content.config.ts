@@ -16,6 +16,7 @@ const projects = defineCollection({
     // What it does, not how. One line.
     summary: z.string().max(120),
     featured: z.boolean().default(false),
+    track: z.enum(["robotics", "ai", "coursework"]).default("robotics"),
     focus: z.string().max(60),
     contribution: z.string().max(400),
     evidence: z.string().max(180),

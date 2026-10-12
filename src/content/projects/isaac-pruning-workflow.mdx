@@ -1,20 +1,20 @@
 ---
-title: Vision-Guided Pruning in Isaac Sim
-summary: UR5e live RGB-D approach, gated spur release, and home return in a two-tree Blender orchard.
-problem: A pruning arm has to approach a thin branch from wrist RGB-D and dual ToF, then release only
-  when tracking and geometry still agree. Jaw occlusion can wipe out image features at the worst moment.
-  A finished recording is not a finished cut, so failed tracking and failed closure stay in the public
-  record.
-approach: The original UR5e and mock pruner run in Isaac Sim 6.0 / Isaac Lab 3 among both source Blender
-  trees, exported to USD with bark maps and collisions. Seeded pyramidal Lucas–Kanade tracking back-projects
-  RTX optical-Z depth into bounded Cartesian commands. Dual 8×8 ray-cast ToF, contact, and geometry gates
-  must pass before a visual-jaw surrogate releases one rigid spur. An independent grader checks the saved
-  capture rather than the renderer’s success label. Branch identity, axis, and radius come from mesh metadata,
-  not a learned detector.
-contribution: I built the Isaac capture loop, live RGB-D controller, release gates, independent sequence
-  grader, and the published success and failure recordings. The robot, orchard meshes, and sensor frames
-  come from pinned upstream sources. This repository composes them, evaluates selected and registered targets, and keeps
-  failed runs visible.
+title: Vision-Guided Pruning
+summary: Follow a branch with wrist RGB-D, verify contact and geometry, then release a simulated spur.
+problem: >-
+  A pruning arm must keep a thin branch in view and stop when tool occlusion or lost
+  tracking makes release unreliable. A convincing recording alone cannot establish
+  that the cut conditions were met.
+approach: >-
+  Built a wrist RGB-D controller in Isaac Sim using Lucas–Kanade tracking and bounded
+  Cartesian commands. Dual ToF, contact, and geometry checks gate a rigid-spur release;
+  a separate grader checks the saved sequence. Depth is simulator ground truth, and
+  branch identity comes from mesh metadata. This is a control study, not a learned
+  detector or a wood-fracture simulation.
+contribution: >-
+  I built the capture loop, RGB-D controller, release gates, independent grader, and
+  success/failure recordings. The robot, orchard meshes, and sensor frames come from
+  pinned upstream sources.
 result: 'October 2: depth-aware appearance checks complete 4/4 targeted low-sun trials while rejecting
   genuine occlusion controls. A separate valid tree1 population passes 2/7. ROS 2 replay reproduces
   199/199 decision states from one capture. Simulator ground-truth depth and rigid-piece release.'
@@ -41,10 +41,10 @@ poster: /media/pruning/isaac_tree1_v15004_evening_depth_check_pass.jpg
 image: /media/pruning/isaac_tree1_v15004_evening_depth_check_pass.jpg
 alt: Isaac Sim dashboard of a UR5e completing the targeted evening pruning sequence with a depth-aware appearance check.
 figcaption: 'October 2: targeted evening pass with depth-aware appearance checks; one of four low-sun trials.'
-focus: Robotics / Simulation / Perception
-evidence: 'Depth-aware low-sun diagnostic: 4/4 targeted passes. Genuine occlusions stop; a separate population passes 2/7.'
+focus: Robot perception / Closed-loop control
+evidence: '4/4 targeted low-sun trials; 2/7 on a separate target population. Simulation with ground-truth depth.'
 date: 2026-10-02
-order: 2
+order: 3
 featured: true
 sections:
 - heading: Keep the failure next to the success

@@ -1,14 +1,13 @@
 ---
-title: 'MetaNaviT: Retrieval over Research Files'
-summary: Find the current configuration, trace the supporting files, and review proposed changes before
-  applying them.
+title: "MetaNaviT: Agentic RAG over Research Files"
+summary: Find the current file, trace the evidence, and review proposed changes before an agent applies them.
 problem: Research folders contain active configs, archived drafts, logs, and checkpoints. Finding a plausible
   answer is easier than identifying the current file and returning traceable evidence.
 approach: Combined BM25 and dense retrieval with reciprocal rank fusion, query routing, staleness filtering,
-  and typed graph traversal. Exposed search and proposed filesystem changes through an MCP interface.
+  and source tracing. Exposed search and proposed filesystem changes through an MCP interface.
 result: 'SciFact, 300 queries: hybrid retrieval plus reranking improves paired nDCG@10 by 0.075
-  (95% bootstrap CI 0.053–0.101) over the recorded baseline. The fp16/cap-512 GPU configuration
-  cuts in-memory benchmark query p50 from 923 to 191 ms with a quality tie.'
+  (95% bootstrap CI 0.053–0.101) over BM25. The fp16/cap-512 GPU configuration
+  cuts in-memory benchmark query p50 from 923 to 191 ms with no statistically detected ranking change.'
 tags:
 - Python
 - FastAPI
@@ -16,7 +15,6 @@ tags:
 - pgvector
 - RAG
 - BM25
-- GraphRAG
 - MCP
 - Docker
 repo: https://github.com/joses2017smjh/MetaNavT
@@ -46,9 +44,11 @@ sections:
 date: 2026-10-02
 order: 6
 featured: false
-focus: RAG / Retrieval engineering
-evidence: 'SciFact, 300 queries: paired nDCG@10 gain +0.075, 95% CI [0.053, 0.101].'
-contribution: Implemented retrieval stages, query routing, evaluation fixtures, and approval-gated file
-  operations. Kept backend choices explicit so the lightweight benchmark can run independently of downloaded
-  embedding models.
+track: ai
+focus: Agentic RAG / Software engineering
+evidence: 'SciFact, 300 queries: nDCG@10 gain +0.075 over BM25, 95% CI [0.053, 0.101].'
+contribution: >-
+  Owned retrieval and data APIs on the original six-person team. Independent 2026
+  extensions add experiment-file provenance, external retrieval evaluations,
+  service-load measurements, and signed approval grants for file operations.
 ---

@@ -1,19 +1,15 @@
 ---
-title: Bimanual Garment Folding in Isaac Sim
-summary: >-
-  Port a camera-driven VLA into Isaac Sim and gate fine-tunes with paired settled-fold evaluations.
+title: Bimanual Garment Folding
+summary: Run a camera-driven VLA in Isaac Sim and promote fine-tunes only after paired fold evaluations.
 problem: >-
-  A folding policy is easy to fool: replaying a demonstration looks like success, and a
-  renderer that crashes looks like a modelling failure. The task needs a scorer nobody
-  tuned, held-out garment poses, and a clear line between the policy acting and a
-  demonstration being played back.
+  A cloth-folding policy can appear successful during a demonstration replay or a
+  transient fold. Evaluation needs actual policy actions, held-out poses, and a
+  checker that scores the garment after it settles.
 approach: >-
-  Ported SmolVLA to PhysX cloth with three rasterised camera views and direct joint targets.
-  Built recovery supervision, renderer-domain diagnostics, and source-pinned paired evaluations.
-  Candidate and baseline run interleaved; the challenge checker scores folds after 600 actions
-  and a 60-step settle. H10 replans after 10 actions; H50 executes the full 50-action chunk.
-  Storm observations avoid the pinned RTX renderer crash. Demonstration replay stays separate
-  from policy execution.
+  Ported SmolVLA to PhysX cloth using three camera views and direct joint targets.
+  Added recovery supervision and paired candidate/baseline evaluations with pinned
+  source. The challenge checker scores after 600 actions and a settling period.
+  Compared replanning every 10 actions with the full 50-action deployment chunk.
 contribution: >-
   I built the simulator port, observation path, failure diagnostics, recovery-training
   adaptations, and paired evaluation drivers. Robot assets, garment assets, the challenge
@@ -62,7 +58,7 @@ date: 2026-10-02
 order: 5
 featured: true
 focus: VLA / Imitation learning
-evidence: "v8: H10 9/16 vs 2/16; shipped H50 6/16 vs 8/16. Release gate fails; baseline retained."
+evidence: "Short-horizon gain fails the full promotion gate at the deployment horizon. Baseline retained."
 sections:
   - heading: What both arms see
     body: >-

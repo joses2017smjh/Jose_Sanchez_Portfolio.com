@@ -1,15 +1,16 @@
 ---
-title: Vision-Based Metric Depth Estimation for Robotic Pruning
-summary: Synthetic orchard depth models, multi-view refinement, and an API that returns depth in metres.
+title: "SPUR: Metric Depth for Robotics"
+summary: Estimate orchard depth and reconstruct branch geometry with RGB-D models, ONNX export, and an inference API.
 problem: >-
   Thin branches make metric-depth estimation difficult: small geometric errors can move a
   proposed cut away from the target. The project uses a synthetic orchard with known depth and camera
   geometry to compare models before attempting field validation.
-approach: 'Rendered a synthetic orchard in Blender: RGB, per-pixel ground-truth depth, masks, and full
-  camera intrinsics and extrinsics for dormant apple trees. Benchmarked monocular, scale-calibrated, fine-tuned,
-  and multi-view RGB-D models under one protocol — 10 trees, 5 seeds, a fixed frame budget, one design
-  change at a time. A DINOv2 RGB+D model refines fine-tuned monocular depth across three stereo pairs.
-  Built a containerized inference service, split ONNX export, and hardware-specific refiner benchmarks.'
+approach: >-
+  Rendered orchard RGB, depth, masks, and camera poses in Blender. Compared monocular
+  depth and multi-view refiners under a fixed synthetic protocol. A DINOv2 RGB-D model
+  refines depth across three stereo pairs. Packaged inference in FastAPI with split
+  ONNX export and calibrated 3D reconstruction. A separate BranchNet pipeline predicts
+  3D branch graphs from RGB-D; real-orchard generalization remains unverified.
 result: 'Five saved best-validation scores: 0.0445 ± 0.0057 m trunk RMSE with three-pair DINOv2 RGB+D
   refinement. A seed-1 re-render scores 0.0467 m. V100 fp16 refiner-only p50: 156 ms, excluding DA2
   and HTTP. Synthetic evaluation; real-orchard accuracy remains unverified.'
@@ -106,10 +107,10 @@ paperStrip:
   pages: /media/papers/cap-page-{n}.jpg
   count: 11
 date: 2026-06-01
-order: 3
+order: 2
 featured: true
 focus: Computer vision / Metric depth
-evidence: 'Five stored best-validation scores: 0.0445 ± 0.0057 m trunk RMSE. Seed-1 re-render: 0.0467 m.'
+evidence: '0.0445 ± 0.0057 m trunk RMSE across five stored best-validation scores. Synthetic data; field accuracy unverified.'
 contribution: Built the synthetic orchard, the evaluation protocol, DINOv2 RGB-D refinement, and the FastAPI/ONNX
   service. Real orchard accuracy is not claimed.
 ---

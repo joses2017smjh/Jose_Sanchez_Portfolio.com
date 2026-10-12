@@ -3,13 +3,12 @@
 Personal portfolio site. Astro + TypeScript, MDX content collections, real CSS
 with custom properties, no client framework. Deployed on Vercel.
 
-[Live portfolio](https://jose-sanchez-portfolio-com.vercel.app) · [Project README template](docs/PROJECT_README_TEMPLATE.md) · [Demo shot lists](docs/DEMO_SHOT_LISTS_2026-10-02.md)
+[Live portfolio](https://jose-sanchez-portfolio-com.vercel.app) · [Project README template](docs/PROJECT_README_TEMPLATE.md) · [Demo shot lists](docs/DEMO_SHOT_LISTS.md) · [Refresh audit](docs/PORTFOLIO_REFRESH_2026-10-12.md)
 
-The October 2 refresh features Berkeley Humanoid VR arm teleoperation, robotic
-pruning, depth refinement, humanoid simulation, and deformable-object folding.
-Each case study links to the code and evidence behind its results. Hardware
-integration, simulation evaluations, and stored validation scores are identified
-in the project copy. The résumé downloads use the same verified project claims.
+The October 12 refresh provides two paths: robotics and computer vision, plus
+AI/software and agentic RAG. Seven visual case studies connect working demos
+to source code, evaluations, and current limits. Project pages lead with results;
+long engineering notes expand on demand. [Validation](docs/VALIDATION_2026-10-12.md).
 
 ## Reproduce on any machine
 
@@ -23,12 +22,13 @@ nvm use            # or install Node >= 20.3 (version pinned in .nvmrc)
 npm ci             # exact versions from package-lock.json
 npm run dev        # http://localhost:4321
 npm run build      # static output in dist/
+npm run check:portfolio # rendered content, evidence boundaries, local media
 ```
 
 ## Add a project
 
 Create one file: `src/content/projects/<slug>.mdx`. The filename becomes the
-URL (`/projects/<slug>`). All content lives in the frontmatter — the Zod
+URL (`/projects/<slug>`). Summary fields live in the frontmatter; extended notes can use an MDX body. The Zod
 schema in [src/content.config.ts](src/content.config.ts) enforces max lengths
 (problem ≤ 400 chars, approach ≤ 700, result ≤ 350) so the build fails if an
 entry gets long-winded. Depth belongs in the project's GitHub README.
@@ -40,6 +40,7 @@ Media rules:
   `prefers-reduced-motion` fallback, where videos don't autoplay). Every video
   also has manual controls and a descriptive label.
 - No motion asset? Set `image:` instead.
+- `track: robotics`, `track: ai`, or `track: coursework` selects the homepage section.
 - `order:` controls list position and the site-wide figure number.
 - `draft: true` hides an entry from the build.
 
