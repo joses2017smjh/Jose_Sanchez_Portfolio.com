@@ -26,6 +26,7 @@ const {
   result,
   tags,
   repo,
+  technicalReadme,
   paper,
   paperStrip,
   diagram,
@@ -45,6 +46,13 @@ const {
 // written — plain markdown, so text and pictures can be reshuffled freely
 // without touching a component. See EDITING.md.
 const { Content } = await render(project);
+const trackAnchor = {
+  humanoid: "projects",
+  rag: "ai-software",
+  vision: "vision-vla",
+  hardware: "beyond",
+  coursework: "coursework",
+}[project.data.track];
 
 // One FIG. NNA…NNZ letter sequence across every strip on the page:
 // section strips letter first, the gallery continues after them.
@@ -58,11 +66,11 @@ for (const s of sections) {
 
 <Base title={`${title} — Jose Sanchez Gonzalez`} description={summary}>
   <ScrollRuler />
-  <p class="meta"><a href={project.data.track === "ai" ? "/#ai-software" : "/#projects"}>&larr; Selected work</a></p>
+  <p class="meta"><a href={`/#${trackAnchor}`}>&larr; Selected work</a></p>
   <h1>{title}</h1>
   <p class="detail-summary">{summary}</p>
   <nav class="project-links" aria-label="Project resources">
-    {repo && <a href={`${repo}#readme`}>Technical README</a>}
+    {(technicalReadme || repo) && <a href={technicalReadme ?? `${repo}#readme`}>Technical README</a>}
     {repo && <a href={repo}>Source code</a>}
     {demo && <a href={demo}>Watch demo</a>}
     {paper && <a href={paper}>Read paper</a>}

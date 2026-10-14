@@ -1,0 +1,92 @@
+---
+title: Language-Guided Manipulation
+summary: A humanoid follows an instruction to pick a tumbler, load a tray, and carry it to the requested table.
+problem: >-
+  The same scene can require a different object or destination depending on the
+  instruction. A successful task needs language grounding, vision, grasping, and
+  carrying to work together.
+approach: >-
+  Built a simulated waiter task for a 24-joint humanoid with grippers. Fine-tuned
+  SmolVLA on scripted demonstrations to turn head-camera images, joint state,
+  and text into base, arm, and gripper commands. Evaluated unseen layouts and a
+  held-out instruction phrasing, then tested DSRL noise steering against the
+  frozen policy and constant-noise controls.
+result: >-
+  Retrained SmolVLA completed 75/100 tasks with original instructions and 76/100
+  with a held-out phrasing. These are simulation results from one checkpoint,
+  with the base held in place while standing. The domain contains two tumbler
+  colours, two destination tables, and six instruction templates.
+tags:
+- Python
+- PyTorch
+- SmolVLA
+- MuJoCo
+- Imitation Learning
+- DSRL
+- Whole-Body Control
+repo: https://github.com/joses2017smjh/bhl-robustness-ladder
+technicalReadme: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WAITER_PROGRAM.md
+links:
+- label: Task and control interfaces
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WAITER_INTERFACES.md
+- label: SmolVLA evaluation
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/waiter-20261005/phase3b-gate/verdict.json
+- label: DSRL comparison
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/waiter-20261005/phase4b-gate/verdict.json
+- label: Demo recording provenance
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/gifs/waiter-3b-task-seed1300.json
+video: /media/waiter/language-guided-task.mp4
+poster: /media/waiter/language-guided-task.jpg
+image: /media/waiter/language-guided-task.jpg
+alt: A simulated humanoid picks the blue tumbler, loads a tray, and carries it to the instructed right-hand table.
+figcaption: 'Phase 3b SmolVLA, development layout, 3× playback. Simulation with a stance lock while standing.'
+date: 2026-10-14
+order: 3
+featured: true
+track: humanoid
+focus: Vision-language-action / Carrying
+evidence: '76/100 successes with a held-out instruction phrasing. Simulation with standing assistance and a small instruction domain.'
+contribution: >-
+  Built the task environment, demonstration pipeline, policy integration, and
+  evaluation gates. Traced object-choice errors to sparse early-episode samples
+  and retrained with more demonstrations and targeted frame sampling.
+---
+
+## Learn the choice as well as the motion
+
+The instruction selects the tumbler colour and destination table. SmolVLA
+receives a rendered head-camera image, text, and proprioception, then predicts
+chunks of base-velocity, arm, and gripper commands. A learned leg controller
+executes walking while the arms and grippers track their commanded targets.
+[Task and interface contract](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WAITER_INTERFACES.md).
+
+The first fine-tune scored **28/100** with each layout's instruction. The retrain
+used **3.4×** the demonstrations and drew **30%** of each training batch from
+the first 12 episode frames, where the object choice happens. Phase 3b then
+scored **75/100** on fresh layouts and **76/100** with the held-out template.
+[Program and results](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WAITER_PROGRAM.md).
+
+## Keep the stronger baseline
+
+DSRL noise steering on the retrained policy reached **80/100** versus **74/100**
+for its normal noise, failing the improvement gate (**p = 0.20**). Constant zero
+noise reached **82/100**. The learned noise policy therefore did not justify
+replacing the baseline.
+[Phase 4b verdict](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/waiter-20261005/phase4b-gate/verdict.json).
+
+## What the demonstration establishes
+
+This project tests a small, simulated instruction domain: two colours, two
+tables, and six phrasing templates. The scripted expert reads oracle object positions
+from the simulator. The learned policy uses rendered vision, text, and joint
+state. The demonstration clip is a development-layout run, separate from the
+scored evaluation.
+
+A declared stance lock holds the base while the robot stands and releases it
+for walking. The scripted expert scored **86/100** with this assistance and
+**1/100** with a free base. Removing standing assistance remains unfinished;
+these results do not demonstrate unassisted whole-body manipulation or
+physical deployment.
+
+Related work: [Locomotion & Control](/projects/bhl-robustness-ladder/) and
+[Perception & Navigation](/projects/humanoid-navigation/).

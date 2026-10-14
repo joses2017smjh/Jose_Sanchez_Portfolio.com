@@ -109,6 +109,14 @@ For a video loop instead of an image, use `video:` plus a required
 
 ## Reordering / adding / hiding projects
 
+- `track:` places each project in a homepage row: `humanoid`, `rag`, or
+  `vision`. `hardware` stays linked from the hardware section; `coursework`
+  appears in the compact graduate-work list.
+- The three featured rows show three, two, and three cards on a desktop;
+  cards stack on narrow screens. Keep the group headings in `src/pages/index.astro`.
+- Use `repo:` for the source repository and optional `technicalReadme:` for
+  a focused report when multiple case studies share one repository. The
+  Technical README link otherwise defaults to the repository README.
 - `order: 1` in each `.mdx` controls position (lowest first) and the FIG.
   number.
 - New project = new `.mdx` file in the same folder; the filename becomes

@@ -11,15 +11,19 @@ const readPage = (path) => readFileSync(join(dist, path, "index.html"), "utf8");
 const plain = (html) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 const home = readPage("");
 const section = (id) => home.match(new RegExp(`<section[^>]*id="${id}"[^>]*>([\\s\\S]*?)<\\/section>`))?.[1];
-const robotics = section("projects");
-const ai = section("ai-software");
+const humanoid = section("projects");
+const rag = section("ai-software");
+const vision = section("vision-vla");
 const hero = section("about");
-assert.ok(robotics, "Robotics and computer vision section must exist");
-assert.ok(ai, "AI and software section must exist");
+assert.ok(humanoid, "Humanoid Simulation row must exist");
+assert.ok(rag, "RAG & Agents row must exist");
+assert.ok(vision, "Computer Vision & VLA row must exist");
+assert.ok(home.indexOf(humanoid) < home.indexOf(rag) && home.indexOf(rag) < home.indexOf(vision), "Featured rows must stay in the requested order");
 assert.ok(hero, "Role-focused hero must exist");
 for (const [track, slugs] of [
-  [robotics, ["berkeley-humanoid-vr", "depth-estimation-robotic-pruning", "isaac-pruning-workflow", "bhl-robustness-ladder", "isaac-folding"]],
-  [ai, ["metanavit", "agentic-soccer-mcp"]],
+  [humanoid, ["bhl-robustness-ladder", "humanoid-navigation", "language-guided-manipulation"]],
+  [rag, ["metanavit", "agentic-soccer-mcp"]],
+  [vision, ["isaac-folding", "isaac-pruning-workflow", "depth-estimation-robotic-pruning"]],
 ]) {
   assert.equal((track.match(/class="project-title"/g) ?? []).length, slugs.length, "Unexpected number of case studies in track");
   for (const slug of slugs) {
@@ -27,14 +31,27 @@ for (const [track, slugs] of [
     assert.ok(existsSync(join(dist, "projects", slug, "index.html")));
   }
 }
-for (const href of ["#projects", "#ai-software", "/projects/metanavit", "/resume.pdf"]) {
+for (const href of ["#projects", "#ai-software", "#vision-vla", "/projects/humanoid-navigation", "/projects/metanavit", "/projects/isaac-pruning-workflow", "/resume.pdf"]) {
   assert.ok(hero.includes(`href="${href}"`), `Missing direct hero entry point: ${href}`);
 }
-assert.ok(!ai.includes("/projects/dom-math-transformer") && !ai.includes("/projects/point-cloud-classification"), "AI software must remain distinct from coursework");
+assert.ok(!rag.includes("/projects/dom-math-transformer") && !rag.includes("/projects/point-cloud-classification"), "RAG projects must remain distinct from coursework");
+assert.ok(section("beyond").includes("/projects/berkeley-humanoid-vr"), "Keep the physical VR control case study accessible from Hardware");
+assert.ok(!humanoid.includes("/projects/berkeley-humanoid-vr"), "Physical VR control belongs in Hardware");
 
 const bhl = plain(readPage("projects/bhl-robustness-ladder"));
-for (const evidence of ["0/360", "77/360", "259/288", "247/288", "oracle pose/goal", "clustered observations", "simulation results, not hardware validation", "learned locomotion has not transferred to hardware", "retracted"]) {
+for (const evidence of ["0/360", "77/360", "simulation results, not hardware validation", "learned locomotion has not transferred to hardware", "retracted"]) {
   assert.ok(bhl.includes(evidence), `Missing BHL result boundary: ${evidence}`);
+}
+const navigation = plain(readPage("projects/humanoid-navigation"));
+for (const evidence of ["12/12", "259/288", "247/288", "oracle pose/goal", "clustered observations"]) {
+  assert.ok(navigation.includes(evidence), `Missing navigation result boundary: ${evidence}`);
+}
+const waiter = plain(readPage("projects/language-guided-manipulation"));
+for (const evidence of ["Language-Guided Manipulation", "75/100", "76/100", "stance lock", "oracle", "six", "simulation"]) {
+  assert.ok(waiter.includes(evidence), `Missing language-guided manipulation result boundary: ${evidence}`);
+}
+for (const [slug, report] of [["humanoid-navigation", "RANDOM_MAZE.md"], ["language-guided-manipulation", "WAITER_PROGRAM.md"]]) {
+  assert.ok(readPage(`projects/${slug}`).includes(`href="https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/${report}"`), `Missing focused technical report: ${slug}`);
 }
 const folding = plain(readPage("projects/isaac-folding"));
 for (const evidence of ["9/16", "2/16", "6/16", "8/16", "gate fails: baseline retained", "Historical policy clips", "Eight reused development poses", "not settled-fold scores"]) {
@@ -73,4 +90,4 @@ for (const page of pages) {
     mediaReferences += 1;
   }
 }
-console.log(`Portfolio checks passed: 5 robotics/CV + 2 AI/software projects, hero entry points, evidence boundaries, ${pages.length} pages, ${mediaReferences} local media references.`);
+console.log(`Portfolio checks passed: 3 humanoid + 2 RAG/agents + 3 vision/VLA projects, hero entry points, hardware access, evidence boundaries, ${pages.length} pages, ${mediaReferences} local media references.`);

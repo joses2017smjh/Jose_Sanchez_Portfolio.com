@@ -17,6 +17,7 @@ const {
   focus,
   tags,
   repo,
+  technicalReadme,
   video,
   cardVideo,
   cardZoom,
@@ -53,7 +54,7 @@ const href = `/projects/${project.id}`;
     <TagList tags={tags.slice(0, 4)} />
     <div class="project-links">
       <a href={href}>View case study <span aria-hidden="true">&rarr;</span></a>
-      {repo && <a href={`${repo}#readme`}>Technical README</a>}
+      {(technicalReadme || repo) && <a href={technicalReadme ?? `${repo}#readme`}>Technical README</a>}
     </div>
   </article>
 </li>

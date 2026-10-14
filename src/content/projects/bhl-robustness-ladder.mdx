@@ -1,89 +1,102 @@
 ---
-title: Humanoid Locomotion & Navigation
-summary: Evaluate learned humanoid locomotion across Isaac Lab and MuJoCo with matched controls and release gates.
+title: Locomotion & Control
+summary: Train and compare humanoid walking policies across simulators, disturbances, and terrain.
 problem: >-
   A high training reward can hide a walking policy that fails in another simulator.
-  Locomotion needs repeatable checks across disturbances and terrain before a
-  checkpoint can be trusted.
+  Walking, turning, and balance need repeatable checks before a checkpoint is promoted.
 approach: >-
   Trained PPO policies in Isaac Lab, exported ONNX, and evaluated them with the
-  upstream deployment controller in MuJoCo. Built randomization and sensor ablations,
-  lidar mapping, and scripted A* navigation using oracle pose and goal. Qualification
-  gates require both turning and straight walking to pass. These are sim-to-sim
-  studies; learned locomotion has not transferred to hardware here.
+  upstream deployment controller in MuJoCo. Built randomization studies, terrain
+  rollouts, and qualification gates for turning, straight walking, and pushes.
+  The new terrain films show recorded simulation rollouts; the full-body arms
+  clip uses an existing upstream policy.
 result: >-
-  October 6 confirmation: default randomization records 0/360 flat falls versus
-  77/360 without it. October 8 navigation: 259/288 goals versus 247/288 baseline,
-  with 0 versus 9 falls. Shared layouts are clustered observations; navigation
-  uses oracle pose/goal. These are published simulation results, not hardware validation.
+  Published 12-DoF confirmation: default randomization recorded 0/360 flat falls
+  versus 77/360 without it. These are sim-to-sim results. The new terrain films
+  and separate 22-joint arms clip are demonstrations, not additional reliability
+  measurements; hardware transfer remains unvalidated.
 tags:
 - Python
+- PyTorch
 - Isaac Lab
-- Isaac Sim
 - MuJoCo
 - PPO
-- Reinforcement Learning
-- Sim-to-Sim
-- Robotics
 - ONNX
+- Slurm
 repo: https://github.com/joses2017smjh/bhl-robustness-ladder
+technicalReadme: https://github.com/joses2017smjh/bhl-robustness-ladder#readme
 links:
-- label: Full technical report
-  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/REPORT.md
+- label: Randomization confirmation
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/campaigns/20261006-confirmatory/results/dr_verdict.json
 - label: Findings ledger
   href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FINDINGS.md
-- label: Lidar-mapped navigation
-  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/RANDOM_MAZE.md
-- label: Latest actor-clock verdict
+- label: Actor-clock verdict
   href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/repo-gpu-20260923/turngait-r12-20261001/verdict/R1.json
-video: /media/bhl/random-maze-humanoid-sensors.mp4
-poster: /media/bhl/random-maze-humanoid-sensors.jpg
-image: /media/bhl/random-maze-humanoid-sensors.jpg
-alt: A simulated humanoid navigates a maze beside lidar mapping, stereo, optical-flow and IMU panels.
-figcaption: 'MuJoCo maze: learned gait + scripted A*, oracle pose/goal, 5× playback. Selected rollout with sensor panels.'
+- label: Full research overview
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/RESEARCH_OVERVIEW_2026-10-12.md
+video: /media/bhl/terrain-ramp.mp4
+poster: /media/bhl/terrain-ramp.jpg
+image: /media/bhl/terrain-ramp.jpg
+alt: A simulated biped traverses an eleven-degree rust-red concrete ramp.
+figcaption: 'Selected MuJoCo rollout on an 11° ramp. Visual demonstration; no new training or reliability claim.'
 sections:
-- heading: Transfer inverts the training-reward ranking
-  body: The flat-ground comparison covers five settings and three trained policies per setting. The default
-    randomization transfers better than the unrandomized configuration even though training reward suggests
-    a different ordering.
+- heading: Terrain and full-body rollouts
+  body: >-
+    Dirt relief is about 8 cm; gravel includes 100 physical stones. Footprints are
+    contact-triggered visual marks and do not change collision geometry. The main
+    capture includes 24 robots and eight falls. The arms clip is a separate run
+    using the upstream 22-joint policy.
   figures:
-  - image: /media/bhl/multi_lab.mp4
-    alt: Four colour-coded policies share one shove, with egocentric depth along the bottom.
-    caption: Four policies, one world, one command. The unrandomized robot is on the ground.
-    poster: /media/bhl/multi_lab.jpg
-  - image: /media/bhl/dr_pair.mp4
-    alt: Two policies follow a strafe command; one stays upright and one falls.
-    caption: Selected strafe rollouts. Aggregate findings and their limits are in the linked technical
-      report.
-    poster: /media/bhl/dr_pair.jpg
-- heading: Stereo pose fix, and a retracted ice claim
-  body: 'Isaac Lab 3.0 read camera quaternions as (x, y, z, w) after they were written (w, x, y, z). Stereo
-    pointed down after the fix. An earlier ice-hazard result is retracted: patches spawned a median 72
-    m away.'
-  figures:
-  - image: /media/bhl/maze_stereo_fixed.webp
-    alt: Corrected downward stereo pose versus the earlier upside-down camera on terrain.
-    caption: After the quaternion fix, 16×16 stereo reaches terrain level 0.88.
-- heading: Mapping and planning, with oracle state
-  body: 'Learned gait + scripted A*: biped 24/24 unseen 5×5/6×6 mazes without falls or wall contacts;
-    humanoid 12/12 fresh 6×6 layouts. Lidar builds the map; 8×8 ray-cast depth drives the brake;
-    pose/goal are oracle. Stereo RGB/rendered depth, flow and IMU are display-only. Simulation results;
-    the hero illustrates one checkpoint.'
-- heading: Turning improves; the combined recipe still fails
-  body: 'Actor-visible gait-clock input enables turns across three training seeds. Only one also passes
-    straight-walk and push qualification; the recipe requires two. Critic-only input qualifies zero.
-    The October 2 verdict preserves that failure instead of promoting on turning alone.'
-  figures:
-  - image: /media/bhl/turngait-clock-actor-vs-critic.mp4
-    poster: /media/bhl/turngait-clock-actor-vs-critic.jpg
-    alt: Two simulated humanoids receive the same turn command; the actor-clock policy turns farther.
-    caption: 'Same turn command, selected seeds, real time. Recipe gate fails: actor clock 1/3 qualified; critic-only 0/3.'
-date: 2026-10-05
-order: 4
+  - image: /media/bhl/terrain-gravel.mp4
+    poster: /media/bhl/terrain-gravel.jpg
+    alt: A simulated biped crosses gravel and leaves visible contact footprints.
+    caption: 'Gravel traversal: 100 physical stones; footprints are contact-triggered visual effects.'
+  - image: /media/bhl/terrain-bumpy.mp4
+    poster: /media/bhl/terrain-bumpy.jpg
+    alt: A simulated biped walks over uneven dirt with about eight centimetres of relief.
+    caption: 'Bumpy terrain with about 8 cm of relief. A selected simulation rollout.'
+  - image: /media/bhl/full-body-arms.mp4
+    poster: /media/bhl/full-body-arms.jpg
+    alt: A complete 22-joint humanoid walks with physical arms in MuJoCo.
+    caption: '22-joint MuJoCo rollout using the upstream full-body policy. Separate demonstration, not a new trained result.'
+date: 2026-10-14
+order: 1
 featured: true
-focus: Policy evaluation / Sim-to-sim
-evidence: 'Published confirmation: 0/360 flat falls with default randomization vs 77/360 without. Simulation; hardware transfer unvalidated.'
-contribution: 'Built the measurement stack: headless MuJoCo scoring, curricula upstream lacks, rollout
-  visualization, and a ledger that keeps retractions public. Used upstream''s observation path so evaluation
-  stays close to the deployment controller.'
+track: humanoid
+focus: Learned control / Sim-to-sim
+evidence: '12-DoF confirmation: 0/360 flat falls with default randomization versus 77/360 without. Simulation only.'
+contribution: >-
+  Built task overlays, headless MuJoCo scoring, checkpoint qualification, replay
+  checks, and rollout visualizations. Kept the upstream observation path and
+  published failed gates alongside positive results.
 ---
+
+## Training reward and transfer can disagree
+
+The flat-ground study covers five settings and three trained policies per setting.
+Default randomization transfers better than the unrandomized configuration even
+when training reward suggests a different ranking. The **0/360 versus 77/360**
+comparison belongs to the 12-DoF biped study, not to the new full-body clip.
+[Confirmation evidence](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/campaigns/20261006-confirmatory/results/dr_verdict.json).
+
+## Turning improves; the combined recipe still fails
+
+Actor-visible gait-clock input enables turns across three training seeds. Only
+one also passes straight-walk and push qualification; the recipe requires two.
+Critic-only input qualifies zero. The October 2 verdict retains that failure.
+[Qualification record](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/repo-gpu-20260923/turngait-r12-20261001/verdict/R1.json).
+
+## Corrected stereo pose and a retracted ice claim
+
+Isaac Lab 3.0 read camera quaternions as `(x, y, z, w)` after they were written
+`(w, x, y, z)`. Correcting the order pointed stereo down at the terrain. The
+earlier ice-hazard result is retracted: patches spawned a median 72 m away.
+The [findings ledger](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FINDINGS.md)
+preserves both corrections.
+
+These are simulation results, not hardware validation: learned locomotion has not transferred to hardware.
+
+The robot design and upstream controller are from
+[Berkeley Humanoid Lite](https://github.com/HybridRobotics/Berkeley-Humanoid-Lite).
+Related work: [Perception & Navigation](/projects/humanoid-navigation/) and
+[Language-Guided Manipulation](/projects/language-guided-manipulation/).

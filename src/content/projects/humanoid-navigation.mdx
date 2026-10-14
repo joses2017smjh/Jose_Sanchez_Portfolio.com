@@ -1,0 +1,84 @@
+---
+title: Perception & Navigation
+summary: Combine learned walking, online lidar mapping, and planning to navigate unfamiliar mazes.
+problem: >-
+  A walking policy needs a route, a map, and commands it can execute. Navigation
+  tests must distinguish reaching a goal from avoiding falls and wall contacts.
+approach: >-
+  Built online occupancy mapping from simulated lidar, scripted A* planning,
+  turn-then-walk commands, and a depth-based speed brake above a learned gait.
+  Evaluated fresh maze layouts, sensor faults, timing, and a learned navigation
+  alternative. The featured maze system uses the simulator's true pose and goal;
+  its stereo, optical-flow, and IMU panels are display-only.
+result: >-
+  The 22-DoF humanoid reached 12/12 fresh 6×6 maze goals with no falls or wall
+  contacts using one qualified gait. A separate biped study reached 24/24 goals
+  across 5×5 and 6×6 mazes. Both use scripted planning and oracle pose/goal in
+  simulation; they do not establish hardware navigation.
+tags:
+- Python
+- MuJoCo
+- LiDAR
+- Mapping
+- A* Planning
+- Sensor Fusion
+- ONNX
+- PPO
+repo: https://github.com/joses2017smjh/bhl-robustness-ladder
+technicalReadme: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/RANDOM_MAZE.md
+links:
+- label: Humanoid maze verdict
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/maze-humanoid-20260928/verdict.json
+- label: Command-filter confirmation
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/H1_NAVIGATION_CONFIRMATION_2026-10-08.md
+- label: Native sensor study
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/NATIVE_CAMPAIGN_RESULTS_2026-10-09.md
+- label: Sensor processing schedules
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/PROCESSING_SCHEDULE_RESULTS_2026-10-12.md
+video: /media/bhl/random-maze-humanoid-sensors.mp4
+poster: /media/bhl/random-maze-humanoid-sensors.jpg
+image: /media/bhl/random-maze-humanoid-sensors.jpg
+alt: A simulated humanoid navigates a maze beside lidar mapping, stereo, optical-flow, and IMU panels.
+figcaption: 'Learned gait + scripted A*, oracle pose/goal, 5× playback. Other sensor panels are display-only.'
+date: 2026-10-14
+order: 2
+featured: true
+track: humanoid
+focus: Mapping / Planning / Sensor evaluation
+evidence: '12/12 fresh humanoid maze goals without falls or wall contacts. Simulation with oracle pose/goal.'
+contribution: >-
+  Built the mapping and planning stack, sensor instrumentation, command filters,
+  and matched evaluation protocols. Separated learned control, scripted planning,
+  and oracle inputs so each result states what the system actually uses.
+---
+
+## Mapping and planning on the same control interface
+
+The robot integrates lidar returns into a log-odds occupancy grid and replans
+with A*. A reactive depth brake slows translation near obstacles or stale
+packets. The learned gait receives forward-velocity and yaw-rate commands.
+The simulator supplies localization and the goal coordinate.
+[System and maze protocol](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/RANDOM_MAZE.md).
+
+## Compare outcomes on matched runs
+
+A separate October 8 command-filter study recorded **259/288 goals versus
+247/288** for the baseline, with **0 versus 9 falls**, across three actors.
+Wall contacts remain, and shared layouts are clustered observations. This is a
+different study from the 12-layout humanoid demonstration.
+[Confirmation report](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/H1_NAVIGATION_CONFIRMATION_2026-10-08.md).
+
+## Sensor accuracy and navigation success are separate tests
+
+Sensor studies cover packet loss, pose errors, IMU delay, native estimators,
+and processing schedules. In the October 12 scheduling study, LiDAR–IMU clean
+goals changed from **0/12 to 11/12**, while stereo remained **0/12** under both
+schedules. The report retains timing, execution-order, and validation limits.
+[Schedule results](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/PROCESSING_SCHEDULE_RESULTS_2026-10-12.md).
+
+The [matched IMU-history and stereo-pose studies](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/H3_H4_CAMPAIGN_2026-10-08.md)
+also retain negative findings. Better sensor measurements alone do not establish
+better closed-loop navigation.
+
+Related work: [Locomotion & Control](/projects/bhl-robustness-ladder/) and
+[Language-Guided Manipulation](/projects/language-guided-manipulation/).

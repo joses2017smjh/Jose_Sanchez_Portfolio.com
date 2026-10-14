@@ -6,8 +6,9 @@ import { resume } from "../resume.config";
 import { sortedProjects } from "../lib/projects";
 
 const projects = await sortedProjects();
-const robotics = projects.filter((p) => p.data.track === "robotics");
-const ai = projects.filter((p) => p.data.track === "ai");
+const humanoid = projects.filter((p) => p.data.track === "humanoid");
+const rag = projects.filter((p) => p.data.track === "rag");
+const vision = projects.filter((p) => p.data.track === "vision");
 const coursework = projects.filter((p) => p.data.track === "coursework");
 ---
 
@@ -18,10 +19,11 @@ const coursework = projects.filter((p) => p.data.track === "coursework");
         <p class="eyebrow">Jose Sanchez Gonzalez · M.S. Artificial Intelligence</p>
         <h1 id="hero-title">{site.positioning}</h1>
         <p class="hero-role">{site.seeking}</p>
-        <p class="hero-intro">From a vision-guided pruning arm to source-traced retrieval: I connect working demos to the code, tests, and measured results behind them.</p>
+        <p class="hero-intro">Humanoid control, agents that retrieve and use evidence, and vision-guided manipulation. Explore the demos, then follow each result to its code and evaluation.</p>
         <ul class="link-row hero-actions">
-          <li><a class="button-link" href="#projects">Robotics & computer vision</a></li>
-          <li><a class="button-link button-secondary" href="#ai-software">AI & software</a></li>
+          <li><a class="button-link" href="#projects">Humanoid simulation</a></li>
+          <li><a class="button-link button-secondary" href="#ai-software">RAG & agents</a></li>
+          <li><a class="button-link button-secondary" href="#vision-vla">Computer vision & VLA</a></li>
           <li><a href={resume.links.pdf}>Download résumé <span class="file-type">PDF</span></a></li>
           <li><a href={`mailto:${site.email}`}>Get in touch</a></li>
         </ul>
@@ -29,9 +31,9 @@ const coursework = projects.filter((p) => p.data.track === "coursework");
       <aside class="hero-details" aria-label="Project starting points">
         <h2>Start with a demo</h2>
         <ul class="project-starts">
-          <li><a href="/projects/berkeley-humanoid-vr">Control a physical humanoid arm <span aria-hidden="true">&rarr;</span></a><span>Quest VR · inverse kinematics · SocketCAN</span></li>
-          <li><a href="/projects/depth-estimation-robotic-pruning">Estimate depth in metres <span aria-hidden="true">&rarr;</span></a><span>Computer vision · synthetic evaluation · API</span></li>
+          <li><a href="/projects/humanoid-navigation">Walk through an unfamiliar maze <span aria-hidden="true">&rarr;</span></a><span>Simulated humanoid · lidar mapping · planning</span></li>
           <li><a href="/projects/metanavit">Trace an answer to its source <span aria-hidden="true">&rarr;</span></a><span>Agentic RAG · retrieval evaluation · MCP</span></li>
+          <li><a href="/projects/isaac-pruning-workflow">Guide a pruning arm with vision <span aria-hidden="true">&rarr;</span></a><span>RGB-D control · Isaac Sim · contact gates</span></li>
         </ul>
       </aside>
     </section>
@@ -39,30 +41,43 @@ const coursework = projects.filter((p) => p.data.track === "coursework");
     <section class="work-section" id="projects" aria-labelledby="work-title">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Robotics · embodied AI · computer vision</p>
-          <h2 id="work-title">From perception to robot behavior</h2>
+          <p class="eyebrow">01 · Robotics & embodied AI</p>
+          <h2 id="work-title">Humanoid Simulation</h2>
         </div>
-        <p>Physical arm control, vision-guided motion, and evaluated learning systems. Simulation results are labeled on each project.</p>
+        <p>Three parts of the same robot system: walk across terrain, navigate a maze, and carry out a language instruction.</p>
       </div>
-      <ul class="project-grid">
-        {robotics.map((project) => <ProjectItem project={project} number={projects.indexOf(project) + 1} />)}
+      <ul class="project-grid project-grid-three">
+        {humanoid.map((project) => <ProjectItem project={project} number={projects.indexOf(project) + 1} />)}
       </ul>
     </section>
 
     <section class="work-section" id="ai-software" aria-labelledby="ai-title">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">AI · software engineering · agentic RAG</p>
-          <h2 id="ai-title">Retrieval and agents you can inspect</h2>
+          <p class="eyebrow">02 · AI & software engineering</p>
+          <h2 id="ai-title">RAG & Agents</h2>
         </div>
-        <p>Search with source tracing, reviewable tool calls, and measured model behavior. Explore the interfaces, then inspect the implementation.</p>
+        <p>Research-file retrieval and soccer analysis with source tracing, tool calls, and inspectable evaluations.</p>
       </div>
       <ul class="project-grid">
-        {ai.map((project) => <ProjectItem project={project} number={projects.indexOf(project) + 1} />)}
+        {rag.map((project) => <ProjectItem project={project} number={projects.indexOf(project) + 1} />)}
       </ul>
     </section>
 
-    <section class="work-section" aria-labelledby="coursework-title">
+    <section class="work-section" id="vision-vla" aria-labelledby="vision-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">03 · Perception & manipulation</p>
+          <h2 id="vision-title">Computer Vision & VLA</h2>
+        </div>
+        <p>Vision-language-action policies for folding, RGB-D control for pruning, and metric depth for robotic perception.</p>
+      </div>
+      <ul class="project-grid project-grid-three">
+        {vision.map((project) => <ProjectItem project={project} number={projects.indexOf(project) + 1} />)}
+      </ul>
+    </section>
+
+    <section class="work-section" id="coursework" aria-labelledby="coursework-title">
       <div class="section-heading">
         <div>
           <p class="eyebrow">Graduate coursework</p>
@@ -101,10 +116,13 @@ const coursework = projects.filter((p) => p.data.track === "coursework");
     <section class="beyond-teaser" id="beyond" aria-labelledby="beyond-title">
       <img src="/media/humanoid/26-fully-built-movement.jpg" alt="Fully assembled Berkeley Humanoid Lite hanging from a rack, chest screen on, wiring still external." width="1200" height="1600" loading="lazy" decoding="async" />
       <div>
-        <p class="eyebrow">Away from the screen</p>
+        <p class="eyebrow">Physical robotics</p>
         <h2 id="beyond-title">Building the hardware, too.</h2>
         <p>From printed parts and actuator calibration to Quest VR arm control. Follow the Berkeley Humanoid Lite build log. Outside the workshop, I hike and train jiu-jitsu.</p>
-        <a href="/beyond">The build log and beyond <span aria-hidden="true">&rarr;</span></a>
+        <ul class="link-row">
+          <li><a href="/projects/berkeley-humanoid-vr">Quest VR arm control <span aria-hidden="true">&rarr;</span></a></li>
+          <li><a href="/beyond">The build log and beyond <span aria-hidden="true">&rarr;</span></a></li>
+        </ul>
       </div>
     </section>
 

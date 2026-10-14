@@ -16,7 +16,7 @@ const projects = defineCollection({
     // What it does, not how. One line.
     summary: z.string().max(120),
     featured: z.boolean().default(false),
-    track: z.enum(["robotics", "ai", "coursework"]).default("robotics"),
+    track: z.enum(["humanoid", "rag", "vision", "hardware", "coursework"]),
     focus: z.string().max(60),
     contribution: z.string().max(400),
     evidence: z.string().max(180),
@@ -30,6 +30,8 @@ const projects = defineCollection({
     tags: z.array(z.string().max(24)).min(1).max(10),
     // Omit for private/coursework projects with no public repo.
     repo: z.string().url().optional(),
+    // A focused report when several case studies share a repository.
+    technicalReadme: z.string().url().optional(),
     paper: z.string().url().optional(),
     // A system diagram, shown full width at its own proportions rather
     // than squeezed into the 16:9 figure box — detail has to stay legible.
