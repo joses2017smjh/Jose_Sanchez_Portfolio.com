@@ -11,10 +11,11 @@ approach: >-
   The new terrain films show recorded simulation rollouts; the full-body arms
   clip uses an existing upstream policy.
 result: >-
-  Published 12-DoF confirmation: default randomization recorded 0/360 flat falls
-  versus 77/360 without it. These are sim-to-sim results. The new terrain films
-  and separate 22-joint arms clip are demonstrations, not additional reliability
-  measurements; hardware transfer remains unvalidated.
+  R1HO qualified all three fine-tuning seeds: 30/30 turns and 9/9 straight walks,
+  with push qualification also passed. These 22-DoF simulation policies share one
+  parent and use simulator yaw. Separately, 12-DoF randomization recorded 0/360 flat
+  falls versus 77/360 without it. Terrain films are demonstrations; hardware transfer
+  remains unvalidated.
 tags:
 - Python
 - PyTorch
@@ -30,8 +31,8 @@ links:
   href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/campaigns/20261006-confirmatory/results/dr_verdict.json
 - label: Findings ledger
   href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FINDINGS.md
-- label: Actor-clock verdict
-  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/repo-gpu-20260923/turngait-r12-20261001/verdict/R1.json
+- label: Later R1HO qualification
+  href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/H3_H4_CAMPAIGN_2026-10-08.md
 - label: Full research overview
   href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/RESEARCH_OVERVIEW_2026-10-12.md
 video: /media/bhl/terrain-ramp.mp4
@@ -64,7 +65,7 @@ order: 1
 featured: true
 track: humanoid
 focus: Learned control / Sim-to-sim
-evidence: '12-DoF confirmation: 0/360 flat falls with default randomization versus 77/360 without. Simulation only.'
+evidence: 'Later R1HO: 3/3 fine-tuning seeds qualify. Simulation with simulator yaw, one shared parent, and existing benchmarks.'
 contribution: >-
   Built task overlays, headless MuJoCo scoring, checkpoint qualification, replay
   checks, and rollout visualizations. Kept the upstream observation path and
@@ -79,12 +80,27 @@ when training reward suggests a different ranking. The **0/360 versus 77/360**
 comparison belongs to the 12-DoF biped study, not to the new full-body clip.
 [Confirmation evidence](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/campaigns/20261006-confirmatory/results/dr_verdict.json).
 
-## Turning improves; the combined recipe still fails
+## Later R1HO qualifies across three fine-tuning seeds
 
-Actor-visible gait-clock input enables turns across three training seeds. Only
-one also passes straight-walk and push qualification; the recipe requires two.
-Critic-only input qualifies zero. The October 2 verdict retains that failure.
-[Qualification record](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/repo-gpu-20260923/turngait-r12-20261001/verdict/R1.json).
+The command-latched heading recipe passes the declared joint qualification gate
+for **3/3** fine-tuning seeds: **30/30 turns**, **9/9 straight walks**, and push
+falls of **8/60, 9/60, and 8/60**. These are 22-DoF simulated policies, with
+simulator yaw and independently seeded fine-tunes of one selected R1H-s2 parent.
+They use existing benchmark cases, not a new hardware or from-scratch study.
+[H4 report and source records](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/H3_H4_CAMPAIGN_2026-10-08.md).
+
+Earlier actor-clock R1 qualified only one of three seeds and failed its recipe
+gate. That negative result remains in the
+[October 2 record](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/repo-gpu-20260923/turngait-r12-20261001/verdict/R1.json).
+
+## Terrain control on held-out mild courses
+
+A separate native FAST-LIO2 study recorded **180/180 clean goals** with heading
+pursuit versus **19/180** for the baseline, within **480 total trials**. It uses
+three frozen 12-DoF actors and 20 reserved reset seeds on flat ground, 1 cm
+steps, and 3° ramps. Estimated pose feeds control; evaluator truth is separate.
+This cohort is distinct from the 11° ramp and relief visualizations above.
+[Terrain confirmation](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/TERRAIN_CONFIRMATION_2026-10-11.md).
 
 ## Corrected stereo pose and a retracted ice claim
 

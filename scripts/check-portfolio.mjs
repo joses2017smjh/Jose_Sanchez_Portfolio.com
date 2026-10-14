@@ -39,11 +39,11 @@ assert.ok(section("beyond").includes("/projects/berkeley-humanoid-vr"), "Keep th
 assert.ok(!humanoid.includes("/projects/berkeley-humanoid-vr"), "Physical VR control belongs in Hardware");
 
 const bhl = plain(readPage("projects/bhl-robustness-ladder"));
-for (const evidence of ["0/360", "77/360", "simulation results, not hardware validation", "learned locomotion has not transferred to hardware", "retracted"]) {
+for (const evidence of ["0/360", "77/360", "R1HO", "30/30", "9/9", "one selected R1H-s2 parent", "180/180", "19/180", "simulation results, not hardware validation", "learned locomotion has not transferred to hardware", "retracted"]) {
   assert.ok(bhl.includes(evidence), `Missing BHL result boundary: ${evidence}`);
 }
 const navigation = plain(readPage("projects/humanoid-navigation"));
-for (const evidence of ["12/12", "259/288", "247/288", "oracle pose/goal", "clustered observations"]) {
+for (const evidence of ["12/12", "259/288", "247/288", "288/288", "286/288", "282 to 276", "5 to 12", "oracle pose/goal", "clustered observations"]) {
   assert.ok(navigation.includes(evidence), `Missing navigation result boundary: ${evidence}`);
 }
 const waiter = plain(readPage("projects/language-guided-manipulation"));
@@ -54,7 +54,7 @@ for (const [slug, report] of [["humanoid-navigation", "RANDOM_MAZE.md"], ["langu
   assert.ok(readPage(`projects/${slug}`).includes(`href="https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/${report}"`), `Missing focused technical report: ${slug}`);
 }
 const folding = plain(readPage("projects/isaac-folding"));
-for (const evidence of ["9/16", "2/16", "6/16", "8/16", "gate fails: baseline retained", "Historical policy clips", "Eight reused development poses", "not settled-fold scores"]) {
+for (const evidence of ["16/48", "8/48", "48 matched pairs", "0.0577", "unchanged baseline weights", "9/16", "2/16", "6/16", "8/16", "fails: baseline retained", "Historical policy clips", "Eight reused development poses", "not settled-fold scores"]) {
   assert.ok(folding.includes(evidence), `Missing folding caveat: ${evidence}`);
 }
 assert.ok(!/1st of 62|2 of 8|Closed-loop and reproducible/.test(folding), "Do not restore superseded folding claims");
@@ -74,6 +74,8 @@ const metanavit = plain(readPage("projects/metanavit"));
 for (const evidence of ["original six-person team", "Independent 2026 extensions", "SciFact, 300 queries", "0.075", "Illustrated retrieval workflow", "not a large-corpus or live-model benchmark"]) {
   assert.ok(metanavit.includes(evidence), `Missing MetaNaviT attribution or result boundary: ${evidence}`);
 }
+assert.ok(metanavit.includes("single-use approval grant"), "MetaNaviT must describe the current approval flow");
+assert.ok(!readPage("projects/metanavit").includes("/media/metanavit/mcp_hitl.mp4"), "Do not present the obsolete approved=True animation as the current workflow");
 
 function htmlFiles(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {

@@ -80,5 +80,20 @@ The [matched IMU-history and stereo-pose studies](https://github.com/joses2017sm
 also retain negative findings. Better sensor measurements alone do not establish
 better closed-loop navigation.
 
+## Newer recovery audit: more goals, fewer clean completions
+
+The October 14 publication audits **1,152 episodes** across four controllers,
+three fixed navigation actors, two sensing conditions, and 48 shared layouts.
+Budgeted recovery reaches **288/288 goals** versus **286/288** for the existing
+recovery reference, with zero falls in both. Clean goals decrease from **282 to
+276**, and contact episodes increase from **5 to 12**.
+
+This is a tradeoff from scripted recovery around a learned navigation policy,
+with oracle pose/goal and no measured world-model influence. It is separate
+from the 22-joint maze demonstration and native estimated-pose studies. The
+overall campaign remains incomplete because terrain confirmation failed its
+asset-matching checks.
+[Dated audit and reproducible outcome counts](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/UPGRADE_V6_NAVIGATION_2026-10-14.md).
+
 Related work: [Locomotion & Control](/projects/bhl-robustness-ladder/) and
 [Language-Guided Manipulation](/projects/language-guided-manipulation/).

@@ -16,9 +16,9 @@ contribution: >-
   adaptations, and paired evaluation drivers. Robot assets, garment assets, the challenge
   checker, and the SmolVLA backbone are upstream components.
 result: >-
-  September 27 v8: H10 settled folds improve to 9/16 from 2/16; H50 falls to 6/16 from 8/16.
-  All 64 episodes complete, but the preregistered non-regression gate fails: baseline retained.
-  Eight reused development poses; shared-seed repeats and GPU effects limit generalization.
+  October 6 runtime screen: unchanged baseline weights settled 16/48 folds at H10 and
+  8/48 at H50 across 48 matched pairs. Exact paired p = 0.0577 missed the 0.05 gate,
+  so the baseline and H50 remain. Eight reused development poses; simulated cloth.
 tags:
   - Python
   - Isaac Sim
@@ -31,7 +31,7 @@ links:
   - label: Long-form method notes
     href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/docs/README_long.md
   - label: Latest completed paired study
-    href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/campaigns/20260926-anchor-diagnostic-v8/REPORT.md
+    href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/docs/RUNTIME_HORIZON_2026-10-06.md
   - label: New adapted-policy media gate
     href: https://github.com/joses2017smjh/IsaacSimFolding/blob/main/docs/MEDIA_GATE_2026-09-20.md
 image: /media/folding/policy-fold-success.jpg
@@ -55,33 +55,33 @@ alt: >-
   Both arms folding short pants in Isaac Sim, the run the challenge checker scored as a
   success.
 figcaption: "Historical policy clips: a transient checker pass and a failure; separate from the latest settled-fold study."
-date: 2026-10-02
+date: 2026-10-14
 order: 6
 featured: true
 focus: VLA / Imitation learning
-evidence: "Short-horizon gain fails the full promotion gate at the deployment horizon. Baseline retained."
+evidence: "48 matched pairs: more settled folds with earlier replanning, but the statistical gate fails. Baseline retained."
 sections:
   - heading: What both arms see
     body: >-
-      The policy reads rasterised camera views and joint state, then emits joint targets.
-      Both wrist cameras are shown together because the fold is bimanual — the
-      jaws have to arrive on the cloth at the same time, and a single view hides whether
-      the other arm agreed.
+      The policy reads three camera views and joint state, then emits joint targets.
+      Both wrist views show whether the arms coordinate. Demonstration replay only
+      proves the scene is solvable; reported results use closed-loop policy actions
+      and the challenge checker. Failures stay visible alongside successes.
     figures:
       - image: /media/folding/wrist-cameras.mp4
         alt: Left and right wrist cameras side by side, both jaws closing on red cloth.
         caption: Left and right wrist cameras during the scored fold.
         poster: /media/folding/wrist-cameras.jpg
-  - heading: The replay is not the policy
+  - heading: More frequent replanning, inconclusive gain
     body: >-
-      A demonstration replay folds the garment without the policy doing anything, so it
-      proves only that the scene is solvable. Every number here comes from closed-loop
-      policy rollouts, graded by the challenge's checker rather than by the renderer's own
-      label. The failure clips stay published beside the successes.
-  - heading: Short-horizon gains fail the shipped horizon
+      The October screen tests how often the same model replans. All 96 episodes
+      completed 600 actions plus a 60-step settle on A40 GPUs. Fourteen pairs favored
+      H10 and six favored H50, giving exact paired p = 0.0577. The preregistered gate
+      fails: baseline retained. Clustered repeats and reused poses limit generalization.
+  - heading: The earlier fine-tune also fails promotion
     body: >-
       Changing the behavior-cloning anchor removed an early H50 action shift, but did not
-      pass the release gate. H10's 9/16 result is a development finding. H50 remains 6/16
+      pass the September v8 release gate. H10 improved from 2/16 to 9/16; H50 remained 6/16
       versus the paired baseline's 8/16. The historical 2/8 checker-pass sweep and its video
       use an earlier metric and checkpoint; they are not settled-fold scores.
   - heading: New adaptation, recorded failure
