@@ -10,12 +10,15 @@ The terrain clips are selected camera views of an existing shared simulation, wi
 
 | Export | Source within bundle | Duration | MP4 bytes | Poster time | JPG bytes |
 |---|---|---:|---:|---:|---:|
+| `terrain-descent-sensors.mp4` | `film/focus_pit_descent.mp4` | 8.00 s | 3,609,983 | 4.00 s | 138,039 |
 | `terrain-ramp.mp4` | `film/detail_ramp_traverse.mp4` | 8.00 s | 1,886,264 | 4.00 s | 81,385 |
 | `terrain-gravel.mp4` | `film/detail_gravel_traverse.mp4` | 8.00 s | 3,590,030 | 4.00 s | 144,017 |
 | `terrain-bumpy.mp4` | `film/detail_bumpy_traverse.mp4` | 6.00 s | 2,044,006 | 3.00 s | 75,139 |
 | `full-body-arms.mp4` | `arms_film/full_body_arms.mp4` | 16.00 s | 3,918,963 | 8.00 s | 63,290 |
 
-Each poster is a native frame extracted from its matching exported MP4 using FFmpeg 7.0.2, JPEG quality `-q:v 2`. All four posters were inspected after extraction; source framing and labels are intact. The poster basename matches its video basename.
+Each poster is a native frame extracted from its matching exported MP4 using FFmpeg 7.0.2, JPEG quality `-q:v 2`. All five posters were inspected after extraction; source framing and labels are intact. The poster basename matches its video basename.
+
+The locomotion lead is the complete eight-second step-descent shot, with both stereo views, lidar ray hits, and IMU traces visible. It is source shot 2, beginning seven seconds into the full film, and covers robot 1 at simulation time 0–8 seconds. Stereo and lidar are displays; native IMU orientation and gyro feed the frozen gait, while scripted routes use simulated pose. The original ramp clip remains in the terrain gallery.
 
 ```sh
 ffmpeg -ss POSTER_SECONDS -i CLIP.mp4 -frames:v 1 -q:v 2 CLIP.jpg
@@ -23,9 +26,10 @@ ffmpeg -ss POSTER_SECONDS -i CLIP.mp4 -frames:v 1 -q:v 2 CLIP.jpg
 
 SHA-256 of each exported MP4:
 
+- `terrain-descent-sensors.mp4`: `c3f1d7d102e5147917d5b665c2617dcb45b6ee25e51afa29609892de7e5bb776`
 - `terrain-ramp.mp4`: `5efc0b9e58877ad29b40ecdf3c338d64ba36aed240ad66c9000e92fc7879aa15`
 - `terrain-gravel.mp4`: `1555ec572751f5fdbc72f1fb69de1a4119dc460dff8d1886f8de93d908f08564`
 - `terrain-bumpy.mp4`: `1eb5907b89f98591ad6eb6aff28e01223421669a77cc3f87a0c3ade9758d279c`
 - `full-body-arms.mp4`: `e7c1bb31da8ca1898547d35886503150b5c6d2b466426aa58cf0634f8d5b6b9c`
 
-Validation: all four entire MP4 files decoded successfully with FFmpeg `-xerror`; their SHA-256 hashes match the original export manifests.
+Validation: all five entire MP4 files decoded successfully with FFmpeg `-xerror`; their SHA-256 hashes match the original export manifests.

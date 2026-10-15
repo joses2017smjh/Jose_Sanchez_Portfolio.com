@@ -35,18 +35,19 @@ links:
   href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/H3_H4_CAMPAIGN_2026-10-08.md
 - label: Full research overview
   href: https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/RESEARCH_OVERVIEW_2026-10-12.md
-video: /media/bhl/terrain-ramp.mp4
-poster: /media/bhl/terrain-ramp.jpg
-image: /media/bhl/terrain-ramp.jpg
-alt: A simulated biped traverses an eleven-degree rust-red concrete ramp.
-figcaption: 'Selected MuJoCo rollout on an 11° ramp. Visual demonstration; no new training or reliability claim.'
+video: /media/bhl/terrain-descent-sensors.mp4
+poster: /media/bhl/terrain-descent-sensors.jpg
+image: /media/bhl/terrain-descent-sensors.jpg
+alt: A simulated humanoid descends a stepped pit beside stereo camera views, lidar hits, and IMU traces.
+figcaption: 'Step descent with stereo + lidar displays and IMU feedback. Selected simulation rollout at real time.'
 sections:
 - heading: Terrain and full-body rollouts
   body: >-
     Dirt relief is about 8 cm; gravel includes 100 physical stones. Footprints are
     contact-triggered visual marks and do not change collision geometry. The main
     capture includes 24 robots and eight falls. The arms clip is a separate run
-    using the upstream 22-joint policy.
+    using the upstream 22-joint policy. In the descent, stereo/lidar are display-only;
+    native IMU feeds the gait and scripted routes use simulated pose.
   figures:
   - image: /media/bhl/terrain-gravel.mp4
     poster: /media/bhl/terrain-gravel.jpg
@@ -60,6 +61,10 @@ sections:
     poster: /media/bhl/full-body-arms.jpg
     alt: A complete 22-joint humanoid walks with physical arms in MuJoCo.
     caption: '22-joint MuJoCo rollout using the upstream full-body policy. Separate demonstration, not a new trained result.'
+  - image: /media/bhl/terrain-ramp.mp4
+    poster: /media/bhl/terrain-ramp.jpg
+    alt: A simulated biped traverses an eleven-degree rust-red concrete ramp.
+    caption: 'Selected 11° ramp traversal. Separate from the scored mild-terrain study.'
 date: 2026-10-14
 order: 1
 featured: true
