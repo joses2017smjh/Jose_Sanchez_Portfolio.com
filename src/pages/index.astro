@@ -73,7 +73,11 @@ if (!teleop) throw new Error("The physical robotics case study is missing.");
             alt={teleop.data.alt}
             caption={teleop.data.figcaption}
           />
-          <a class="hardware-dashboard-link" href="/media/humanoid-vr/operator-dashboard.jpg">Inspect the developer, sensor, and calibration panels <span aria-hidden="true">&rarr;</span></a>
+          <div class="hardware-dashboard-link">
+            <a href="/media/humanoid-vr/operator-dashboard.jpg">Operator panels</a>
+            <span aria-hidden="true"> · </span>
+            <a href="/media/humanoid-vr/imu-telemetry-full-panel.jpg">Full telemetry panel</a>
+          </div>
         </div>
         <div class="hardware-copy">
           <h3>Quest VR Teleoperation</h3>

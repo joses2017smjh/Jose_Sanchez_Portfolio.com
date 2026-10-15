@@ -2,8 +2,16 @@
   "date": "2026-10-14",
   "source_commits": {
     "44f65bd": "44f65bdc4f12f7c8385417b5ab9232c1a0defd89",
-    "e4a77ca": "e4a77cafbe04e1de5a9c779b110c987957c4c4ae",
     "current_preview": "12cc49345d063332503e69855bbfdbd2506045cb"
+  },
+  "telemetry_source": {
+    "filename": "actaulved.mp4",
+    "bytes": 95294057,
+    "sha256": "1f0d160e88c815226619c11a62abcc9632d6b022fade49eb7b4ab17f377a3d06",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "note": "User-supplied recording, including its existing edits. Source video is not published."
   },
   "frames": [
     {
@@ -29,14 +37,14 @@
     },
     {
       "frame": "imu-telemetry",
-      "source": "e4a77ca-quest.mp4",
-      "source_sha256": "263d792fb502dc22e4548127fb180f2ceb8b9e44ceb16981a03653ef1b9ba485",
-      "time_seconds": 11.55,
+      "source": "actaulved.mp4",
+      "source_sha256": "1f0d160e88c815226619c11a62abcc9632d6b022fade49eb7b4ab17f377a3d06",
+      "time_seconds": 46.5,
       "crop_xyxy": [
-        20,
-        215,
-        920,
-        720
+        495,
+        295,
+        1295,
+        890
       ],
       "note": "Source framing retained unless a crop is listed; no perspective correction or generated content."
     },
@@ -83,29 +91,33 @@
     12.55
   ],
   "calibration_note": "Authentic transition from the Onshape-derived robot model to the joint details.",
-  "telemetry_note": "A tighter static detail centers the pitch/yaw readings and visible acceleration values. Original captured edges remain clipped; no missing values are reconstructed.",
+  "telemetry_note": "Complete IMU panel recovered at 46.5 seconds of actaulved.mp4. Crop preserves all four panel corners, roll/pitch/yaw, acceleration, gyro, magnetometer, and temperature. No missing regions or measurements are generated.",
   "lidar_note": "Original captured framing is retained.",
   "overview_note": "Separate frames, not a simultaneous or live dashboard. All UI and measurements are authentic captured pixels.",
   "outputs": {
     "operator-dashboard.jpg": {
-      "bytes": 314279,
-      "sha256": "450d525ca823120f16ec9ee91801c2b415b06762ce2b8e5a91061a8c5872a62d"
+      "bytes": 314745,
+      "sha256": "81b518843ea4983b6b2a0c6f47a637572be109742049fb1c7bdf36ed51e01c0c"
     },
     "developer-mode.jpg": {
       "bytes": 102040,
       "sha256": "51a6aca7b793ed4f3223ce0f947a618192d2d7bdcc315af9cc7f96853d5becb2"
     },
     "sensor-diagnostics.jpg": {
-      "bytes": 103736,
-      "sha256": "1469a03e3c83d78a40b5c1a90735a9d3903ea9ec79afee0da41462b72c2eda13"
+      "bytes": 110706,
+      "sha256": "0c9f60d89c8ed48f88d3fbf06878efbf734027c436201608f70d081a2d8b21a6"
     },
     "calibration-onshape.jpg": {
       "bytes": 122583,
       "sha256": "b2d645498514a079999f5606561fc953d9378e607dd6496d85ef8f10070a8253"
     },
+    "imu-telemetry-full-panel.jpg": {
+      "bytes": 45506,
+      "sha256": "458a428f1b797522ca614b7594d805c585108197243ba92f0c3c521b63fcb133"
+    },
     "quest-vr-teleop.mp4": {
-      "bytes": 3812033,
-      "sha256": "f8d5e399d15972e87db27a56c6a751ce316947bf75c7b85ac926ec71d5c9a103"
+      "bytes": 3812295,
+      "sha256": "3cd89c661210752684a55dc0b474eb1d87c848328ada06553676ee02bf582bd0"
     }
   },
   "preview": {

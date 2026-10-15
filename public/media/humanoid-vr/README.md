@@ -17,14 +17,18 @@ still leads; the complete preview remains 16.5 seconds at 1280 × 720 / 24 fps.
 
 The model transition was recovered from the saved video at website commit
 `44f65bdc4f12f7c8385417b5ab9232c1a0defd89` (source time 8.55–12.55 seconds).
-The telemetry still comes from `e4a77cafbe04e1de5a9c779b110c987957c4c4ae`
-at 11.55 seconds. Its source already clips the telemetry panel's left and lower
-edges; a tighter static detail appears inside the overview, and the previous moving zoom
-is not restored. No missing regions or measurements were generated.
+The complete telemetry panel comes from the user-supplied `actaulved.mp4`
+at **46.5 seconds**, within the requested 46–48-second window. The 1920 × 1080
+recording is cropped to `[495, 295, 1295, 890]`, preserving all four panel corners,
+roll/pitch/yaw, acceleration, gyro, magnetometer, and temperature. This replaces
+the clipped telemetry excerpt used in the previous edit. Lidar framing is unchanged.
+[Full-size telemetry frame](imu-telemetry-full-panel.jpg) is also linked from the
+front page. The supplied recording includes existing edits; it is not published
+with the website. No missing regions or measurements were generated.
 
 [Frame timestamps, crops, source hashes, and export hashes](dashboard-frames.json)
 record the exact edit. The developer terminal is cropped to its window;
-the telemetry still also uses a tighter crop around the readings.
+the telemetry crop removes surrounding space while preserving the complete panel.
 The other selected frames retain the captured view. The exported video fully decodes
 to 396 frames / 16.5 seconds. Stereo/depth retains its labeled 1.5× playback;
 the other footage retains its source playback rate.
@@ -62,7 +66,8 @@ source. The GIF has no audio. [Export hashes and provenance](supported-leg-motio
 The previous 19-second preview at website commit
 `92b8b4d27565ccedff5d1152dddb9fc43f8aa918` contains an oversized IMU shot
 from 11.5 to 14 seconds. Its left and lower panel edges are outside the
-recorded frame. The uncropped source recording was not available for this edit.
+recorded frame. The uncropped source recording was not available for that earlier
+edit; the complete panel has since been recovered from `actaulved.mp4` as described above.
 
 The revised preview omits that shot and joins the surrounding depth/flow and
 lidar footage. It retains the remaining shots, their order and playback rates,
