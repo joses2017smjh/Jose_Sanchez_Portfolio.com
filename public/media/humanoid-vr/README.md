@@ -47,6 +47,16 @@ shows leg motion; no walking-policy identity or hardware-transfer result is
 inferred from the filename. Source framing, timing, and audio are preserved.
 Playback starts muted and the native controls allow sound to be enabled.
 
+The front-page leg-motion clip now joins the site's demo playback controls:
+it loops automatically while visible, pauses off-screen, and respects reduced
+motion and the global Pause demos button. The project-page clip uses the same
+behavior when its section is opened and visible.
+
+`supported-leg-motion.gif` provides an actual looping GIF as well: the full
+portrait recording at 360 × 640 and 10 fps, with a 64-color palette. The edit
+reduces resolution, frame rate, and colors without cropping or speeding up the
+source. The GIF has no audio. [Export hashes and provenance](supported-leg-motion.json).
+
 ## 2026-10-14: remove the cropped IMU close-up
 
 The previous 19-second preview at website commit

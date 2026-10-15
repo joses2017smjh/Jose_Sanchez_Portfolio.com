@@ -1,0 +1,14 @@
+{
+  "source": "pleasewalk.mp4",
+  "source_sha256": "4bbf1f4466436ce759d08b596827f6b0cd6e0bf8dfb8e769984e1d73afedb233",
+  "gif": "supported-leg-motion.gif",
+  "gif_sha256": "4c3a734d919f448072b199433845a9da101ae8dd62cf66125572f16acb2d3ff0",
+  "gif_bytes": 7632029,
+  "width": 360,
+  "height": 640,
+  "fps": 10,
+  "loop": "infinite",
+  "framing": "Full source frame; no crop or time scaling",
+  "processing": "Frame-rate reduction, spatial downsampling, palette reduction; GIF has no audio",
+  "full_decode_passed": true
+}
