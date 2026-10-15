@@ -36,6 +36,10 @@ for (const href of ["#projects", "#ai-software", "#vision-vla", "/projects/human
 }
 assert.ok(!rag.includes("/projects/dom-math-transformer") && !rag.includes("/projects/point-cloud-classification"), "RAG projects must remain distinct from coursework");
 assert.ok(section("beyond").includes("/projects/berkeley-humanoid-vr"), "Keep the physical VR control case study accessible from Hardware");
+assert.ok(home.indexOf(humanoid) < home.indexOf(section("beyond")) && home.indexOf(section("beyond")) < home.indexOf(rag), "Physical robotics must follow the humanoid cards before RAG");
+for (const media of ["/media/humanoid-vr/quest-vr-teleop.mp4", "/media/humanoid/26-fully-built-movement.jpg", "/media/humanoid-vr/supported-leg-motion.mp4"]) {
+  assert.ok(section("beyond").includes(media), `Missing physical robotics media: ${media}`);
+}
 assert.ok(!humanoid.includes("/projects/berkeley-humanoid-vr"), "Physical VR control belongs in Hardware");
 
 const bhl = plain(readPage("projects/bhl-robustness-ladder"));

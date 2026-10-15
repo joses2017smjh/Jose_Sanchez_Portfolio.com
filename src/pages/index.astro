@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import ProjectItem from "../components/ProjectItem.astro";
+import Figure from "../components/Figure.astro";
 import { site } from "../site.config";
 import { resume } from "../resume.config";
 import { sortedProjects } from "../lib/projects";
@@ -10,6 +11,8 @@ const humanoid = projects.filter((p) => p.data.track === "humanoid");
 const rag = projects.filter((p) => p.data.track === "rag");
 const vision = projects.filter((p) => p.data.track === "vision");
 const coursework = projects.filter((p) => p.data.track === "coursework");
+const teleop = projects.find((p) => p.id === "berkeley-humanoid-vr");
+if (!teleop) throw new Error("The physical robotics case study is missing.");
 ---
 
 <Base title={`${site.name} — Robotics, Computer Vision & AI Software`} description={`${site.positioning} ${site.seeking}`} full>
@@ -22,6 +25,7 @@ const coursework = projects.filter((p) => p.data.track === "coursework");
         <p class="hero-intro">Humanoid control, agents that retrieve and use evidence, and vision-guided manipulation. Explore the demos, then follow each result to its code and evaluation.</p>
         <ul class="link-row hero-actions">
           <li><a class="button-link" href="#projects">Humanoid simulation</a></li>
+          <li><a class="button-link button-secondary" href="#beyond">Physical robotics</a></li>
           <li><a class="button-link button-secondary" href="#ai-software">RAG & agents</a></li>
           <li><a class="button-link button-secondary" href="#vision-vla">Computer vision & VLA</a></li>
           <li><a href={resume.links.pdf}>Download résumé <span class="file-type">PDF</span></a></li>
@@ -32,6 +36,7 @@ const coursework = projects.filter((p) => p.data.track === "coursework");
         <h2>Start with a demo</h2>
         <ul class="project-starts">
           <li><a href="/projects/humanoid-navigation">Walk through an unfamiliar maze <span aria-hidden="true">&rarr;</span></a><span>Simulated humanoid · lidar mapping · planning</span></li>
+          <li><a href="/projects/berkeley-humanoid-vr">Control physical robot arms from VR <span aria-hidden="true">&rarr;</span></a><span>Quest tracking · inverse kinematics · SocketCAN</span></li>
           <li><a href="/projects/metanavit">Trace an answer to its source <span aria-hidden="true">&rarr;</span></a><span>Agentic RAG · retrieval evaluation · MCP</span></li>
           <li><a href="/projects/isaac-pruning-workflow">Guide a pruning arm with vision <span aria-hidden="true">&rarr;</span></a><span>RGB-D control · Isaac Sim · contact gates</span></li>
         </ul>
@@ -49,6 +54,54 @@ const coursework = projects.filter((p) => p.data.track === "coursework");
       <ul class="project-grid project-grid-three">
         {humanoid.map((project) => <ProjectItem project={project} number={projects.indexOf(project) + 1} />)}
       </ul>
+    </section>
+
+    <section class="work-section hardware-section" id="beyond" aria-labelledby="hardware-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">From simulation to the workshop</p>
+          <h2 id="hardware-title">Physical Robotics</h2>
+        </div>
+        <p>The assembled Berkeley Humanoid Lite, its hardware bring-up, and Quest arm control.</p>
+      </div>
+      <article class="hardware-showcase">
+        <div class="hardware-demo">
+          <Figure
+            number={projects.indexOf(teleop) + 1}
+            video={teleop.data.video}
+            poster={teleop.data.poster}
+            alt={teleop.data.alt}
+            caption={teleop.data.figcaption}
+          />
+        </div>
+        <div class="hardware-copy">
+          <h3>Quest VR Teleoperation</h3>
+          <p class="hardware-intro">Control physical humanoid arms from a VR headset.</p>
+          <p>I built the WebXR-to-robot control path, connecting Quest controller tracking to inverse kinematics and SocketCAN arm commands, with per-joint calibration and live feedback.</p>
+          <p class="project-evidence">Calibration checks recorded for all ten arm joints.</p>
+          <ul class="link-row hardware-actions">
+            <li><a class="button-link" href="/projects/berkeley-humanoid-vr">View project</a></li>
+            <li><a href={teleop.data.repo}>GitHub</a></li>
+            <li><a href="/beyond/humanoid">Build log <span aria-hidden="true">&rarr;</span></a></li>
+          </ul>
+          <div class="hardware-build-grid">
+            <figure>
+              <a class="hardware-build-frame" href="/beyond/humanoid">
+                <img src="/media/humanoid/26-fully-built-movement.jpg" alt="Fully assembled Berkeley Humanoid Lite on a support rack, with its arms, legs, and external wiring visible." width="1200" height="1600" loading="lazy" decoding="async" />
+              </a>
+              <figcaption>The complete physical build.</figcaption>
+            </figure>
+            <figure>
+              <div class="hardware-build-frame">
+                <video controls playsinline muted preload="none" poster="/media/humanoid-vr/supported-leg-motion.jpg" aria-label="Seven-second leg-motion test with the assembled humanoid supported by a rack.">
+                  <source src="/media/humanoid-vr/supported-leg-motion.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <figcaption>Supported leg-motion test · 7 s.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section class="work-section" id="ai-software" aria-labelledby="ai-title">
@@ -109,19 +162,6 @@ const coursework = projects.filter((p) => p.data.track === "coursework");
           ))}
           <li><a href={resume.links.linkedin}>LinkedIn</a></li>
           <li><a href="https://github.com/joses2017smjh">GitHub profile</a></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="beyond-teaser" id="beyond" aria-labelledby="beyond-title">
-      <img src="/media/humanoid/26-fully-built-movement.jpg" alt="Fully assembled Berkeley Humanoid Lite hanging from a rack, chest screen on, wiring still external." width="1200" height="1600" loading="lazy" decoding="async" />
-      <div>
-        <p class="eyebrow">Physical robotics</p>
-        <h2 id="beyond-title">Building the hardware, too.</h2>
-        <p>From printed parts and actuator calibration to Quest VR arm control. Follow the Berkeley Humanoid Lite build log. Outside the workshop, I hike and train jiu-jitsu.</p>
-        <ul class="link-row">
-          <li><a href="/projects/berkeley-humanoid-vr">Quest VR arm control <span aria-hidden="true">&rarr;</span></a></li>
-          <li><a href="/beyond">The build log and beyond <span aria-hidden="true">&rarr;</span></a></li>
         </ul>
       </div>
     </section>

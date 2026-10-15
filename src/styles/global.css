@@ -455,6 +455,76 @@ a:focus-visible {
   border: 1px solid var(--hairline);
 }
 
+.hardware-showcase {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.hardware-demo,
+.hardware-copy {
+  min-width: 0;
+}
+
+.hardware-demo .figure {
+  margin: 0;
+}
+
+.hardware-copy h3 {
+  font-size: var(--text-lg);
+  margin: 0 0 var(--space-1);
+}
+
+.hardware-intro {
+  color: var(--dim);
+}
+
+.hardware-actions {
+  margin-bottom: var(--space-3);
+}
+
+.hardware-build-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.hardware-build-grid figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.hardware-build-frame {
+  display: grid;
+  place-items: center;
+  height: clamp(13rem, 22vw, 18rem);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.hardware-build-frame img,
+.hardware-build-frame video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hardware-build-grid figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--faint);
+  margin-top: var(--space-1);
+}
+
+@media (min-width: 56rem) {
+  .hardware-showcase {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
 .hero-details h2 {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
