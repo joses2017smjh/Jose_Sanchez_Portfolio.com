@@ -41,6 +41,11 @@ for (const media of ["/media/humanoid-vr/quest-vr-teleop.mp4", "/media/humanoid/
   assert.ok(section("beyond").includes(media), `Missing physical robotics media: ${media}`);
 }
 assert.ok(!humanoid.includes("/projects/berkeley-humanoid-vr"), "Physical VR control belongs in Hardware");
+const vr = readPage("projects/berkeley-humanoid-vr");
+const vrPanelNames = ["developer-mode.jpg", "sensor-diagnostics.jpg", "calibration-onshape.jpg"];
+const vrPanelPositions = vrPanelNames.map((name) => vr.indexOf(name));
+assert.ok(vrPanelPositions.every((position, index) => position >= 0 && (index === 0 || position > vrPanelPositions[index - 1])), "VR panels must show developer mode, sensor diagnostics, then calibration / Onshape");
+assert.ok(home.includes("/media/humanoid-vr/operator-dashboard.jpg"), "The front-page operator overview must be inspectable as a still frame");
 
 const bhl = plain(readPage("projects/bhl-robustness-ladder"));
 for (const evidence of ["0/360", "77/360", "R1HO", "30/30", "9/9", "one selected R1H-s2 parent", "180/180", "19/180", "simulation results, not hardware validation", "learned locomotion has not transferred to hardware", "retracted"]) {

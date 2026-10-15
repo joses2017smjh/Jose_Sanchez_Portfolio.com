@@ -33,9 +33,9 @@ links:
 video: /media/humanoid-vr/quest-vr-teleop.mp4
 poster: /media/humanoid-vr/quest-vr-teleop.jpg
 image: /media/humanoid-vr/quest-vr-teleop.jpg
-alt: "Physical arm teleoperation, panel summary, developer workspace, stereo/depth, lidar output and calibration."
-figcaption: "16.5 s: teleop → summary → developer/sensors → calibration. Stereo 1.5×; summary combines source frames."
-date: 2026-10-05
+alt: "Physical arm teleoperation, developer mode, IMU telemetry, lidar scans, robot model and joint calibration."
+figcaption: "16.5 s: teleop → developer → diagnostics → model / calibration. Overview combines frames; stereo 1.5×."
+date: 2026-10-14
 order: 9
 featured: true
 focus: "Robot control / Hardware integration"
@@ -47,12 +47,22 @@ sections:
       and end stops. Hardware uses the as-built CAN map and per-joint calibration.
       This makes rehearsal and software checks possible before commanding the arms.
       Simulation measurements are separate from the physical step-test report.
-  - heading: Feedback for the operator
+  - heading: Operator panels
     body: >-
-      The headset shows stereo camera views, lidar and IMU status, and per-eye relative-depth
-      and RAFT flow overlays. Relative depth is rescaled per image. CPU vision updates
-      slowly and stays outside the arm-control loop. Grip gating and damping are software
-      controls; they do not establish physical emergency-stop performance.
+      Developer mode, sensor diagnostics, then calibration and the Onshape-derived model.
+      The overview combines separate recording frames. IMU telemetry and lidar scans
+      complement stereo, relative-depth, and flow views. Relative depth is rescaled per
+      image; CPU vision stays outside the arm-control loop.
+    figures:
+      - image: /media/humanoid-vr/developer-mode.jpg
+        alt: Recorded developer terminal and in-headset workspace.
+        caption: "1 · Developer mode: terminal and headset workspace."
+      - image: /media/humanoid-vr/sensor-diagnostics.jpg
+        alt: Separate recorded frames of IMU telemetry and the lidar scan display.
+        caption: "2 · Sensor diagnostics: IMU telemetry and lidar output, captured at separate moments."
+      - image: /media/humanoid-vr/calibration-onshape.jpg
+        alt: Onshape-derived robot model and the joint calibration screen from the recorded mode switch.
+        caption: "3 · Calibration / Onshape: robot-model view and joint details from the recorded switch."
   - heading: The assembled robot
     body: >-
       The complete physical build and a seven-second supported leg-motion test.

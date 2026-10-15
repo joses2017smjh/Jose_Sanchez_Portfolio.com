@@ -210,8 +210,8 @@ export const humanoid = {
       kind: "video" as const,
       src: "/media/humanoid-vr/quest-vr-teleop.mp4",
       poster: "/media/humanoid-vr/quest-vr-teleop.jpg",
-      alt: "Physical arm control, panel summary, developer workspace, stereo/depth, IMU telemetry, lidar output and calibration.",
-      caption: "1 Oct recording — 19 s: teleop, panel summary, developer panels, stereo/depth at 1.5×, IMU telemetry, lidar, then calibration. Summary combines separate recording frames.",
+      alt: "Physical arm control, developer workspace, telemetry and lidar diagnostics, then the robot-model and calibration screens.",
+      caption: "1 Oct recording — 16.5 s: physical arm control, developer mode, sensor diagnostics, then robot model / calibration. Overview combines frames; stereo/depth plays at 1.5×.",
     },
   ],
 } as const;

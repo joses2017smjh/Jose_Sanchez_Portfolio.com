@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-14",
+  "source_commits": {
+    "44f65bd": "44f65bdc4f12f7c8385417b5ab9232c1a0defd89",
+    "e4a77ca": "e4a77cafbe04e1de5a9c779b110c987957c4c4ae",
+    "current_preview": "12cc49345d063332503e69855bbfdbd2506045cb"
+  },
+  "frames": [
+    {
+      "frame": "developer-terminal",
+      "source": "44f65bd-quest.mp4",
+      "source_sha256": "b169380037a10803adab4bf3fffdb0cd5c0e67c9665529e9a89a05454d7ed2b8",
+      "time_seconds": 6.65,
+      "crop_xyxy": [
+        10,
+        265,
+        605,
+        635
+      ],
+      "note": "Source framing retained unless a crop is listed; no perspective correction or generated content."
+    },
+    {
+      "frame": "developer-headset",
+      "source": "44f65bd-quest.mp4",
+      "source_sha256": "b169380037a10803adab4bf3fffdb0cd5c0e67c9665529e9a89a05454d7ed2b8",
+      "time_seconds": 1.2,
+      "crop_xyxy": null,
+      "note": "Source framing retained unless a crop is listed; no perspective correction or generated content."
+    },
+    {
+      "frame": "imu-telemetry",
+      "source": "e4a77ca-quest.mp4",
+      "source_sha256": "263d792fb502dc22e4548127fb180f2ceb8b9e44ceb16981a03653ef1b9ba485",
+      "time_seconds": 11.55,
+      "crop_xyxy": null,
+      "note": "Source framing retained unless a crop is listed; no perspective correction or generated content."
+    },
+    {
+      "frame": "lidar-output",
+      "source": "quest-before-dashboard.mp4",
+      "source_sha256": "56f83e3cee2de2e323bcec063bc7d9942f0ede0748159c2b329cb55c4499646a",
+      "time_seconds": 12.0,
+      "crop_xyxy": null,
+      "note": "Source framing retained unless a crop is listed; no perspective correction or generated content."
+    },
+    {
+      "frame": "onshape-model",
+      "source": "44f65bd-quest.mp4",
+      "source_sha256": "b169380037a10803adab4bf3fffdb0cd5c0e67c9665529e9a89a05454d7ed2b8",
+      "time_seconds": 8.85,
+      "crop_xyxy": null,
+      "note": "Source framing retained unless a crop is listed; no perspective correction or generated content."
+    },
+    {
+      "frame": "joint-calibration",
+      "source": "44f65bd-quest.mp4",
+      "source_sha256": "b169380037a10803adab4bf3fffdb0cd5c0e67c9665529e9a89a05454d7ed2b8",
+      "time_seconds": 10.5,
+      "crop_xyxy": null,
+      "note": "Source framing retained unless a crop is listed; no perspective correction or generated content."
+    }
+  ],
+  "panel_order": [
+    "Developer mode",
+    "Sensor diagnostics",
+    "Calibration / Onshape"
+  ],
+  "summary_video_interval_seconds": [
+    4,
+    7
+  ],
+  "calibration_video_interval_seconds": [
+    12.5,
+    16.5
+  ],
+  "calibration_source_interval_seconds": [
+    8.55,
+    12.55
+  ],
+  "calibration_note": "Authentic transition from the Onshape-derived robot model to the joint details.",
+  "telemetry_note": "A still detail from the earlier preview; original captured edges remain clipped. This detail is reduced within the overview; the former moving zoom is not restored.",
+  "overview_note": "Separate frames, not a simultaneous or live dashboard. All UI and measurements are authentic captured pixels.",
+  "outputs": {
+    "operator-dashboard.jpg": {
+      "bytes": 315685,
+      "sha256": "1110c0bd99c130844ba53acbdd4d50c72b0a597c3f4730038dea6eb986d7039b"
+    },
+    "developer-mode.jpg": {
+      "bytes": 102040,
+      "sha256": "51a6aca7b793ed4f3223ce0f947a618192d2d7bdcc315af9cc7f96853d5becb2"
+    },
+    "sensor-diagnostics.jpg": {
+      "bytes": 105278,
+      "sha256": "4db15bfc9937723076b821530b93baae95ce2bcf63966c53972801146ff626c8"
+    },
+    "calibration-onshape.jpg": {
+      "bytes": 122583,
+      "sha256": "b2d645498514a079999f5606561fc953d9378e607dd6496d85ef8f10070a8253"
+    },
+    "quest-vr-teleop.mp4": {
+      "bytes": 3811938,
+      "sha256": "d6a50113261b1143f315103ce7b5f9ddece4d7dac3db4595e4d401209cc1268d"
+    }
+  },
+  "preview": {
+    "width": 1280,
+    "height": 720,
+    "fps": 24,
+    "frames": 396,
+    "duration_seconds": 16.5,
+    "audio": false,
+    "stereo_depth_speed": 1.5,
+    "other_footage_speed_changed": false,
+    "full_decode_passed": true
+  }
+}

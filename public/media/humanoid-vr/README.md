@@ -1,5 +1,33 @@
 # Quest VR preview
 
+## 2026-10-14: developer → diagnostics → calibration / Onshape
+
+The panel overview now follows this order:
+
+1. **Developer mode:** the recorded terminal and in-headset workspace.
+2. **Sensor diagnostics:** separate frames of IMU telemetry and lidar output.
+3. **Calibration / Onshape:** the Onshape-derived robot model and joint details.
+
+`operator-dashboard.jpg` is the complete three-column overview. The three named
+panel JPGs provide larger views in the VR case study. These are compositions
+of actual recording frames, not a synchronized live sensor dashboard. The
+front-page video shows the new overview at 4–7 seconds and ends with the recorded
+model-to-joint-details transition at 12.5–16.5 seconds. Physical teleoperation
+still leads; the complete preview remains 16.5 seconds at 1280 × 720 / 24 fps.
+
+The model transition was recovered from the saved video at website commit
+`44f65bdc4f12f7c8385417b5ab9232c1a0defd89` (source time 8.55–12.55 seconds).
+The telemetry still comes from `e4a77cafbe04e1de5a9c779b110c987957c4c4ae`
+at 11.55 seconds. Its source already clips the telemetry panel's left and lower
+edges; the still is reduced inside the overview, and the previous moving zoom
+is not restored. No missing regions or measurements were generated.
+
+[Frame timestamps, crops, source hashes, and export hashes](dashboard-frames.json)
+record the exact edit. The developer terminal alone is cropped to its window;
+other selected frames retain the captured view. The exported video fully decodes
+to 396 frames / 16.5 seconds. Stereo/depth retains its labeled 1.5× playback;
+the other footage retains its source playback rate.
+
 ## 2026-10-14: physical robot feature and supported leg-motion clip
 
 The front page now places the Quest preview beneath Humanoid Simulation, alongside
