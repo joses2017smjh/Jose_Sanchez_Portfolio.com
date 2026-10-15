@@ -30,6 +30,8 @@ links:
   href: https://github.com/joses2017smjh/Vision-Based-Metric-Depth-Estimation-for-Robotic-Pruning
 - label: Robot simulation workflow
   href: https://github.com/joses2017smjh/isaac-sim-pruning-workflow
+- label: Branch geometry and transfer results
+  href: https://github.com/joses2017smjh/spur-depth-service/blob/master/docs/RESULTS.md
 video: /media/depth/orchard_rig.mp4
 cardVideo: /media/depth/orchard_rig_card.mp4
 cardZoom: true
@@ -107,7 +109,7 @@ paperStrip:
   pdf: /media/papers/depth-capstone-paper.pdf
   pages: /media/papers/cap-page-{n}.jpg
   count: 11
-date: 2026-06-01
+date: 2026-10-14
 order: 8
 featured: true
 focus: Computer vision / Metric depth
@@ -115,6 +117,17 @@ evidence: '0.0445 ± 0.0057 m trunk RMSE across five stored best-validation scor
 contribution: Built the synthetic orchard, the evaluation protocol, DINOv2 RGB-D refinement, and the FastAPI/ONNX
   service. Real orchard accuracy is not claimed.
 ---
+
+## From depth to branch geometry
+
+October 2–5 studies extend the service to branch graphs and cut directions.
+BranchNet raises skeleton F1 at 2 cm from **0.50 to 0.60** on two held-out
+synthetic trees, with 120 correlated frames. Fitted axes raise strict cut recall
+from **0.12 to 0.17** on that same set. On real MFO cherry images, whole-orchard
+training reduces background classified as wood from **31% to 8%**, but class
+mIoU remains **0.12**. These are perception results; physical cutting and
+real-orchard metric-depth accuracy remain unvalidated.
+[Protocol and comparisons](https://github.com/joses2017smjh/spur-depth-service/blob/master/docs/RESULTS.md).
 
 ## What sim-to-real actually costs
 

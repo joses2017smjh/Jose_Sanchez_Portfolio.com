@@ -63,7 +63,7 @@ for (const evidence of ["4/4 targeted", "2/7", "ground-truth depth", "rigid-piec
   assert.ok(pruning.includes(evidence), `Missing pruning result boundary: ${evidence}`);
 }
 const depth = plain(readPage("projects/depth-estimation-robotic-pruning"));
-for (const evidence of ["0.0445", "0.0057", "Five saved best-validation scores", "Synthetic evaluation", "real-orchard accuracy remains unverified", "excluding DA2 and HTTP", "1.5e-5"]) {
+for (const evidence of ["0.0445", "0.0057", "Five saved best-validation scores", "Synthetic evaluation", "real-orchard accuracy remains unverified", "excluding DA2 and HTTP", "1.5e-5", "0.50 to 0.60", "120 correlated frames", "mIoU remains 0.12"]) {
   assert.ok(depth.includes(evidence), `Missing depth result boundary: ${evidence}`);
 }
 const soccer = plain(readPage("projects/agentic-soccer-mcp"));
@@ -71,7 +71,7 @@ for (const evidence of ["1,520 matches", "1.0229", "0.9407 closing market", "86.
   assert.ok(soccer.includes(evidence), `Missing soccer result boundary: ${evidence}`);
 }
 const metanavit = plain(readPage("projects/metanavit"));
-for (const evidence of ["original six-person team", "Independent 2026 extensions", "SciFact, 300 queries", "0.075", "Illustrated retrieval workflow", "not a large-corpus or live-model benchmark"]) {
+for (const evidence of ["original six-person team", "Independent 2026 extensions", "SciFact, 300 queries", "0.075", "Illustrated retrieval workflow", "not a large-corpus or live-model benchmark", "0.3637", "0.3207", "0.058 to 0.671", "16 measured requests per level"]) {
   assert.ok(metanavit.includes(evidence), `Missing MetaNaviT attribution or result boundary: ${evidence}`);
 }
 assert.ok(metanavit.includes("single-use approval grant"), "MetaNaviT must describe the current approval flow");

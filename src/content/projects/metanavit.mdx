@@ -18,6 +18,11 @@ tags:
 - MCP
 - Docker
 repo: https://github.com/joses2017smjh/MetaNavT
+links:
+- label: October retrieval and load results
+  href: https://github.com/joses2017smjh/MetaNavT/tree/main/bench/results/revamp_20261007
+- label: Robotics file-lookup evaluation
+  href: https://github.com/joses2017smjh/MetaNavT/blob/main/bench/results/robotics_file_lookup_revalidated_2026-10-07.json
 video: /media/metanavit/ask.mp4
 poster: /media/metanavit/ask_poster.jpg
 image: /media/metanavit/workflow.png
@@ -36,7 +41,17 @@ sections:
   body: Mutation tools return a plan before application. Current file operations require a signed,
     single-use approval grant after plan review. SciFact experiments use actual embedding and
     reranking backends, evaluated separately from the illustrated retrieval traces.
-date: 2026-10-02
+- heading: Test across different corpora
+  body: 'October 7: on 323 NFCorpus queries, hybrid nDCG@10 is 0.3637 versus BM25 at
+    0.3207; adding the reranker reduces it to 0.3555. On 648 FiQA queries, dense
+    retrieval leads hybrid, 0.3848 versus 0.3645. The best retrieval recipe depends
+    on the corpus.'
+- heading: Retrieve the right experiment file
+  body: 'Adding path context raises Recall@10 from 0.058 to 0.671 on 240 generated
+    robotics questions with disjoint experiment families. This measures source-file
+    retrieval, not answer accuracy. A separate H100 HTTP check records p95 of
+    252/422/1319 ms at concurrency 1/4/16, with only 16 measured requests per level.'
+date: 2026-10-14
 order: 4
 featured: false
 track: rag
