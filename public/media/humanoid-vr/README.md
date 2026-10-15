@@ -19,12 +19,13 @@ The model transition was recovered from the saved video at website commit
 `44f65bdc4f12f7c8385417b5ab9232c1a0defd89` (source time 8.55–12.55 seconds).
 The telemetry still comes from `e4a77cafbe04e1de5a9c779b110c987957c4c4ae`
 at 11.55 seconds. Its source already clips the telemetry panel's left and lower
-edges; the still is reduced inside the overview, and the previous moving zoom
+edges; a tighter static detail appears inside the overview, and the previous moving zoom
 is not restored. No missing regions or measurements were generated.
 
 [Frame timestamps, crops, source hashes, and export hashes](dashboard-frames.json)
-record the exact edit. The developer terminal alone is cropped to its window;
-other selected frames retain the captured view. The exported video fully decodes
+record the exact edit. The developer terminal is cropped to its window;
+the telemetry still also uses a tighter crop around the readings.
+The other selected frames retain the captured view. The exported video fully decodes
 to 396 frames / 16.5 seconds. Stereo/depth retains its labeled 1.5× playback;
 the other footage retains its source playback rate.
 

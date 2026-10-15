@@ -32,7 +32,12 @@
       "source": "e4a77ca-quest.mp4",
       "source_sha256": "263d792fb502dc22e4548127fb180f2ceb8b9e44ceb16981a03653ef1b9ba485",
       "time_seconds": 11.55,
-      "crop_xyxy": null,
+      "crop_xyxy": [
+        20,
+        215,
+        920,
+        720
+      ],
       "note": "Source framing retained unless a crop is listed; no perspective correction or generated content."
     },
     {
@@ -78,28 +83,29 @@
     12.55
   ],
   "calibration_note": "Authentic transition from the Onshape-derived robot model to the joint details.",
-  "telemetry_note": "A still detail from the earlier preview; original captured edges remain clipped. This detail is reduced within the overview; the former moving zoom is not restored.",
+  "telemetry_note": "A tighter static detail centers the pitch/yaw readings and visible acceleration values. Original captured edges remain clipped; no missing values are reconstructed.",
+  "lidar_note": "Original captured framing is retained.",
   "overview_note": "Separate frames, not a simultaneous or live dashboard. All UI and measurements are authentic captured pixels.",
   "outputs": {
     "operator-dashboard.jpg": {
-      "bytes": 315685,
-      "sha256": "1110c0bd99c130844ba53acbdd4d50c72b0a597c3f4730038dea6eb986d7039b"
+      "bytes": 314279,
+      "sha256": "450d525ca823120f16ec9ee91801c2b415b06762ce2b8e5a91061a8c5872a62d"
     },
     "developer-mode.jpg": {
       "bytes": 102040,
       "sha256": "51a6aca7b793ed4f3223ce0f947a618192d2d7bdcc315af9cc7f96853d5becb2"
     },
     "sensor-diagnostics.jpg": {
-      "bytes": 105278,
-      "sha256": "4db15bfc9937723076b821530b93baae95ce2bcf63966c53972801146ff626c8"
+      "bytes": 103736,
+      "sha256": "1469a03e3c83d78a40b5c1a90735a9d3903ea9ec79afee0da41462b72c2eda13"
     },
     "calibration-onshape.jpg": {
       "bytes": 122583,
       "sha256": "b2d645498514a079999f5606561fc953d9378e607dd6496d85ef8f10070a8253"
     },
     "quest-vr-teleop.mp4": {
-      "bytes": 3811938,
-      "sha256": "d6a50113261b1143f315103ce7b5f9ddece4d7dac3db4595e4d401209cc1268d"
+      "bytes": 3812033,
+      "sha256": "f8d5e399d15972e87db27a56c6a751ce316947bf75c7b85ac926ec71d5c9a103"
     }
   },
   "preview": {
