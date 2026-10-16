@@ -96,3 +96,24 @@ sections:
         alt: Adapted policy moves its arms over a short top but leaves the garment unfolded.
         caption: "20 September: new policy failure, with both wrist views and the overhead camera."
 ---
+
+## Why the original policy ignored the cloth
+
+The policy was trained on path-traced frames, but the simulator rollouts feed it
+rasterized ones. On identical replayed states, the converged checkpoint's
+action-prediction skill (1 is perfect; 0 is no better than always predicting
+the mean action) was **+0.976** on path-traced frames and **−0.038** on
+rasterized frames. Fine-tuning on **18,200** rasterized frames raised it to
+**+0.652**. This is a single-step, teacher-forced score, not a fold rate.
+[Job ledger, rows 21155266, 21155267, 21192053 and 21193835](https://github.com/joses2017smjh/IsaacSimFolding/blob/main/SLURM_JOBS.md).
+
+## A silent optimizer defect, found in the checkpoint bytes
+
+The trainer ran AdamW directly on bf16 action-expert weights with no FP32 master
+copy, so most updates rounded to zero. A byte-level comparison of the stored
+weights showed that only **11.5%** of the 96.6M expert weights had changed. A
+later fine-tune with FP32 master weights changed **59.4%**. The two checkpoints
+come from different runs and steps, so this is not an isolated ablation, and
+weight movement is not fold success.
+[Report](https://github.com/joses2017smjh/IsaacSimFolding/blob/main/campaigns/20260923-recovery-supervision-v3/REPORT.md) ·
+[Byte audit](https://github.com/joses2017smjh/IsaacSimFolding/blob/main/docs/evidence/runtime_horizon_2026-10-06/optimizer_audit.json).

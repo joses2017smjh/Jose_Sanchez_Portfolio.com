@@ -123,11 +123,25 @@ contribution: Built the synthetic orchard, the evaluation protocol, DINOv2 RGB-D
 October 2–5 studies extend the service to branch graphs and cut directions.
 BranchNet raises skeleton F1 at 2 cm from **0.50 to 0.60** on two held-out
 synthetic trees, with 120 correlated frames. Fitted axes raise strict cut recall
-from **0.12 to 0.17** on that same set. On real MFO cherry images, whole-orchard
-training reduces background classified as wood from **31% to 8%**, but class
-mIoU remains **0.12**. These are perception results; physical cutting and
-real-orchard metric-depth accuracy remain unvalidated.
+from **0.12 to 0.17** on that same set. Rendering whole orchard rows (the target
+row plus three behind it) instead of a single tree raises pixel mIoU from
+**0.23 to 0.76** and skeleton F1 from **0.01 to 0.36** on 10 held-out synthetic
+trees with rendered depth; with fused depth, every method collapses. On
+real MFO cherry images, the same whole-orchard training reduces background
+classified as wood from **31% to 8%**, but class mIoU remains **0.12**. These are
+perception results; physical cutting and real-orchard metric-depth accuracy
+remain unvalidated.
 [Protocol and comparisons](https://github.com/joses2017smjh/spur-depth-service/blob/master/docs/RESULTS.md).
+
+## A placeholder camera matrix
+
+Every annotation stored a hard-coded placeholder intrinsics matrix instead of
+the render camera's. With the correct matrix, ground-truth depth lies **0.09 mm**
+(median) from the rendered branch surfaces instead of **7.2 cm**, and four-view
+reconstruction error falls from **7.0 cm to 7.4 mm**. This is one tree and one
+shot. Per-pixel depth RMSE does not use the matrix and is unchanged, and the
+six-view refiner has not been retrained.
+[Correction and report](https://github.com/joses2017smjh/spur-depth-service/blob/master/docs/RESULTS.md#camera-intrinsics-correction).
 
 ## What sim-to-real actually costs
 

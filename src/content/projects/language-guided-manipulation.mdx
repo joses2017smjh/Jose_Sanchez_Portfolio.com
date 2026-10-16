@@ -60,10 +60,15 @@ chunks of base-velocity, arm, and gripper commands. A learned leg controller
 executes walking while the arms and grippers track their commanded targets.
 [Task and interface contract](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WAITER_INTERFACES.md).
 
-The first fine-tune scored **28/100** with each layout's instruction. The retrain
-used **3.4×** the demonstrations and drew **30%** of each training batch from
-the first 12 episode frames, where the object choice happens. Phase 3b then
-scored **75/100** on fresh layouts and **76/100** with the held-out template.
+The first fine-tune scored **28/100** with each layout's instruction. Its
+features held both the instruction's colour and which tumbler was which, but it
+picked between the two at about chance. The choice is made in an episode's
+first ten frames, **1.6%** of the training data. On development layouts,
+**3.4×** the demonstrations alone left the choice at chance (**95 of 189**
+pick-ups). With the same demonstrations, drawing **30%** of each training batch
+from the first 12 frames made it right in **192 of 192**. Phase 3b, trained
+that way, scored **75/100** on fresh layouts and **76/100** with the held-out
+template.
 [Program and results](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/WAITER_PROGRAM.md).
 
 ## Keep the stronger baseline

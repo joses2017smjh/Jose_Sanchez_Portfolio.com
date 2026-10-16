@@ -62,3 +62,12 @@ contribution: >-
   extensions add experiment-file provenance, external retrieval evaluations,
   service-load measurements, and signed approval grants for file operations.
 ---
+
+## Approval grants under attack
+
+Each approval grant is signed, short-lived, single-use, and bound to one exact
+reviewed change. In deterministic enforcement tests, all **220** malicious
+fixtures across **22** attack families were denied, with the corpus and files
+outside it unchanged, and all **100** benign controls succeeded. These tests
+check the enforcement code, not a model's resistance to prompt injection.
+[Results](https://github.com/joses2017smjh/MetaNavT/blob/main/bench/results/trusted_actions.json).

@@ -80,6 +80,30 @@ The [matched IMU-history and stereo-pose studies](https://github.com/joses2017sm
 also retain negative findings. Better sensor measurements alone do not establish
 better closed-loop navigation.
 
+## A 20 ms IMU delay halves success
+
+In an Isaac Lab route test, four policies with different sensor inputs
+completed **124 of 128** first episodes. Delaying the IMU by one 20 ms control
+step cut that to **61/128**, and 40 ms cut it to **3/128**. Fine-tuning one
+policy for 2,000 iterations with randomized sensor dropout, IMU bias and up to
+20 ms of IMU delay let it complete **29/32** at 40 ms, against **0/32** for the
+untouched policy. The route is fixed and a blind policy also completes it, so
+this measures tolerance to a delayed IMU, not perception.
+[Delay probe](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/repo-gpu-20260923/maze-sf01/summary.json) ·
+[Fine-tune and control](https://github.com/joses2017smjh/bhl-robustness-ladder/tree/main/results/repo-gpu-20260923/sf04-finetune).
+
+## A learned navigator in place of the planner
+
+A PPO navigation policy replaced A* and sent velocity and turn-rate commands to
+the same frozen biped gait. Three trained navigators reached **35 of 36** goals
+on 12 unseen mazes with **no falls**; scripted A* reached 12/12. A predeclared
+48-maze confirmation then failed its zero-fall target. The navigators reached
+**44, 46 and 44 of 48** goals (A* 44/48), but **6 falls** occurred across the
+nominal and 35% lidar-dropout runs. Pose and goal come from the simulator, and
+a scripted speed brake stays in the loop.
+[First transfer](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/results/navgym-v5-transfer-20261002/verdict.json) ·
+[48-maze confirmation](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/campaigns/20261006-confirmatory/results/verdict.json).
+
 ## Newer recovery audit: more goals, fewer clean completions
 
 The October 14 publication audits **1,152 episodes** across four controllers,
