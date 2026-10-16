@@ -369,6 +369,8 @@ export const PROJECTS: Project[] = [
     repoUrl: "https://github.com/joses2017smjh/PointCloudclassification",
     repoBranch: "main",
     siteUrl: `${SITE}/projects/point-cloud-classification`,
+    collaboration:
+      "Course project. A teammate implemented and trained the PointNet and Point Transformer models; I built the ModelNet40 visualization tool and wrote the README.",
     deepLinks: [
       {
         label: "Point Transformer training notebook",
@@ -391,7 +393,7 @@ export const PROJECTS: Project[] = [
     contentId: "dom-math-transformer",
     title: "DoM: Math Problems to Computation Graphs",
     oneLineResult:
-      "Constrained decoding into valid computation graphs reaches 77.45% exact graph match and 84.78% 2-gram BLEU on the MathQA test set.",
+      "Constrained decoding into valid computation graphs reaches 78.99% exact graph match and 85.62% 2-gram BLEU on 2,985 MathQA test problems.",
     lane: ["ml-engineering"],
     period: "Fall 2025 – Jan 2026",
     status: "coursework",
@@ -400,21 +402,21 @@ export const PROJECTS: Project[] = [
     metrics: [
       {
         label: "Exact graph match — MathQA test, smart_sample decoding",
-        value: "77.45%",
-        source: "EXTERNAL: public/media/papers/dom-paper.pdf",
-        note: "Course report, test table with smart_sample. Verified against main.tex Table tab:test_results_smart_sample. The repo commits no report — stats/accuracies_test.txt instead logs 77.65%. Resolve before an interview.",
+        value: "78.99%",
+        source: "test_stats.txt",
+        note: "smart accuracy 0.78995; argmax decoding 0.77655 (also in stats/accuracies_test.txt). The course report's 77.45% matches validation_stats.txt (smart accuracy 0.77453), not the test log.",
       },
       {
         label: "2-gram BLEU — same run",
-        value: "84.78%",
-        source: "EXTERNAL: public/media/papers/dom-paper.pdf",
-        note: "Repo log says 84.89%. Same disagreement as above.",
+        value: "85.62%",
+        source: "test_stats.txt",
+        note: "smart average BLEU 0.85617; argmax 0.84885. evaluate.py compute_bleu uses n_gram = 2. The course report's 84.78% matches the validation log.",
       },
       {
         label: "Average graph edit distance — same run",
-        value: "2.72",
-        source: "EXTERNAL: public/media/papers/dom-paper.pdf",
-        note: "Repo log says 2.56.",
+        value: "2.56",
+        source: "test_stats.txt",
+        note: "smart average GED 2.5628. The course report's 2.72 matches the validation log (2.7151).",
       },
       {
         label: "Trainable parameters",

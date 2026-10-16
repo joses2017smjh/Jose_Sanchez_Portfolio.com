@@ -4,8 +4,9 @@ summary: Compare point-based classifiers through predicted labels, local attenti
   cases.
 problem: Point clouds are unordered. Classification needs to preserve useful local geometry while remaining
   insensitive to the order in which points enter the model.
-approach: Implemented PointNet-style and attention-based classifiers and evaluated point-cloud predictions.
-  Inspected confusion matrices and point-budget experiments to understand what each architecture retained.
+approach: A teammate implemented and trained the PointNet-style and attention-based classifiers. Their
+  predictions were inspected with a ModelNet40 point-cloud visualizer, confusion matrices, and point-budget
+  experiments to understand what each architecture retained.
 result: 'The Point Transformer records 86.79% accuracy on 2,468 ModelNet40 test clouds.
   Graduate coursework: the figure comes from the training notebook''s own
   saved output, and no deployment claim is made.'
@@ -48,6 +49,7 @@ featured: false
 track: coursework
 focus: 3D perception / Deep learning
 evidence: 86.79% on 2,468 ModelNet40 test clouds, from the train_pointtransformer.ipynb output cell.
-contribution: Built and compared point-based neural models in PyTorch, prepared sampled point clouds,
-  and visualized correct predictions and furniture-class confusions.
+contribution: Built the ModelNet40 point-cloud visualization tool and wrote the repository README. A
+  teammate implemented and trained the classifiers; the visualizations show their correct predictions and
+  furniture-class confusions.
 ---
